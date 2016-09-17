@@ -1,0 +1,29 @@
+.singleButton {
+    -fx-font: 22 arial;
+    -fx-font-weight: bold;
+    -fx-base: #b3ecff;
+}
+
+.multiButton {
+    -fx-font: 22 arial;
+    -fx-font-weight: bold;
+    -fx-base: #b3ecff;
+}
+
+.helpButton {
+    -fx-font: 22 arial;
+    -fx-font-weight: bold;
+    -fx-base: #b3ecff;
+}
+
+.backButton {
+    -fx-font: 22 arial;
+    -fx-font-weight: bold;
+    -fx-base: #b3ecff;
+}
+
+.startButton {
+    -fx-font: 22 arial;
+    -fx-font-weight: bold;
+    -fx-base: #b3ecff;
+}

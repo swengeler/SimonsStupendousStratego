@@ -27,3 +27,11 @@
     -fx-font-weight: bold;
     -fx-base: #b3ecff;
 }
+
+.evenRectangle {
+    -fx-fill: #d9b38c;
+}
+
+.oddRectangle {
+    -fx-fill: #ffe6cc;
+}

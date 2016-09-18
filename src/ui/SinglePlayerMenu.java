@@ -25,6 +25,9 @@ public class SinglePlayerMenu extends VBox {
 
         Button startButton = new Button("Start", new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream("/start_icon.png"), 50, 50, true, true)));
         startButton.getStyleClass().add("startButton");
+        startButton.setOnAction((ActionEvent e) -> {
+            Main.getInstance().setView(3);
+        });
 
         this.getChildren().add(backButton);
         this.getChildren().add(startButton);

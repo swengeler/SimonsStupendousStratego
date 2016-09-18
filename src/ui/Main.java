@@ -18,6 +18,7 @@ public class Main extends Application {
     private MainMenu mainMenu;
     private SinglePlayerMenu singlePlayerMenu;
     private MultiPlayerMenu multiPlayerMenu;
+    private InGameView inGameView;
 
     public static void main(String[] args) {
         launch(args);
@@ -35,7 +36,7 @@ public class Main extends Application {
         // creating the first menu that the user will see and then assigning it to the scene that will make it visible
         // adding a style sheet for the UI elements
         mainMenu = new MainMenu();
-        scene = new Scene(mainMenu, 500, 500);
+        scene = new Scene(mainMenu, 1200, 800);
         scene.getStylesheets().add("styles.css");
 
         // setting up the window
@@ -60,7 +61,16 @@ public class Main extends Application {
                 multiPlayerMenu = new MultiPlayerMenu();
             }
             scene.setRoot(multiPlayerMenu);
+        } else if (id == 3) {
+            if (inGameView == null) {
+                inGameView = new InGameView();
+            }
+            scene.setRoot(inGameView);
         }
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 
 }

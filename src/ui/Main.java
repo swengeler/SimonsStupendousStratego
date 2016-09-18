@@ -1,6 +1,7 @@
 package ui;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -42,6 +43,7 @@ public class Main extends Application {
         // setting up the window
         primaryStage = stage;
         primaryStage.setTitle("Test");
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -67,6 +69,10 @@ public class Main extends Application {
             }
             scene.setRoot(inGameView);
         }
+    }
+
+    public InGameView getInGameView() {
+        return inGameView;
     }
 
     public Scene getScene() {

@@ -17,13 +17,13 @@ public class SinglePlayerMenu extends VBox {
     }
 
     private void createButtons() {
-        Button backButton = new Button("Back", new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream("/back_icon.png"), 50, 50, true, true)));
+        Button backButton = new Button("Back", new ImageView(new Image(getClass().getResourceAsStream("/back_icon.png"), 50, 50, true, true)));
         backButton.getStyleClass().add("backButton");
         backButton.setOnAction((ActionEvent e) -> {
             Main.getInstance().setView(0);
         });
 
-        Button startButton = new Button("Start", new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream("/start_icon.png"), 50, 50, true, true)));
+        Button startButton = new Button("Start", new ImageView(new Image(getClass().getResourceAsStream("/start_icon.png"), 50, 50, true, true)));
         startButton.getStyleClass().add("startButton");
         startButton.setOnAction((ActionEvent e) -> {
             Main.getInstance().setView(3);

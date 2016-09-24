@@ -10,9 +10,7 @@ public class Player {
     private PlayerType type;
 
     private ArrayList<Piece> activePieces;
-    private Piece selectedPiece;
-
-    private boolean isActive;
+    private Piece currentPiece;
 
     public Player(PlayerType type) {
         this.type = type;
@@ -25,22 +23,24 @@ public class Player {
         return type;
     }
 
-    public Piece getActivePiece() {
-        return selectedPiece;
+    public Piece getCurrentPiece() {
+        return currentPiece;
     }
 
     public ArrayList<Piece> getActivePieces() {
         return activePieces;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
     /* Setter methods */
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setCurrentPiece(Piece activePiece) {
+        this.currentPiece = activePiece;
+    }
+
+    /* Other methods */
+
+    public void removePiece(Piece piece) {
+        activePieces.remove(piece);
     }
 
 }

@@ -8,7 +8,8 @@ public abstract class GameState {
     protected StrategoGame parent;
 
     protected Player firstPlayer, secondPlayer;
-    protected Piece activePiece;
+    protected Player currentPlayer, currentOpponent;
+    protected Piece currentPiece;
 
     public GameState(StrategoGame parent, Player firstPlayer, Player secondPlayer) {
         this.parent = parent;
@@ -20,7 +21,7 @@ public abstract class GameState {
 
     public void processBoardSelect(int row, int col) {}
 
-    public void processPlayerReady() {}
+    public void processEndTurn() {}
 
     public void processSwitch() {}
 

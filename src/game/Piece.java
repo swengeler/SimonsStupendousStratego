@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Piece {
 
     private static int pieceCount;
-    private int ID;
+    private final int ID;
 
     private PieceType type;
     private PlayerType playerType;
@@ -69,6 +69,11 @@ public class Piece {
 
     public void revealMove() {
         isMoveRevealed = true;
+    }
+
+    public void setPos(int rowPos, int colPos) {
+        this.rowPos = rowPos;
+        this.colPos = colPos;
     }
 
     /* Clone method */

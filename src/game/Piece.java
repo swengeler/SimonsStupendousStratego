@@ -1,5 +1,7 @@
 package game;
 
+import java.util.ArrayList;
+
 /**
  * Created by Simon on 17/09/2016.
  */
@@ -9,16 +11,27 @@ public class Piece {
     private int ID;
 
     private PieceType type;
+    private PlayerType playerType;
 
-    private int xPos;
-    private int yPos;
+    private int rowPos = - 1;
+    private int colPos = -1;
 
-    public Piece(PieceType type, int xPos, int yPos) {
+    private boolean isRevealed;
+    private boolean isMoveRevealed;
+
+    public Piece(PieceType type, PlayerType playerType) {
         ID = pieceCount++;
         this.type = type;
-        this.xPos = xPos;
-        this.yPos = yPos;
+        this.playerType = playerType;
     }
+
+    private Piece(PieceType type, PlayerType playerType, int ID) {
+        this.ID = ID++;
+        this.type = type;
+        this.playerType = playerType;
+    }
+
+    /* Getter methods */
 
     public int getID() {
         return ID;
@@ -28,11 +41,42 @@ public class Piece {
         return type;
     }
 
-    public int getxPos() {
-        return xPos;
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 
-    public int getyPos() {
-        return yPos;
+    public int getRowPos() {
+        return rowPos;
     }
+
+    public int getColPos() {
+        return colPos;
+    }
+
+    public boolean isRevealed() {
+        return isRevealed;
+    }
+
+    public boolean isMoveRevealed() {
+        return isMoveRevealed;
+    }
+
+    /* Setter methods */
+
+    public void reveal() {
+        isRevealed = true;
+    }
+
+    public void revealMove() {
+        isMoveRevealed = true;
+    }
+
+    /* Clone method */
+
+    public Piece clone() {
+        Piece clone = new Piece(type, playerType, ID);
+
+        return clone;
+    }
+
 }

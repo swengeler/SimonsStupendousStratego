@@ -21,7 +21,7 @@ public class DeploymentState extends GameState {
         }
         if (parent.getBoard()[row][col].getOccupyingPiece() != null) {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
-            // controller will be the CommunicationsHandler instance that will bridge the gap between model and view (probably initialised in the Main class)
+            // controller will be the CommunicationsHandler instance that will bridge the gap between model and view (probably initialised in the main class)
             // controller.updateActivePiece(currentPiece);
         } else if (currentPlayer.getCurrentPiece() != null) {
             parent.getBoard()[row][col].setOccupyingPiece(currentPlayer.getCurrentPiece());

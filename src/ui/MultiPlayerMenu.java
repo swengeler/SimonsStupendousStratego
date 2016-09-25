@@ -11,8 +11,11 @@ import javafx.scene.layout.VBox;
  */
 public class MultiPlayerMenu extends VBox {
 
-    public MultiPlayerMenu() {
+    private StrategoFrame parent;
+
+    public MultiPlayerMenu(StrategoFrame parent) {
         super();
+        this.parent = parent;
         createButtons();
     }
 
@@ -20,7 +23,7 @@ public class MultiPlayerMenu extends VBox {
         Button backButton = new Button("Back", new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream("/back_icon.png"), 50, 50, true, true)));
         backButton.getStyleClass().add("backButton");
         backButton.setOnAction((ActionEvent e) -> {
-            Main.getInstance().setView(0);
+            parent.setToMainMenu();
         });
 
         Button startButton = new Button("Start", new ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream("/start_icon.png"), 50, 50, true, true)));

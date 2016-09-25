@@ -7,7 +7,6 @@ public class StrategoGame {
 
     public static final int BOARD_SIZE = 10;
 
-
     private GameState currentState;
     private MoveManager moveManager;
     private CommunicationManager controller;
@@ -44,6 +43,12 @@ public class StrategoGame {
         moveManager = new MoveManager(board);
         this.controller = controller;
         controller.setStrategoGame(this);
+    }
+
+    /* Getter methods */
+
+    public CommunicationManager getComManager() {
+        return controller;
     }
 
     public GameState getCurrentState() {

@@ -12,8 +12,11 @@ import javafx.scene.layout.VBox;
  */
 public class MainMenu extends VBox {
 
-    public MainMenu() {
+    private StrategoFrame parent;
+
+    public MainMenu(StrategoFrame parent) {
         super();
+        this.parent = parent;
         createButtons();
     }
 
@@ -22,14 +25,14 @@ public class MainMenu extends VBox {
         singleButton.setMinSize(350, 100);
         singleButton.getStyleClass().add("singleButton");
         singleButton.setOnAction((ActionEvent e) -> {
-            Main.getInstance().setView(1);
+            parent.setToSinglePlayerMenu();
         });
 
         Button multiButton = new Button("Multiplayer", new ImageView(new Image(getClass().getResourceAsStream("/multiplayer_icon.png"), 50, 50, true, true)));
         multiButton.setMinSize(350, 100);
         multiButton.getStyleClass().add("multiButton");
         multiButton.setOnAction((ActionEvent e) -> {
-            Main.getInstance().setView(2);
+            parent.setToMultiPlayerMenu();
         });
 
         Button helpButton = new Button("Help", new ImageView(new Image(getClass().getResourceAsStream("/help_icon.png"), 50, 50, true, true)));

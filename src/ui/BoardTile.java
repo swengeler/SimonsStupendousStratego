@@ -32,7 +32,7 @@ public class BoardTile extends Rectangle {
         setOnMouseEntered((MouseEvent e) -> setEffect(new DropShadow()));
         setOnMouseExited((MouseEvent e) -> setEffect(null));
         setOnMouseClicked((MouseEvent e) -> {
-            if (Main.getInstance().getInGameView().pieceSelected()) {
+            if (ain.getInstance().getInGameView().pieceSelected()) {
                 setOccupyingPiece();
             }
         });

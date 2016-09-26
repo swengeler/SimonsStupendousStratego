@@ -17,7 +17,7 @@ public abstract class GameState {
         this.secondPlayer = secondPlayer;
     }
 
-    public void processTraySelect(/*Piece or PieceType*/) {}
+    public void processTraySelect(PieceType type) {}
 
     public void processBoardSelect(int row, int col) {}
 

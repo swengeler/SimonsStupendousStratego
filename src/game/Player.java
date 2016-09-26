@@ -14,7 +14,6 @@ public class Player {
 
     public Player(PlayerType type) {
         this.type = type;
-        this.activePieces = PieceFactory.generatePieces(type);
     }
 
     /* Getter methods */
@@ -38,6 +37,10 @@ public class Player {
     }
 
     /* Other methods */
+
+    public void addPiece(Piece piece) {
+        activePieces.add(piece);
+    }
 
     public void removePiece(Piece piece) {
         activePieces.remove(piece);

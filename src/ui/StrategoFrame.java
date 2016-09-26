@@ -9,7 +9,7 @@ import javafx.stage.Stage;
  */
 public class StrategoFrame extends Stage {
 
-    public static final int FRAME_WIDTH = 1000;
+    public static final int FRAME_WIDTH = 1100;
     public static final int FRAME_HEIGHT = 800;
 
     private CommunicationManager controller;
@@ -23,7 +23,7 @@ public class StrategoFrame extends Stage {
 
     public StrategoFrame(CommunicationManager controller) {
         mainMenu = new MainMenu(this);
-        scene = new Scene(mainMenu, 1200, 800);
+        scene = new Scene(mainMenu, FRAME_WIDTH, FRAME_HEIGHT);
         scene.getStylesheets().add("styles.css");
         this.setScene(scene);
         this.controller = controller;

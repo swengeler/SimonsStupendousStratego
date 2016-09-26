@@ -36,6 +36,19 @@ public class CommunicationManager {
 
     }
 
+    public void sendTrayPieceSelected(int index) {
+        System.out.println("Index = " + index);
+        strategoGame.getCurrentState().processTraySelect(PieceType.values()[index]);
+    }
+
     /* Model to view methods */
+
+    public void sendTrayActiveUpdate(PieceType type) {
+        // send command to highlight a certain tray icon
+    }
+
+    public void sendActivePieceUpdate(Piece activePiece) {
+        // send command to board Piece with the same ID, eyoo, was geht da
+    }
 
 }

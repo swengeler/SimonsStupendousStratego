@@ -13,6 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.*;
 
+import java.util.ArrayList;
+
 /**
  * Created by Simon on 17/09/2016.
  */
@@ -24,12 +26,15 @@ public class InGameView extends Pane {
     private Tray trayNorth, traySouth;
     private Button backButton, switchButton;
 
-    double tileSize = StrategoFrame.FRAME_HEIGHT / (ModelBoard.BOARD_SIZE * 1.2);
+    private ArrayList<Image> pieceIcons;
+
+    double tileSize = StrategoFrame.FRAME_HEIGHT / (ModelBoard.BOARD_SIZE * 1.3);
     double yOffset = (StrategoFrame.FRAME_HEIGHT - (tileSize * ModelBoard.BOARD_SIZE)) / 2;
     double xOffset = (StrategoFrame.FRAME_WIDTH - (tileSize * ModelBoard.BOARD_SIZE)) / 2;
 
     public InGameView(StrategoFrame parent) {
         super();
+        System.out.println("tilesize:" + tileSize);
         this.parent = parent;
         //drawHelpGrid(100);
         //prepareBoardTest2();
@@ -39,25 +44,42 @@ public class InGameView extends Pane {
 
     private void makeComponents() {
 
-        Background b = new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/frame_background.png")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+        Background b = new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/frame_background2.png")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
         setBackground(b);
 
-        board = new Board(tileSize);
-        trayNorth = new Tray("blue");
-        traySouth = new Tray("red");
+        board = new Board(parent, tileSize);
+        trayNorth = new Tray(parent, "blue");
+        traySouth = new Tray(parent, "red");
 
         backButton = new Button("Back");
         backButton.getStyleClass().add("backButton");
         backButton.setOnAction((ActionEvent e) -> parent.setToSinglePlayerMenu());
-        switchButton = new Button("Switch player");
-        switchButton.getStyleClass().add("switchButton");
+        switchButton = new Button("Switch");
+        switchButton.getStyleClass().add("backButton");
         switchButton.setOnAction((ActionEvent e) -> parent.getComManager().sendPlayerSwitch());
 
         getChildren().addAll(board, trayNorth, traySouth, backButton, switchButton);
     }
 
     private void placeComponents() {
-        board.setLayoutX(0);
+        board.setLayoutX(150);
+        board.setLayoutY(100);
+
+        trayNorth.setLayoutX(805);
+        trayNorth.setLayoutY(105);
+
+        traySouth.setLayoutX(60);
+        traySouth.setLayoutY(105);
+
+        backButton.setLayoutX(950);
+        backButton.setLayoutY(50 + 75);
+
+        switchButton.setLayoutX(940);
+        switchButton.setLayoutY(125 + 75);
+    }
+
+    public ArrayList<Image> getPieceIcons() {
+        return pieceIcons;
     }
 
     public void makeButtons() {

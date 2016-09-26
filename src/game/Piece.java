@@ -26,7 +26,7 @@ public class Piece {
     }
 
     private Piece(PieceType type, PlayerType playerType, int ID) {
-        this.ID = ID++;
+        this.ID = ID;
         this.type = type;
         this.playerType = playerType;
     }

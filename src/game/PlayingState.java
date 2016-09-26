@@ -9,7 +9,7 @@ public class PlayingState extends GameState {
         super(parent, firstPlayer, secondPlayer);
     }
 
-    public void processTraySelect() {
+    public void processTraySelect(PieceType type) {
         // maybe make sound?
     }
 

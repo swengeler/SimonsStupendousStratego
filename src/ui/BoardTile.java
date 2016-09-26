@@ -1,51 +1,36 @@
-/*
 package ui;
 
-import game.Piece;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-*/
 /**
- * Created by Simon on 18/09/2016.
- *//*
+ *
+ */
+public class BoardTile extends ImageView {
 
-public class BoardTile extends Rectangle {
+    public static double TILE_SIZE = 58;
 
-    private int id;
+    private int rowPos, colPos;
 
-    private int gridX;
-    private int gridY;
-
-    private Piece occupyingPiece;
-
-    public BoardTile(int gridX, int gridY, int id) {
-        super(gridX * InGameView.TILE_SIZE + InGameView.X_OFFSET, gridY * InGameView.TILE_SIZE + InGameView.Y_OFFSET, InGameView.TILE_SIZE, InGameView.TILE_SIZE);
-        this.gridX = gridX;
-        this.gridY = gridY;
-        this.id = id;
-        initEventListeners();
+    public BoardTile(int rowPos, int colPos, Image boardBackground) {
+        super();
+        this.rowPos = rowPos;
+        this.colPos = colPos;
+        cutAndSetImage(boardBackground);
     }
 
-    private void initEventListeners() {
-        setOnMouseEntered((MouseEvent e) -> setEffect(new DropShadow()));
-        setOnMouseExited((MouseEvent e) -> setEffect(null));
-        setOnMouseClicked((MouseEvent e) -> {
-            if (ain.getInstance().getInGameView().pieceSelected()) {
-                setOccupyingPiece();
-            }
-        });
-        getStyleClass().add(x % 2 == 0 ? "evenRectangle" : "oddRectangle");
+    private void cutAndSetImage(Image boardBackground) {
+        Rectangle2D viewPort = new Rectangle2D(colPos * TILE_SIZE, rowPos * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        setImage(boardBackground);
+        setViewport(viewPort);
     }
 
-    public void setOccupyingPiece(Piece newPiece) {
-        occupyingPiece = newPiece;
+    public int getRowPos() {
+        return rowPos;
     }
 
-    public boolean isOccupied() {
-        return !(occupyingPiece == null);
+    public int getColPos() {
+        return colPos;
     }
-
 }
-*/

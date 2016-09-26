@@ -10,19 +10,23 @@ public class DeploymentState extends GameState {
         currentPlayer = firstPlayer;
     }
 
-    public void processTraySelect() {
-        // check whether enough pieces left?
-        // change active piece
+    public void processTraySelect(PieceType type) {
+        Piece temp;
+        if ((temp = PieceFactory.makePiece(currentPlayer.getType(), type)) != null) {
+            currentPlayer.addPiece(temp);
+            currentPlayer.setCurrentPiece(temp);
+            parent.getComManager().sendTrayActiveUpdate(type);
+        }
     }
 
     public void processBoardSelect(int row, int col) {
         if (!isLegalSelection(row)) {
+            // maybe call some method to notify user
             return;
         }
         if (parent.getBoard()[row][col].getOccupyingPiece() != null) {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
-            // controller will be the CommunicationsHandler instance that will bridge the gap between model and view (probably initialised in the main class)
-            // controller.updateActivePiece(currentPiece);
+            parent.getComManager().sendActivePieceUpdate(currentPlayer.getCurrentPiece());
         } else if (currentPlayer.getCurrentPiece() != null) {
             parent.getBoard()[row][col].setOccupyingPiece(currentPlayer.getCurrentPiece());
             currentPlayer.setCurrentPiece(null);

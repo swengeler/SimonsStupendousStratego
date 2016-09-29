@@ -9,9 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import project.stratego.ui.StrategoFrame;
 
-/**
- *
- */
 public class Tray extends Pane {
 
     private int playerIndex;

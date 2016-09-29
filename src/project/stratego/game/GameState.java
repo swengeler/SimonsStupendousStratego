@@ -5,9 +5,6 @@ import project.stratego.game.entities.Player;
 import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 
-/**
- *
- */
 public abstract class GameState {
 
     protected StrategoGame parent;

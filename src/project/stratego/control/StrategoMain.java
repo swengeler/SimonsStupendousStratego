@@ -5,9 +5,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import project.stratego.ui.StrategoFrame;
 
-/**
- *
- */
 public class StrategoMain extends Application {
 
     public static void main(String[] args) {

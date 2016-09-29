@@ -1,15 +1,11 @@
 package project.stratego.ui.components;
 
-import project.stratego.game.ModelBoard;
 import javafx.scene.Group;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-/**
- *
- */
 public class BoardArea extends Pane {
 
     private Group northDeploymentArea;
@@ -31,8 +27,8 @@ public class BoardArea extends Pane {
     private void makeGrid() {
         board = new BoardTile[10][10];
 
-        for (int row = 0; row < ModelBoard.BOARD_SIZE; row++) {
-            for (int col = 0; col < ModelBoard.BOARD_SIZE; col++) {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
                 BoardTile temp = new BoardTile(row, col, tileBackground);
                 temp.setLayoutX(col * (BoardTile.TILE_SIZE + 2) + 1);
                 temp.setLayoutY(row * (BoardTile.TILE_SIZE + 2) + 1);

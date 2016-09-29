@@ -4,9 +4,6 @@ import project.stratego.game.entities.Piece;
 
 import java.util.ArrayList;
 
-/**
- *
- */
 public class PieceFactory {
 
     private static int[][] pieceCount = {

@@ -4,9 +4,6 @@ import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
 
-/**
- *
- */
 public class DeploymentState extends GameState {
 
     public DeploymentState(StrategoGame parent, Player firstPlayer, Player secondPlayer) {

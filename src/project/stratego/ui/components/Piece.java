@@ -6,9 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-/**
- *
- */
 public class Piece extends ImageView {
 
     public static final double PIECE_SIZE = 0.8 * BoardTile.TILE_SIZE;

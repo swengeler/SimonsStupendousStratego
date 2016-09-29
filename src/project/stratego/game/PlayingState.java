@@ -4,9 +4,6 @@ import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
 
-/**
- *
- */
 public class PlayingState extends GameState {
 
     boolean testing = false;

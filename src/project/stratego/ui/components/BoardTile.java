@@ -9,9 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import project.stratego.ui.StrategoFrame;
 
-/**
- *
- */
 public class BoardTile extends Group {
 
     public static double TILE_SIZE = 60;

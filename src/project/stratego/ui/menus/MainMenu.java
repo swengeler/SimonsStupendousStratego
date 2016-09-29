@@ -8,9 +8,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import project.stratego.ui.StrategoFrame;
 
-/**
- * Created by Simon on 17/09/2016.
- */
 public class MainMenu extends VBox {
 
     private StrategoFrame parent;

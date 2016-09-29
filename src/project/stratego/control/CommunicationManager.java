@@ -6,9 +6,6 @@ import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 import project.stratego.ui.StrategoFrame;
 
-/**
- *
- */
 public class CommunicationManager {
 
     private StrategoFrame strategoFrame;

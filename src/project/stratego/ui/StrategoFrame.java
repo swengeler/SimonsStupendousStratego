@@ -5,9 +5,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import project.stratego.ui.menus.*;
 
-/**
- *
- */
 public class StrategoFrame extends Stage {
 
     public static final int FRAME_WIDTH = 1100;

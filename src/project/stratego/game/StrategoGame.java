@@ -6,9 +6,6 @@ import project.stratego.game.entities.Player;
 import project.stratego.game.utils.MoveManager;
 import project.stratego.game.utils.PlayerType;
 
-/**
- *
- */
 public class StrategoGame {
 
     public static final int BOARD_SIZE = 10;

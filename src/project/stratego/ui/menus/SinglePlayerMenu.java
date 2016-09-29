@@ -7,9 +7,6 @@ import javafx.scene.image.*;
 import javafx.scene.layout.VBox;
 import project.stratego.ui.StrategoFrame;
 
-/**
- * Created by Simon on 17/09/2016.
- */
 public class SinglePlayerMenu extends VBox {
 
     private StrategoFrame parent;

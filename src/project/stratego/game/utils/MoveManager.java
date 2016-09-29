@@ -2,9 +2,6 @@ package project.stratego.game.utils;
 
 import project.stratego.game.entities.*;
 
-/**
- *
- */
 public class MoveManager {
 
     private BoardTile[][] board;

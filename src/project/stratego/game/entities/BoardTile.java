@@ -1,8 +1,5 @@
 package project.stratego.game.entities;
 
-/**
- *
- */
 public class BoardTile {
 
     private Piece occupyingPiece;

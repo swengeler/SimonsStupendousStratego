@@ -3,9 +3,6 @@ package project.stratego.game.entities;
 import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 
-/**
- * Created by Simon on 17/09/2016.
- */
 public class Piece {
 
     private static int pieceCount;

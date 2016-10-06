@@ -43,11 +43,11 @@ public class PlayingState extends GameState {
             StrategoGame.getInstance().getComManager().sendAttackTied(orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKWON) {
             StrategoGame.getInstance().getComManager().sendAttackWon(orRow, orCol, row, col);
-        } else if (parent.getBoard()[row][col].getOccupyingPiece() != null) {
+        } else if (parent.getBoard()[row][col].getOccupyingPiece() != null && parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() == currentPlayer.getType()) {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
             return;
         }
-        if (!testing) {
+        if (result != MoveResult.NOMOVE && !testing) {
             processPlayerReady();
         }
     }

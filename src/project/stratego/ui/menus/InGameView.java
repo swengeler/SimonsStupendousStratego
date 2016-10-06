@@ -58,7 +58,10 @@ public class InGameView extends Pane {
 
         backButton = new Button("Back");
         backButton.getStyleClass().add("backButton");
-        backButton.setOnAction((ActionEvent e) -> parent.setToSinglePlayerMenu());
+        backButton.setOnAction((ActionEvent e) -> {
+            parent.getComManager().sendResetGame();
+            parent.setToSinglePlayerMenu();
+        });
         readyButton = new Button("Ready");
         readyButton.getStyleClass().add("backButton");
         readyButton.setOnAction((ActionEvent e) -> parent.getComManager().sendPlayerReady());

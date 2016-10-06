@@ -33,6 +33,10 @@ public class CommunicationManager {
 
     /* View to model methods */
 
+    public void sendResetGame() {
+        strategoGame.resetGame();
+    }
+
     public void sendAutoDeploy() {
         ((DeploymentState) strategoGame.getCurrentState()).randomPlaceCurrentPlayer();
     }

@@ -61,7 +61,7 @@ public class DeploymentState extends GameState {
                 parent.getBoard()[row][col].setOccupyingPiece(currentPlayer.getCurrentPiece());
                 //System.out.println(currentPlayer.getCurrentPiece().getType() + " placed at " + row + ", " + col);
                 StrategoGame.getInstance().getComManager().sendPiecePlaced(currentPlayer.getCurrentPiece());
-                currentPlayer.setCurrentPiece(null);
+                //currentPlayer.setCurrentPiece(null);
             } else {
                 // piece from board to be placed on unoccupied tile on board
                 //System.out.println("Piece occupying a tile should be moved");

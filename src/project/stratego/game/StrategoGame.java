@@ -96,4 +96,9 @@ public class StrategoGame {
         currentState = currentState instanceof DeploymentState ? new PlayingState(this, playerNorth, playerSouth) : new DeploymentState(this, playerNorth, playerSouth);
     }
 
+    public void resetGame() {
+        boardSetup();
+        currentState = new DeploymentState(this,playerNorth, playerSouth);
+    }
+
 }

@@ -4,6 +4,11 @@ import project.stratego.game.entities.Piece;
 
 import java.util.ArrayList;
 
+/**
+ * A class that keeps track of the pieces that a player has not deployed on the board yet
+ * and can be used to generate a piece of a certain type if the requesting player has not
+ * placed all available pieces of that type yet.
+ */
 public class PieceFactory {
 
     private static int[][] pieceCount = {
@@ -16,6 +21,10 @@ public class PieceFactory {
             PieceType.pieceQuantity[6] + PieceType.pieceQuantity[7] + PieceType.pieceQuantity[8] +
             PieceType.pieceQuantity[9] + PieceType.pieceQuantity[10] + PieceType.pieceQuantity[11];
 
+    /**
+     * A method that checks whether the requesting player is allowed to generate and place another
+     * piece of the specified type and returns a piece of that type if the player is allowed to do so.
+     */
     public static Piece makePiece(PlayerType playerType, PieceType pieceType) {
         if (pieceCount[playerType.ordinal()][pieceType.ordinal()] > 0) {
             pieceCount[playerType.ordinal()][pieceType.ordinal()]--;

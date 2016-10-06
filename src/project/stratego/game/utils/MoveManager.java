@@ -98,11 +98,27 @@ public class MoveManager {
         if (((rowDiff == 0 && Math.abs(colDiff) > 1) || (colDiff == 0 && Math.abs(rowDiff) > 1)) && movingPiece.getType() != PieceType.SCOUT) {
             return false;
         }
-        if ((rowDiff == 0 && board[destRow][movingPiece.getColPos() + (colDiff > 0 ? 1 : -1)].getOccupyingPiece() != null) || (colDiff == 0 && board[movingPiece.getRowPos() + (rowDiff > 0 ? 1 : -1)][destCol].getOccupyingPiece() != null) ||
+        int c;
+        if (rowDiff == 0) {
+            c = colDiff > 0 ? 1 : -1;
+            for (int i = 1; i < Math.abs(colDiff); i++) {
+                if (board[destRow][movingPiece.getColPos() + i * c].getOccupyingPiece() != null || !board[destRow][movingPiece.getColPos() + i * c].isAccessible()) {
+                    return false;
+                }
+            }
+        } else if (colDiff == 0) {
+            c = rowDiff > 0 ? 1 : -1;
+            for (int i = 1; i < Math.abs(rowDiff); i++) {
+                if (board[movingPiece.getRowPos() + i * c][destCol].getOccupyingPiece() != null || !board[movingPiece.getRowPos() + i * c][destCol].isAccessible()) {
+                    return false;
+                }
+            }
+        }
+        /*if ((rowDiff == 0 && board[destRow][movingPiece.getColPos() + (colDiff > 0 ? 1 : -1)].getOccupyingPiece() != null) || (colDiff == 0 && board[movingPiece.getRowPos() + (rowDiff > 0 ? 1 : -1)][destCol].getOccupyingPiece() != null) ||
                 (rowDiff == 0 && !board[destRow][movingPiece.getColPos() + (colDiff > 0 ? 1 : -1)].isAccessible()) || (colDiff == 0 && !board[movingPiece.getRowPos() + (rowDiff > 0 ? 1 : -1)][destCol].isAccessible())) {
             // piece is a scout or move was legal either way
             return false;
-        }
+        }*/
         return true;
     }
 

@@ -49,14 +49,14 @@ public class InGameView extends Pane {
     }
 
     private void makeComponents() {
-        Background b = new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/frame_background2.png")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
-        setBackground(b);
+        //Background b = new Background(new BackgroundImage(new Image(getClass().getResourceAsStream("/frame_background2.png")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+        //setBackground(b);
 
         boardArea = new BoardArea(tileBackground, pieceIcons, backsidePieceIcons);
         trayNorth = new Tray(0, pieceIcons);
         traySouth = new Tray(1, pieceIcons);
 
-        backButton = new Button("Back");
+        /*backButton = new Button("Back");
         backButton.getStyleClass().add("backButton");
         backButton.setOnAction((ActionEvent e) -> {
             parent.getComManager().sendResetGame();
@@ -64,9 +64,10 @@ public class InGameView extends Pane {
         });
         readyButton = new Button("Ready");
         readyButton.getStyleClass().add("backButton");
-        readyButton.setOnAction((ActionEvent e) -> parent.getComManager().sendPlayerReady());
+        readyButton.setOnAction((ActionEvent e) -> parent.getComManager().sendPlayerReady());*/
 
-        getChildren().addAll(boardArea, trayNorth, traySouth, backButton, readyButton);
+        getChildren().addAll(boardArea, trayNorth, traySouth);
+        //getChildren().addAll(boardArea, trayNorth, traySouth, backButton, readyButton);
     }
 
     private void placeComponents() {
@@ -79,11 +80,11 @@ public class InGameView extends Pane {
         traySouth.setLayoutX(60);
         traySouth.setLayoutY(90);
 
-        backButton.setLayoutX(950);
+       /* backButton.setLayoutX(950);
         backButton.setLayoutY(50 + 75);
 
         readyButton.setLayoutX(940);
-        readyButton.setLayoutY(125 + 75);
+        readyButton.setLayoutY(125 + 75);*/
     }
 
     public void drawHelpGrid(double size) {

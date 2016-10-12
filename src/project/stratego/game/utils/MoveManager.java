@@ -114,11 +114,6 @@ public class MoveManager {
                 }
             }
         }
-        /*if ((rowDiff == 0 && board[destRow][movingPiece.getColPos() + (colDiff > 0 ? 1 : -1)].getOccupyingPiece() != null) || (colDiff == 0 && board[movingPiece.getRowPos() + (rowDiff > 0 ? 1 : -1)][destCol].getOccupyingPiece() != null) ||
-                (rowDiff == 0 && !board[destRow][movingPiece.getColPos() + (colDiff > 0 ? 1 : -1)].isAccessible()) || (colDiff == 0 && !board[movingPiece.getRowPos() + (rowDiff > 0 ? 1 : -1)][destCol].isAccessible())) {
-            // piece is a scout or move was legal either way
-            return false;
-        }*/
         return true;
     }
 

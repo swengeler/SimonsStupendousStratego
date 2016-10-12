@@ -1,9 +1,11 @@
 package project.stratego.ui.menus;
 
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import project.stratego.control.CommunicationManager;
 
 /**
  *
@@ -66,15 +68,16 @@ public class SideMenu extends Pane {
         multiPlayerMenu.setText("Multiplayer");
         multiPlayerMenu.setStyle("-fx-font: 22 arial;");
 
-        Button b2 = new Button("Placeholder button");
-        b2.setLayoutX(5);
-        b2.setLayoutY(5);
-        Scene snapScene = new Scene(b2);
+        Button readyButton = new Button("Ready");
+        readyButton.setLayoutX(5);
+        readyButton.setLayoutY(5);
+        readyButton.setOnAction((ActionEvent e) -> CommunicationManager.getInstance().sendPlayerReady());
+        Scene snapScene = new Scene(readyButton);
         snapScene.snapshot(null);
 
         Button startButton = new Button("Start game");
         startButton.setLayoutX(5);
-        startButton.setLayoutY(b2.getHeight() + 10);
+        startButton.setLayoutY(readyButton.getHeight() + 10);
 
         // Pane pane = new Pane();
         // pane.getChildren().addAll(b1, b2, startButton);
@@ -82,7 +85,7 @@ public class SideMenu extends Pane {
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
         pane.setSpacing(5);
-        pane.getChildren().addAll(b2, startButton);
+        pane.getChildren().addAll(readyButton, startButton);
 
         multiPlayerMenu.setContent(pane);
 

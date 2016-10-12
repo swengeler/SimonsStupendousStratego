@@ -1,5 +1,6 @@
 package project.stratego.game;
 
+import project.stratego.control.CommunicationManager;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
@@ -37,16 +38,16 @@ public class PlayingState extends GameState {
         MoveResult result;
         if ((result = parent.getMoveManager().lastMoveResult()) == MoveResult.MOVE) {
             System.out.println("PIECE MOVED FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            StrategoGame.getInstance().getComManager().sendPieceMoved(orRow, orCol, row, col);
+            CommunicationManager.getInstance().sendPieceMoved(orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKLOST) {
             System.out.println("PIECE LOST ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            StrategoGame.getInstance().getComManager().sendAttackLost(orRow, orCol, row, col);
+            CommunicationManager.getInstance().sendAttackLost(orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKTIE) {
             System.out.println("PIECE TIED ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            StrategoGame.getInstance().getComManager().sendAttackTied(orRow, orCol, row, col);
+            CommunicationManager.getInstance().sendAttackTied(orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKWON) {
             System.out.println("PIECE WON ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            StrategoGame.getInstance().getComManager().sendAttackWon(orRow, orCol, row, col);
+            CommunicationManager.getInstance().sendAttackWon(orRow, orCol, row, col);
         } else if (parent.getBoard()[row][col].getOccupyingPiece() != null && parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() == currentPlayer.getType()) {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
             return;
@@ -77,7 +78,7 @@ public class PlayingState extends GameState {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null && temp.getPlayerType() == currentPlayer.getType() && !temp.isRevealed()) {
-                    parent.getComManager().sendHidePiece(temp);
+                    CommunicationManager.getInstance().sendHidePiece(temp);
                 }
             }
         }
@@ -88,7 +89,7 @@ public class PlayingState extends GameState {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null && temp.getPlayerType() == currentPlayer.getType()) {
-                    parent.getComManager().sendRevealPiece(temp);
+                    CommunicationManager.getInstance().sendRevealPiece(temp);
                 }
             }
         }

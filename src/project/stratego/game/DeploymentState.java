@@ -1,5 +1,6 @@
 package project.stratego.game;
 
+import project.stratego.control.CommunicationManager;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
@@ -15,14 +16,14 @@ public class DeploymentState extends GameState {
     public void randomPlaceCurrentPlayer() {
         PieceFactory.reset();
         currentPlayer.getActivePieces().clear();
-        StrategoGame.getInstance().getComManager().sendResetDeployment(currentPlayer.getType());
+        CommunicationManager.getInstance().sendResetDeployment(currentPlayer.getType());
         Piece temp;
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 10; col++) {
                 temp = PieceFactory.makeRandomPiece(currentPlayer.getType());
                 currentPlayer.addPiece(temp);
                 parent.getBoard()[currentPlayer.getType() == PlayerType.NORTH ? row : 9 - row][col].setOccupyingPiece(temp);
-                parent.getComManager().sendPiecePlaced(temp);
+                CommunicationManager.getInstance().sendPiecePlaced(temp);
             }
         }
     }
@@ -36,7 +37,7 @@ public class DeploymentState extends GameState {
         if ((temp = PieceFactory.makePiece(currentPlayer.getType(), pieceType)) != null) {
             currentPlayer.addPiece(temp);
             currentPlayer.setCurrentPiece(temp);
-            parent.getComManager().sendTrayActiveUpdate(pieceType);
+            CommunicationManager.getInstance().sendTrayActiveUpdate(pieceType);
         }
     }
 
@@ -54,13 +55,13 @@ public class DeploymentState extends GameState {
                 // piece from board to be placed on occupied tile on board
                 // -> simply swaps the current active piece, not the positions of the pieces or similar
                 currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
-                parent.getComManager().sendActivePieceUpdate(currentPlayer.getCurrentPiece());
+                CommunicationManager.getInstance().sendActivePieceUpdate(currentPlayer.getCurrentPiece());
             } else if (currentPlayer.getCurrentPiece().getRowPos() < 0) {
                 // piece from tray to be placed on unoccupied tile on board
                 // -> simply place the piece
                 parent.getBoard()[row][col].setOccupyingPiece(currentPlayer.getCurrentPiece());
                 //System.out.println(currentPlayer.getCurrentPiece().getType() + " placed at " + row + ", " + col);
-                StrategoGame.getInstance().getComManager().sendPiecePlaced(currentPlayer.getCurrentPiece());
+                CommunicationManager.getInstance().sendPiecePlaced(currentPlayer.getCurrentPiece());
                 //currentPlayer.setCurrentPiece(null);
             } else {
                 // piece from board to be placed on unoccupied tile on board
@@ -69,7 +70,7 @@ public class DeploymentState extends GameState {
                 int orCol = currentPlayer.getCurrentPiece().getColPos();
                 parent.getBoard()[orRow][orCol].setOccupyingPiece(null);
                 parent.getBoard()[row][col].setOccupyingPiece(currentPlayer.getCurrentPiece());
-                StrategoGame.getInstance().getComManager().sendPieceMoved(orRow, orCol, row, col);
+                CommunicationManager.getInstance().sendPieceMoved(orRow, orCol, row, col);
             }
         } else {
             if (parent.getBoard()[row][col].getOccupyingPiece() != null) {
@@ -100,7 +101,7 @@ public class DeploymentState extends GameState {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null && temp.getPlayerType() == currentPlayer.getType() && !temp.isRevealed()) {
-                    parent.getComManager().sendHidePiece(temp);
+                    CommunicationManager.getInstance().sendHidePiece(temp);
                 }
             }
         }

@@ -8,8 +8,19 @@ import project.stratego.ui.StrategoFrame;
 
 public class CommunicationManager {
 
+    private static CommunicationManager instance;
+
     private StrategoFrame strategoFrame;
     private StrategoGame strategoGame;
+
+    public static CommunicationManager getInstance() {
+        if (instance == null) {
+            instance = new CommunicationManager();
+        }
+        return instance;
+    }
+
+    private CommunicationManager() {}
 
     public void setStrategoFrame(StrategoFrame strategoFrame) {
         this.strategoFrame = strategoFrame;

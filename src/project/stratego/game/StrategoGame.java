@@ -10,30 +10,15 @@ public class StrategoGame {
 
     public static final int BOARD_SIZE = 10;
 
-    private static StrategoGame instance;
-    private static boolean initialised;
-
     private GameState currentState;
     private MoveManager moveManager;
-    private CommunicationManager controller;
     private BoardTile[][] board;
 
     private Player playerNorth, playerSouth;
 
-    public static StrategoGame getInstance() {
-        return instance;
-    }
-
-    public static void initialise(CommunicationManager controller) {
-        if (!initialised) {
-            instance = new StrategoGame(controller);
-            initialised = true;
-        }
-    }
-
-    private StrategoGame(CommunicationManager controller) {
+    public StrategoGame() {
         boardSetup();
-        componentSetup(controller);
+        componentSetup();
     }
 
     private void boardSetup() {
@@ -55,18 +40,12 @@ public class StrategoGame {
         playerSouth = new Player(PlayerType.SOUTH);
     }
 
-    private void componentSetup(CommunicationManager controller) {
+    private void componentSetup() {
         currentState = new DeploymentState(this, playerNorth, playerSouth);
         moveManager = new MoveManager(board);
-        this.controller = controller;
-        controller.setStrategoGame(this);
     }
 
     /* Getter methods */
-
-    public CommunicationManager getComManager() {
-        return controller;
-    }
 
     public GameState getCurrentState() {
         return currentState;

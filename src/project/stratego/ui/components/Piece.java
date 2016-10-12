@@ -2,14 +2,19 @@ package project.stratego.ui.components;
 
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-public class Piece extends ImageView {
+public class Piece extends Group {
 
     public static final double PIECE_SIZE = 0.8 * BoardTile.TILE_SIZE;
 
+    private ImageView icon;
+    private Rectangle background;
     private Image revealedImage;
     private Image hiddenImage;
 
@@ -18,10 +23,10 @@ public class Piece extends ImageView {
 
     public Piece(int playerIndex, int pieceIndex, Image pieceIcons, Image backsidePieceIcons) {
         super();
-        //revealedViewPort = new Rectangle2D((playerIndex * 12 + pieceIndex) * PIECE_SIZE, 0, PIECE_SIZE, PIECE_SIZE);
-        revealedViewPort = new Rectangle2D(pieceIndex * PIECE_SIZE, playerIndex * PIECE_SIZE, PIECE_SIZE, PIECE_SIZE);
-        // maybe have a look at the line below, the F piece appears when using this
-        //revealedViewPort = new Rectangle2D((playerIndex + pieceIndex) * PIECE_SIZE, 0, PIECE_SIZE, PIECE_SIZE);
+        icon = new ImageView();
+        background = new Rectangle(PIECE_SIZE, PIECE_SIZE, (playerIndex == 0 ? Color.web("#48a4f9") : Color.web("#bf1c1c")));
+        getChildren().addAll(background, icon);
+        revealedViewPort = new Rectangle2D(pieceIndex * PIECE_SIZE, 0, PIECE_SIZE, PIECE_SIZE);
         hiddenViewPort = new Rectangle2D(playerIndex * PIECE_SIZE, 0, PIECE_SIZE, PIECE_SIZE);
         revealedImage = pieceIcons;
         hiddenImage = backsidePieceIcons;
@@ -29,13 +34,13 @@ public class Piece extends ImageView {
     }
 
     public void setToRevealedState() {
-        setImage(revealedImage);
-        setViewport(revealedViewPort);
+        icon.setImage(revealedImage);
+        icon.setViewport(revealedViewPort);
     }
 
     public void setToHiddenState() {
-        setImage(hiddenImage);
-        setViewport(hiddenViewPort);
+        icon.setImage(hiddenImage);
+        icon.setViewport(hiddenViewPort);
     }
 
     public void moveTo(BoardTile destTile) {

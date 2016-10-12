@@ -1,12 +1,14 @@
 package project.stratego.ui.components;
 
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import project.stratego.control.CommunicationManager;
 import project.stratego.ui.StrategoFrame;
 
 public class Tray extends Pane {
@@ -22,41 +24,37 @@ public class Tray extends Pane {
     }
 
     private void makeIcons(Image pieceIcons) {
-        class TrayPiece extends ImageView {
+        class TrayPiece extends Group {
 
+            private ImageView icon;
             private Rectangle border;
 
             private TrayPiece(int playerIndex, int pieceIndex, Image pieceIcons) {
                 super();
+                makeBackGroundAndBorder(playerIndex);
                 cutAndSetImage(pieceIndex, pieceIcons);
                 setLayoutX(xOffset);
                 setLayoutY(pieceIndex * (Piece.PIECE_SIZE + yOffset) + yOffset);
                 setOnMouseClicked((MouseEvent e) -> {
-                    StrategoFrame.getInstance().getComManager().sendTrayPieceSelected(playerIndex, pieceIndex);
+                    CommunicationManager.getInstance().sendTrayPieceSelected(playerIndex, pieceIndex);
                 });
-                //System.out.println("image with overall index = " + ((playerIndex * 12) + pieceIndex) + " placed at (" + getLayoutX() + "|" + getLayoutY() + ")");
-                makeBorder();
             }
 
             private void cutAndSetImage(int pieceIndex, Image pieceIcons) {
-                //Rectangle2D viewPort = new Rectangle2D(((playerIndex * 12) + pieceIndex) * Piece.PIECE_SIZE, 0, Piece.PIECE_SIZE, Piece.PIECE_SIZE);
-                Rectangle2D viewPort = new Rectangle2D(pieceIndex * Piece.PIECE_SIZE, playerIndex * Piece.PIECE_SIZE, Piece.PIECE_SIZE, Piece.PIECE_SIZE);
-                //System.out.println("New viewport rectangle: (" + viewPort.getMinX() + "|" + viewPort.getMinY() + "|" + viewPort.getWidth() + "|" + viewPort.getHeight() + ")");
-                setImage(pieceIcons);
-                setViewport(viewPort);
+                Rectangle2D viewPort = new Rectangle2D(pieceIndex * Piece.PIECE_SIZE, 0, Piece.PIECE_SIZE, Piece.PIECE_SIZE);
+                icon = new ImageView();
+                icon.setImage(pieceIcons);
+                icon.setViewport(viewPort);
+                getChildren().add(icon);
             }
 
-            public void makeBorder() {
-                border = new Rectangle(Piece.PIECE_SIZE, Piece.PIECE_SIZE, Color.TRANSPARENT);
-                border.setLayoutX(getLayoutX());
-                border.setLayoutY(getLayoutY());
-                border.setStroke(Color.WHITE);
-                border.setStrokeWidth(3);
-                border.setVisible(false);
+            public void makeBackGroundAndBorder(int playerIndex) {
+                border = new Rectangle(Piece.PIECE_SIZE, Piece.PIECE_SIZE, (playerIndex == 0 ? Color.web("#48a4f9") : Color.web("#bf1c1c")));
+                border.setStrokeWidth(2);
                 getChildren().add(border);
 
-                setOnMouseEntered((MouseEvent e) -> border.setVisible(true));
-                setOnMouseExited((MouseEvent e) -> border.setVisible(false));
+                setOnMouseEntered((MouseEvent e) -> border.setStroke(Color.WHITE));
+                setOnMouseExited((MouseEvent e) -> border.setStroke(Color.TRANSPARENT));
             }
         }
 

@@ -72,7 +72,7 @@ public class StrategoFrame extends Stage {
     }
 
     public void setToInGameView() {
-        inGameView = new InGameView(this);
+        inGameView = new InGameView(this, 0);
         scene.setRoot(inGameView);
     }
 

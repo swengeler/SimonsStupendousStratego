@@ -17,6 +17,7 @@ public class StrategoFrame extends Stage {
 
     private void setUp() {
         HBox components = new HBox();
+        components.setStyle("-fx-background-color: #bf1c1c");
         // would be nice to make these window-size based
         sideMenu = new SideMenu();
         inGameView = new InGameView(20);

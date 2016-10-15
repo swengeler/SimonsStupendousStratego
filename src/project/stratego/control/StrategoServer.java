@@ -38,9 +38,11 @@ public class StrategoServer {
                     // all games are full, a new game has to be started to connect the client to it
                     ((ModelComManager) ManagerManager.getModelReceiver()).addStrategoGame(IDCounter);
                     temp = new StrategoServerThread(this, clientSocket, IDCounter, 0);
+                    sendCommandToClient(IDCounter, 0, "sa 0");
                 } else {
                     // client is connected to the last game that was created
                     temp = new StrategoServerThread(this, clientSocket, IDCounter, 1);
+                    sendCommandToClient(IDCounter, 0, "sa 1");
                     IDCounter++;
                 }
                 clients.add(temp);

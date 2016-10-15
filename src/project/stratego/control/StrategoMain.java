@@ -13,11 +13,10 @@ public class StrategoMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        CombinedComManager controller = CombinedComManager.getInstance();
+        ManagerManager.configureMultiPlayer();
+
         primaryStage = new StrategoFrame();
-        controller.setStrategoFrame((StrategoFrame) primaryStage);
-        StrategoGame game = new StrategoGame();
-        controller.setStrategoGame(game);
+        ManagerManager.getViewReceiver().setStrategoFrame((StrategoFrame) primaryStage);
 
         primaryStage.setTitle("Test");
         primaryStage.setResizable(false);

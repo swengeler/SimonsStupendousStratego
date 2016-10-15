@@ -80,10 +80,11 @@ public class StrategoServerThread implements Runnable {
     }
 
     public void sendCommand(String command) {
-        if (out != null)
+        if (out != null) {
             out.println(command);
-        else
-            System.out.println("Client could not send command");
+        } else {
+            System.out.println("Server could not send command to client.");
+        }
     }
 
     public int getGameID() {

@@ -6,8 +6,8 @@ public class ManagerManager {
     private static ViewReceiver viewReceiver;
 
     public static void configureSinglePlayer() {
-        modelReceiver = CombinedComManager.getInstance();
-        viewReceiver = CombinedComManager.getInstance();
+        //modelReceiver = CombinedComManager.getInstance();
+        //viewReceiver = CombinedComManager.getInstance();
     }
 
     public static void configureMultiPlayer() {

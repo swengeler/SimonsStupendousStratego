@@ -90,15 +90,15 @@ public class ModelComManager implements ModelReceiver {
     @Override
     public void sendResetDeployment(int gameID, int playerIndex) {
         // rd = reset deployment, s = self, o = opponent
-        server.sendCommandToClient(gameID, playerIndex, "rd s");
-        server.sendCommandToClient(gameID, Math.abs(1 - playerIndex), "rd o");
+        server.sendCommandToClient(gameID, playerIndex, ("rd " + playerIndex));
+        server.sendCommandToClient(gameID, Math.abs(1 - playerIndex), ("rd " + playerIndex));
     }
 
     @Override
     public void sendPiecePlaced(int gameID, int playerIndex, int pieceIndex, int row, int col) {
         // pp = piece placed, s = self, o = opponent
-        server.sendCommandToClient(gameID, playerIndex, ("pp s " + pieceIndex + " " + row + " " + col));
-        server.sendCommandToClient(gameID, Math.abs(1 - playerIndex), ("pp o " + row + " " + col));
+        server.sendCommandToClient(gameID, 0, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
+        server.sendCommandToClient(gameID, 1, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
     }
 
     @Override

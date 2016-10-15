@@ -6,9 +6,9 @@ interface ViewReceiver {
 
     void setStrategoFrame(StrategoFrame frame);
     void sendResetGame();
-    void sendAutoDeploy();
-    void sendPlayerReady();
+    void sendAutoDeploy(int playerIndex);
+    void sendPlayerReady(int playerIndex);
     void sendTrayPieceSelected(int playerIndex, int index);
-    void sendBoardTileSelected(int row, int col);
+    void sendBoardTileSelected(int playerIndex, int row, int col);
 
 }

@@ -11,6 +11,8 @@ import javafx.scene.shape.*;
 
 public class InGameView extends Pane {
 
+    private int ID;
+
     private BoardArea boardArea;
     private Tray trayNorth, traySouth;
 
@@ -58,6 +60,11 @@ public class InGameView extends Pane {
         traySouth.setLayoutY(0 + padding);
     }
 
+    public void processAssignSide(int playerIndex) {
+        ID = playerIndex;
+        // possibly do other stuff, e.g. change the color of the tray or smth
+    }
+
     public void processPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {
         boardArea.makePiece(playerIndex, pieceIndex, row, col);
     }
@@ -102,4 +109,7 @@ public class InGameView extends Pane {
         boardArea.movePiece(stopRow, stopCol, destRow, destCol);
     }
 
+    public int getID() {
+        return ID;
+    }
 }

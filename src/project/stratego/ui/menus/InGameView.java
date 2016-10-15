@@ -1,20 +1,14 @@
 package project.stratego.ui.menus;
 
 import javafx.geometry.Insets;
-import project.stratego.control.CommunicationManager;
-import project.stratego.ui.StrategoFrame;
+import project.stratego.control.CombinedComManager;
 import project.stratego.ui.components.*;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
-/**
- * Created by Simon on 17/09/2016.
- */
 public class InGameView extends Pane {
 
     private BoardArea boardArea;
@@ -34,7 +28,7 @@ public class InGameView extends Pane {
         Rectangle test = new Rectangle(10, 10, 20, 20);
         test.setFill(Color.WHITE);
         test.setOnMouseClicked((MouseEvent e) -> {
-            CommunicationManager.getInstance().sendAutoDeploy();
+            CombinedComManager.getInstance().sendAutoDeploy();
         });
         getChildren().add(test);
         setStyle("-fx-background-color: linear-gradient(from 0% 50% to 100% 50%, #48a4f9, #bf1c1c);");
@@ -85,12 +79,15 @@ public class InGameView extends Pane {
     }
 
     public void processAttackLost(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        boardArea.revealPiece(orRow, orCol);
         boardArea.movePiece(orRow, orCol, stopRow, stopCol);
         boardArea.attackAnimation(stopRow, stopCol, destRow, destCol);
         boardArea.removePiece(stopRow, stopCol);
     }
 
     public void processAttackTied(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        boardArea.revealPiece(orRow, orCol);
+        boardArea.revealPiece(destRow, destCol);
         boardArea.movePiece(orRow, orCol, stopRow, stopCol);
         boardArea.attackAnimation(stopRow, stopCol, destRow, destCol);
         boardArea.removePiece(stopRow, stopCol);
@@ -98,6 +95,7 @@ public class InGameView extends Pane {
     }
 
     public void processAttackWon(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        boardArea.revealPiece(orRow, orCol);
         boardArea.movePiece(orRow, orCol, stopRow, stopCol);
         boardArea.attackAnimation(stopRow, stopCol, destRow, destCol);
         boardArea.removePiece(destRow, destCol);

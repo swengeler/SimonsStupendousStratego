@@ -13,7 +13,7 @@ public class StrategoMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        CommunicationManager controller = CommunicationManager.getInstance();
+        CombinedComManager controller = CombinedComManager.getInstance();
         primaryStage = new StrategoFrame();
         controller.setStrategoFrame((StrategoFrame) primaryStage);
         StrategoGame game = new StrategoGame();

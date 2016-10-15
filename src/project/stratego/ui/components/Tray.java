@@ -8,8 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import project.stratego.control.CommunicationManager;
-import project.stratego.ui.StrategoFrame;
+import project.stratego.control.CombinedComManager;
 
 public class Tray extends Pane {
 
@@ -36,7 +35,7 @@ public class Tray extends Pane {
                 setLayoutX(xOffset);
                 setLayoutY(pieceIndex * (Piece.PIECE_SIZE + yOffset) + yOffset);
                 setOnMouseClicked((MouseEvent e) -> {
-                    CommunicationManager.getInstance().sendTrayPieceSelected(playerIndex, pieceIndex);
+                    CombinedComManager.getInstance().sendTrayPieceSelected(playerIndex, pieceIndex);
                 });
             }
 

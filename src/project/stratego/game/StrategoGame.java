@@ -1,6 +1,5 @@
 package project.stratego.game;
 
-import project.stratego.control.CommunicationManager;
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.MoveManager;
@@ -10,13 +9,16 @@ public class StrategoGame {
 
     public static final int BOARD_SIZE = 10;
 
-    private GameState currentState;
+    private final int gameID;
+
+    private GameLogic currentState;
     private MoveManager moveManager;
     private BoardTile[][] board;
 
     private Player playerNorth, playerSouth;
 
-    public StrategoGame() {
+    public StrategoGame(int gameID) {
+        this.gameID = gameID;
         boardSetup();
         componentSetup();
     }
@@ -41,13 +43,17 @@ public class StrategoGame {
     }
 
     private void componentSetup() {
-        currentState = new DeploymentState(this, playerNorth, playerSouth);
+        currentState = new DeploymentLogic(this, playerNorth, playerSouth);
         moveManager = new MoveManager(board);
     }
 
     /* Getter methods */
 
-    public GameState getCurrentState() {
+    public int getGameID() {
+        return gameID;
+    }
+
+    public GameLogic getCurrentState() {
         return currentState;
     }
 
@@ -59,7 +65,7 @@ public class StrategoGame {
         return board;
     }
 
-    public BoardTile[][] getCloneBoard() {
+    public BoardTile[][] getBoardClone() {
         BoardTile[][] clone = new BoardTile[board.length][board[0].length];
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
@@ -72,12 +78,12 @@ public class StrategoGame {
     public void switchStates() {
         System.out.println("States switches");
         System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
-        currentState = currentState instanceof DeploymentState ? new PlayingState(this, playerNorth, playerSouth) : new DeploymentState(this, playerNorth, playerSouth);
+        currentState = currentState instanceof DeploymentLogic ? new PlayingLogic(this, playerNorth, playerSouth) : new DeploymentLogic(this, playerNorth, playerSouth);
     }
 
     public void resetGame() {
         boardSetup();
-        currentState = new DeploymentState(this,playerNorth, playerSouth);
+        currentState = new DeploymentLogic(this,playerNorth, playerSouth);
     }
 
 }

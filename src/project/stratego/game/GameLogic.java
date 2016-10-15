@@ -5,36 +5,31 @@ import project.stratego.game.entities.Player;
 import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 
-public abstract class GameState {
+public abstract class GameLogic {
 
     protected StrategoGame parent;
 
-    protected Player firstPlayer, secondPlayer;
-    protected Player currentPlayer, currentOpponent;
+    protected Player playerNorth, playerSouth;
     protected Piece currentPiece;
 
-    public GameState(StrategoGame parent, Player firstPlayer, Player secondPlayer) {
+    public GameLogic(StrategoGame parent, Player playerNorth, Player playerSouth) {
         this.parent = parent;
-        this.firstPlayer = firstPlayer;
-        this.secondPlayer = secondPlayer;
+        this.playerNorth = playerNorth;
+        this.playerSouth = playerSouth;
     }
 
     /**
      * Method for processing the selection of a piece to be deployed on the board from the
      * "tray" from which pieces that are not in the game already can be selected.
      */
-    public void processTraySelect(PlayerType playerType, PieceType pieceType) {}
+    public void processTraySelect(int playerIndex, int pieceIndex) {}
     
     /**
      * Method for processing both the selection of a piece and the selection of a position to
      * move a previously selected piece.
      */
-    public void processBoardSelect(int row, int col) {}
+    public void processBoardSelect(int playerIndex, int row, int col) {}
 
-    public void processPlayerReady() {}
-
-    public void processResetGame() {
-
-    }
+    public void processPlayerReady(int playerIndex) {}
 
 }

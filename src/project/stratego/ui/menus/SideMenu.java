@@ -5,7 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import project.stratego.control.CommunicationManager;
+import project.stratego.control.CombinedComManager;
 
 /**
  *
@@ -71,7 +71,7 @@ public class SideMenu extends Pane {
         Button readyButton = new Button("Ready");
         readyButton.setLayoutX(5);
         readyButton.setLayoutY(5);
-        readyButton.setOnAction((ActionEvent e) -> CommunicationManager.getInstance().sendPlayerReady());
+        readyButton.setOnAction((ActionEvent e) -> CombinedComManager.getInstance().sendPlayerReady());
         Scene snapScene = new Scene(readyButton);
         snapScene.snapshot(null);
 

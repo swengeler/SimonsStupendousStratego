@@ -1,7 +1,6 @@
 package project.stratego.ui;
 
 import javafx.scene.layout.HBox;
-import project.stratego.control.CommunicationManager;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import project.stratego.ui.menus.*;
@@ -18,7 +17,7 @@ public class StrategoFrame extends Stage {
     private void setUp() {
         HBox components = new HBox();
         components.setStyle("-fx-background-color: #bf1c1c");
-        // would be nice to make these window-size based
+
         sideMenu = new SideMenu();
         inGameView = new InGameView(20);
 
@@ -27,7 +26,7 @@ public class StrategoFrame extends Stage {
         Scene scene = new Scene(components);
         setScene(scene);
         setTitle("New UI Test");
-        //setResizable(false);
+        setResizable(false);
         show();
 
         System.out.println(inGameView.getWidth() + " " + inGameView.getHeight());

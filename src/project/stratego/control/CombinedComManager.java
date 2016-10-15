@@ -6,21 +6,21 @@ import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 import project.stratego.ui.StrategoFrame;
 
-public class CommunicationManager {
+public class CombinedComManager {
 
-    private static CommunicationManager instance;
+    private static CombinedComManager instance;
 
     private StrategoFrame strategoFrame;
     private StrategoGame strategoGame;
 
-    public static CommunicationManager getInstance() {
+    public static CombinedComManager getInstance() {
         if (instance == null) {
-            instance = new CommunicationManager();
+            instance = new CombinedComManager();
         }
         return instance;
     }
 
-    private CommunicationManager() {}
+    private CombinedComManager() {}
 
     public void setStrategoFrame(StrategoFrame strategoFrame) {
         this.strategoFrame = strategoFrame;
@@ -49,15 +49,16 @@ public class CommunicationManager {
     }
 
     public void sendAutoDeploy() {
-        ((DeploymentState) strategoGame.getCurrentState()).randomPlaceCurrentPlayer();
+        if (strategoGame.getCurrentState() instanceof DeploymentLogic)
+            ((DeploymentLogic) strategoGame.getCurrentState()).randomPlaceCurrentPlayer();
     }
 
     public void sendPlayerReady() {
         strategoGame.getCurrentState().processPlayerReady();
     }
 
-    public void sendTrayPieceSelected(int playerIndex, int index) {
-        strategoGame.getCurrentState().processTraySelect(PlayerType.values()[playerIndex], PieceType.values()[index]);
+    public void sendTrayPieceSelected(int playerIndex, int pieceIndex) {
+        strategoGame.getCurrentState().processTraySelect(playerIndex, pieceIndex);
     }
 
     public void sendBoardTileSelected(int row, int col) {
@@ -66,35 +67,38 @@ public class CommunicationManager {
 
     /* Model to view methods */
 
-    public void sendTrayActiveUpdate(PieceType type) {
+    // gameID is not used in the ComManager that is not part of the server-configuration
+    // it is still part of the methods below to have matching interfaces (will try to find a more elegant solution)
+
+    public void sendTrayActiveUpdate(int gameID, int pieceIndex) {
         // send command to highlight a certain tray icon
     }
 
-    public void sendActivePieceUpdate(Piece activePiece) {
-        // send command to board Piece with the same ID, eyoo, was geht da
+    public void sendActivePieceUpdate(int gameID, Piece activePiece) {
+
     }
 
-    public void sendPiecePlaced(Piece piecePlaced) {
+    public void sendPiecePlaced(int gameID, Piece piecePlaced) {
         strategoFrame.getInGameView().processPiecePlaced(piecePlaced.getPlayerType().ordinal(), piecePlaced.getType().ordinal(), piecePlaced.getRowPos(), piecePlaced.getColPos());
     }
 
-    public void sendResetDeployment(PlayerType playerType) {
+    public void sendResetDeployment(int gameID, PlayerType playerType) {
         strategoFrame.getInGameView().processResetDeployment(playerType.ordinal());
     }
 
-    public void sendPieceMoved(int orRow, int orCol, int destRow, int destCol) {
+    public void sendPieceMoved(int gameID, int orRow, int orCol, int destRow, int destCol) {
         strategoFrame.getInGameView().processPieceMoved(orRow, orCol, destRow, destCol);
     }
 
-    public void sendHidePiece(Piece pieceToHide) {
+    public void sendHidePiece(int gameID, Piece pieceToHide) {
         strategoFrame.getInGameView().processHidePiece(pieceToHide.getRowPos(), pieceToHide.getColPos());
     }
 
-    public void sendRevealPiece(Piece pieceToReveal) {
+    public void sendRevealPiece(int gameID, Piece pieceToReveal) {
         strategoFrame.getInGameView().processRevealPiece(pieceToReveal.getRowPos(), pieceToReveal.getColPos());
     }
 
-    public void sendAttackLost(int orRow, int orCol, int destRow, int destCol) {
+    public void sendAttackLost(int gameID, int orRow, int orCol, int destRow, int destCol) {
         int rowDiff = destRow - orRow;
         int colDiff = destCol - orCol;
         if (rowDiff != 0) {
@@ -106,7 +110,7 @@ public class CommunicationManager {
         }
     }
 
-    public void sendAttackTied(int orRow, int orCol, int destRow, int destCol) {
+    public void sendAttackTied(int gameID, int orRow, int orCol, int destRow, int destCol) {
         int rowDiff = destRow - orRow;
         int colDiff = destCol - orCol;
         if (rowDiff != 0) {
@@ -118,7 +122,7 @@ public class CommunicationManager {
         }
     }
 
-    public void sendAttackWon(int orRow, int orCol, int destRow, int destCol) {
+    public void sendAttackWon(int gameID, int orRow, int orCol, int destRow, int destCol) {
         int rowDiff = destRow - orRow;
         int colDiff = destCol - orCol;
         if (rowDiff != 0) {

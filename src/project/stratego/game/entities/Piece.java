@@ -62,6 +62,7 @@ public class Piece {
     /* Setter methods */
 
     public void reveal() {
+        System.out.println("Piece at (" + rowPos + "|" + colPos + ") revealed.");
         isRevealed = true;
     }
 

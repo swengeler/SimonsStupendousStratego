@@ -1,6 +1,6 @@
 package project.stratego.game;
 
-import project.stratego.control.CombinedComManager;
+import project.stratego.control.*;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
@@ -15,7 +15,7 @@ public class PlayingLogic extends GameLogic {
         super(parent, firstPlayer, secondPlayer);
         currentPlayer = firstPlayer;
         currentOpponent = secondPlayer;
-        revealPieces();
+        //revealPieces();
     }
 
     @Override
@@ -40,22 +40,23 @@ public class PlayingLogic extends GameLogic {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
             return;
         }
+
         int orRow = currentPlayer.getCurrentPiece().getRowPos();
         int orCol = currentPlayer.getCurrentPiece().getColPos();
         parent.getMoveManager().processMove(currentPlayer, currentOpponent, (currentPiece = currentPlayer.getCurrentPiece()), row, col);
         MoveResult result;
         if ((result = parent.getMoveManager().lastMoveResult()) == MoveResult.MOVE) {
             System.out.println("PIECE MOVED FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            CombinedComManager.getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
+            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKLOST) {
             System.out.println("PIECE LOST ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            CombinedComManager.getInstance().sendAttackLost(parent.getGameID(), orRow, orCol, row, col);
+            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendAttackLost(parent.getGameID(), orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKTIE) {
             System.out.println("PIECE TIED ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            CombinedComManager.getInstance().sendAttackTied(parent.getGameID(), orRow, orCol, row, col);
+            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendAttackTied(parent.getGameID(), orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKWON) {
             System.out.println("PIECE WON ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            CombinedComManager.getInstance().sendAttackWon(parent.getGameID(), orRow, orCol, row, col);
+            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendAttackWon(parent.getGameID(), orRow, orCol, row, col);
         } else if (parent.getBoard()[row][col].getOccupyingPiece() != null && parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() == currentPlayer.getType()) {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
             return;
@@ -75,14 +76,13 @@ public class PlayingLogic extends GameLogic {
         if (!gameOver) {
             System.out.println("player: " + currentPlayer.getActivePieces().size());
             System.out.println("opponent: " + currentOpponent.getActivePieces().size());
-            hidePieces();
+            //hidePieces();
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
-            revealPieces();
+            //revealPieces();
         } else {
             System.out.println("Game over");
-            currentPlayer = currentOpponent;
-            revealPieces();
+            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendGameOver(parent.getGameID());
         }
     }
 
@@ -91,18 +91,27 @@ public class PlayingLogic extends GameLogic {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null && temp.getPlayerType() == currentPlayer.getType() && !temp.isRevealed()) {
-                    CombinedComManager.getInstance().sendHidePiece(parent.getGameID(), temp);
+                    ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendHidePiece(parent.getGameID(), currentPlayer.getType().ordinal(), temp.getRowPos(), temp.getColPos());
                 }
             }
         }
     }
 
     private void revealPieces() {
+        /*for (Piece p : currentPlayer.getActivePieces()) {
+            System.out.println("Piece revealed: " + currentOpponent.getType().ordinal() + " " + p.getRowPos() + " " + p.getColPos() + ".");
+            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), currentOpponent.getType().ordinal(), p.getRowPos(), p.getColPos());
+        }
+        for (Piece p : currentOpponent.getActivePieces()) {
+            System.out.println("Piece revealed: " + currentOpponent.getType().ordinal() + " " + p.getRowPos() + " " + p.getColPos() + ".");
+            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), currentPlayer.getType().ordinal(), p.getRowPos(), p.getColPos());
+        }*/
         Piece temp;
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
-                if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null && temp.getPlayerType() == currentPlayer.getType()) {
-                    CombinedComManager.getInstance().sendRevealPiece(parent.getGameID(), temp);
+                if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null) {
+                    ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), 0, temp.getRowPos(), temp.getColPos());
+                    ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), 1, temp.getRowPos(), temp.getColPos());
                 }
             }
         }

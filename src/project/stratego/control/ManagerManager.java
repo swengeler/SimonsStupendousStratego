@@ -2,8 +2,8 @@ package project.stratego.control;
 
 public class ManagerManager {
 
-    private static ModelReceiver modelReceiver;
-    private static ViewReceiver viewReceiver;
+    private static ModelComManager modelReceiver;
+    private static ViewComManager viewReceiver;
 
     public static void configureSinglePlayer() {
         //modelReceiver = CombinedComManager.getInstance();
@@ -15,11 +15,11 @@ public class ManagerManager {
         viewReceiver = ViewComManager.getInstance();
     }
 
-    public static ModelReceiver getModelReceiver() {
+    public static ModelComManager getModelReceiver() {
         return modelReceiver;
     }
 
-    public static ViewReceiver getViewReceiver() {
+    public static ViewComManager getViewReceiver() {
         return viewReceiver;
     }
 

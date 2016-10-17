@@ -23,6 +23,7 @@ public class StrategoServer {
     private void setUp() {
         try {
             serverSocket = new ServerSocket(PORT);
+            System.out.println("Server started successfully.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,15 +39,18 @@ public class StrategoServer {
                     // all games are full, a new game has to be started to connect the client to it
                     ((ModelComManager) ManagerManager.getModelReceiver()).addStrategoGame(IDCounter);
                     temp = new StrategoServerThread(this, clientSocket, IDCounter, 0);
+                    clients.add(temp);
+                    (new Thread(temp)).start();
                     sendCommandToClient(IDCounter, 0, "sa 0");
                 } else {
                     // client is connected to the last game that was created
                     temp = new StrategoServerThread(this, clientSocket, IDCounter, 1);
-                    sendCommandToClient(IDCounter, 0, "sa 1");
+                    clients.add(temp);
+                    (new Thread(temp)).start();
+                    sendCommandToClient(IDCounter, 1, "sa 1");
+                    System.out.println("Second client connected");
                     IDCounter++;
                 }
-                clients.add(temp);
-                temp.run();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -55,7 +59,8 @@ public class StrategoServer {
 
     public void sendCommandToClient(int gameID, int playerIndex, String command) {
         for (StrategoServerThread s : clients) {
-            if (s.getGameID() == gameID && s.getGameID() == playerIndex) {
+            if (s.getGameID() == gameID && s.getPlayerIndex() == playerIndex) {
+                System.out.println("Client found to send command to: \"" + command + "\".");
                 s.sendCommand(command);
                 return;
             }
@@ -65,7 +70,9 @@ public class StrategoServer {
     public void remove(int gameID) {
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).getGameID() == gameID) {
+                System.out.println("Game removed (ID: " + gameID + ").");
                 clients.get(i).sendCommand("dc");
+                clients.get(i).stopThread();
                 clients.remove(i);
             }
         }

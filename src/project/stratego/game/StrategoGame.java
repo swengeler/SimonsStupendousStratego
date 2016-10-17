@@ -76,8 +76,8 @@ public class StrategoGame {
     }
 
     public void switchStates() {
-        System.out.println("States switches");
-        System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
+        System.out.println("States switched");
+        //System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
         currentState = currentState instanceof DeploymentLogic ? new PlayingLogic(this, playerNorth, playerSouth) : new DeploymentLogic(this, playerNorth, playerSouth);
     }
 

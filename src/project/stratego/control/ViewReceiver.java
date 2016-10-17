@@ -1,3 +1,4 @@
+/*
 package project.stratego.control;
 
 import project.stratego.ui.StrategoFrame;
@@ -12,3 +13,4 @@ interface ViewReceiver {
     void sendBoardTileSelected(int playerIndex, int row, int col);
 
 }
+*/

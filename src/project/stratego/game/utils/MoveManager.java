@@ -58,6 +58,7 @@ public class MoveManager {
             } else if (checkIfAttackWins(movingPiece, destTile.getOccupyingPiece())) {
                 lastMoveResult = MoveResult.ATTACKWON;
                 lastRemovedPiece = destTile.getOccupyingPiece();
+                movingPiece.reveal();
                 destTile.getOccupyingPiece().reveal();
                 destTile.setOccupyingPiece(movingPiece);
                 staticPlayer.removePiece(lastRemovedPiece);

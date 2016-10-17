@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import project.stratego.control.CombinedComManager;
+import project.stratego.control.*;
 
 public class BoardTile extends Group {
 
@@ -47,7 +47,7 @@ public class BoardTile extends Group {
 
     private void makeActions() {
         setOnMouseClicked((MouseEvent e) -> {
-            CombinedComManager.getInstance().sendBoardTileSelected(rowPos, colPos);
+            ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestBoardTileSelected(-1, rowPos, colPos);
         });
         setOnMouseEntered((MouseEvent e) -> setBorderVisible(true));
         setOnMouseExited((MouseEvent e) -> setBorderVisible(false));

@@ -97,7 +97,17 @@ public class BoardArea extends Pane {
     }
 
     public void revealPiece(int row, int col) {
-        board[row][col].getOccupyingPiece().setToRevealedState();
+        if (board[row][col].getOccupyingPiece() != null) {
+            board[row][col].getOccupyingPiece().setToRevealedState();
+        }
+    }
+
+    public void revealAll() {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                revealPiece(row, col);
+            }
+        }
     }
 
     public void removePiece(int row, int col) {

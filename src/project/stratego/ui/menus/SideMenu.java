@@ -5,12 +5,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import project.stratego.control.CombinedComManager;
+import project.stratego.control.*;
+import project.stratego.ui.StrategoFrame;
 
-/**
- *
- */
 public class SideMenu extends Pane {
+
+    private StrategoFrame parent;
 
     private Accordion menu;
 
@@ -18,15 +18,18 @@ public class SideMenu extends Pane {
     private TitledPane multiPlayerMenu;
     private TitledPane helpMenu;
 
-    public SideMenu() {
+    public SideMenu(StrategoFrame parent) {
+        this.parent = parent;
         menu = new Accordion();
         makeSinglePlayerMenu();
         makeMultiPlayerMenu();
         makeHelpMenu();
+        configureChangeListener();
         getChildren().add(menu);
 
         //menu.setStyle("-fx-border-color: black;");
-        setStyle("-fx-background-color: #48a4f9;");
+        //setStyle("-fx-background-color: #48a4f9;");
+        setStyle("-fx-background-color: transparent;");
     }
 
     private void makeSinglePlayerMenu() {
@@ -56,6 +59,7 @@ public class SideMenu extends Pane {
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
         pane.setSpacing(5);
+        pane.setStyle("-fx-background-color: transparent;");
         pane.getChildren().addAll(b1, b2, startButton);
 
         singlePlayerMenu.setContent(pane);
@@ -69,23 +73,34 @@ public class SideMenu extends Pane {
         multiPlayerMenu.setStyle("-fx-font: 22 arial;");
 
         Button readyButton = new Button("Ready");
-        readyButton.setLayoutX(5);
-        readyButton.setLayoutY(5);
-        readyButton.setOnAction((ActionEvent e) -> CombinedComManager.getInstance().sendPlayerReady());
+        readyButton.setOnAction((ActionEvent e) -> ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestPlayerReady());
         Scene snapScene = new Scene(readyButton);
         snapScene.snapshot(null);
 
         Button startButton = new Button("Start game");
-        startButton.setLayoutX(5);
-        startButton.setLayoutY(readyButton.getHeight() + 10);
+        startButton.setOnAction((ActionEvent e) -> {
+            if (!((ViewComManager) ManagerManager.getViewReceiver()).isConnected()) {
+                StrategoClient client = new StrategoClient();
+                (new Thread(client)).start();
+                ((ViewComManager) ManagerManager.getViewReceiver()).setStrategoClient(client);
+            }
+        });
 
-        // Pane pane = new Pane();
-        // pane.getChildren().addAll(b1, b2, startButton);
+        Button autoDeployButton = new Button("Auto deploy");
+        autoDeployButton.setOnAction((ActionEvent e) -> {
+            ((ViewComManager) ManagerManager.getViewReceiver()).requestAutoDeploy();
+        });
+
+        Button resetDeploymentButton = new Button("Reset deployment");
+        resetDeploymentButton.setOnAction((ActionEvent e) -> {
+            ((ViewComManager) ManagerManager.getViewReceiver()).requestResetDeployment();
+        });
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
         pane.setSpacing(5);
-        pane.getChildren().addAll(readyButton, startButton);
+        pane.setStyle("-fx-background-color: transparent;");
+        pane.getChildren().addAll(readyButton, startButton, autoDeployButton, resetDeploymentButton);
 
         multiPlayerMenu.setContent(pane);
 
@@ -104,12 +119,23 @@ public class SideMenu extends Pane {
         );
         helpText.setWrapText(true);
         helpText.setPrefWidth(220);
-        helpText.setStyle("-fx-font: 16 arial;");
+        helpText.setStyle("-fx-font: 16 arial; -fx-background-color: transparent;");
         helpText.setPadding(new Insets(20));
 
         helpMenu.setContent(helpText);
 
         menu.getPanes().add(helpMenu);
+    }
+
+    private void configureChangeListener() {
+        menu.expandedPaneProperty().addListener(((observable, oldValue, newValue) -> {
+            // change between single and multiplayer mode
+            if (newValue == singlePlayerMenu) {
+                //((ViewComManager) ManagerManager.getViewReceiver()).configureSinglePlayer();
+            } else if (newValue == multiPlayerMenu) {
+
+            }
+        }));
     }
 
 }

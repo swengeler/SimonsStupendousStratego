@@ -1,11 +1,12 @@
 package project.stratego.control;
 
+import project.stratego.game.utils.PieceType;
 import project.stratego.ui.StrategoFrame;
 
 /**
  *
  */
-public class ViewComManager implements ViewReceiver {
+public class ViewComManager {
 
     private static ViewComManager instance;
 
@@ -22,41 +23,56 @@ public class ViewComManager implements ViewReceiver {
 
     private StrategoFrame frame;
 
+    /* Methods for managing the connection */
+
+    public boolean isConnected() {
+        return client != null;
+    }
+
     public void setStrategoClient(StrategoClient client) {
         this.client = client;
     }
 
-    @Override
+    public void closeStrategoClient() {
+        client.stopThread();
+        client = null;
+    }
+
     public void setStrategoFrame(StrategoFrame frame) {
         this.frame = frame;
     }
 
-    @Override
-    public void sendResetGame() {
+    /* Requests from view to model */
+
+    public void requestResetGame() {
         client.sendCommandToServer("rs");
     }
 
-    @Override
-    public void sendAutoDeploy(int playerIndex) {
+    public void requestAutoDeploy() {
         client.sendCommandToServer("ad");
     }
 
-    @Override
-    public void sendPlayerReady(int playerIndex) {
+    public void requestResetDeployment() {
+        client.sendCommandToServer("rd");
+    }
+
+    public void requestPlayerReady() {
         client.sendCommandToServer("pr");
     }
 
-    @Override
-    public void sendTrayPieceSelected(int playerIndex, int index) {
-        client.sendCommandToServer("tps " + index);
+    public void requestTrayPieceSelected(int playerIndex, int index) {
+        if (playerIndex == 0 || playerIndex == 1) {
+            client.sendCommandToServer("tps " + index);
+        }
+    }
+    
+    public void requestBoardTileSelected(int playerIndex, int row, int col) {
+        if (playerIndex == 0 || playerIndex == 1) {
+            client.sendCommandToServer("bts " + row + " " + col);
+        }
     }
 
-    @Override
-    public void sendBoardTileSelected(int playerIndex, int row, int col) {
-        client.sendCommandToServer("bts " + row + " " + col);
-    }
-
-    /* Model to view methods (sent by the client) */
+    /* Commands from model to view */
 
     public void sendTrayActiveUpdate(int gameID, int pieceIndex) {
 
@@ -66,44 +82,50 @@ public class ViewComManager implements ViewReceiver {
 
     }
 
-    public void sendAssignSide(int gameID, int playerIndex) {
+    public void sendAssignSide(int playerIndex) {
         frame.getInGameView().processAssignSide(playerIndex);
     }
 
-    public void sendResetDeployment(int gameID, int playerIndex) {
+    public void sendResetDeployment(int playerIndex) {
         frame.getInGameView().processResetDeployment(playerIndex);
     }
 
-    public void sendPiecePlaced(int gameID, int playerIndex, int pieceIndex, int row, int col) {
+    public void sendPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {
+        System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + " (ViewComManager).");
         frame.getInGameView().processPiecePlaced(playerIndex, pieceIndex, row, col);
-        if (frame.getInGameView().getID() != playerIndex) {
+        if (frame.getInGameView().getPlayerIndex() != playerIndex) {
             frame.getInGameView().processHidePiece(row, col);
         }
     }
 
-    public void sendPieceMoved(int gameID, int orRow, int orCol, int destRow, int destCol) {
+    public void sendPieceMoved(int orRow, int orCol, int destRow, int destCol) {
+        frame.getInGameView().processPieceMoved(orRow, orCol, destRow, destCol);
     }
 
-    public void sendHidePiece(int gameID, int playerIndex, int row, int col) {
+    public void sendHidePiece(int row, int col) {
         frame.getInGameView().processHidePiece(row, col);
     }
 
-    public void sendRevealPiece(int gameID, int playerIndex, int row, int col) {
+    public void sendRevealPiece(int row, int col) {
         frame.getInGameView().processRevealPiece(row, col);
     }
 
     // NOTE: the attack methods still have to be fixed (is the processing done on the client or server side?)
 
-    public void sendAttackLost(int gameID, int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+    public void sendAttackLost(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
         frame.getInGameView().processAttackLost(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
-    public void sendAttackTied(int gameID, int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+    public void sendAttackTied(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
         frame.getInGameView().processAttackTied(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
-    public void sendAttackWon(int gameID, int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+    public void sendAttackWon(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
         frame.getInGameView().processAttackWon(orRow, orCol, stopRow, stopCol, destRow, destCol);
+    }
+
+    public void sendGameOver() {
+        frame.getInGameView().processGameOver();
     }
 
 }

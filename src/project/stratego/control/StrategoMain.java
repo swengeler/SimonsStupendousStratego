@@ -18,7 +18,7 @@ public class StrategoMain extends Application {
         primaryStage = new StrategoFrame();
         ManagerManager.getViewReceiver().setStrategoFrame((StrategoFrame) primaryStage);
 
-        primaryStage.setTitle("Test");
+        primaryStage.setTitle("Simon's Stupendous Stratego");
         primaryStage.setResizable(false);
         primaryStage.show();
     }

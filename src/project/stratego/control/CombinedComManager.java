@@ -50,11 +50,11 @@ public class CombinedComManager {
 
     public void sendAutoDeploy() {
         if (strategoGame.getCurrentState() instanceof DeploymentLogic)
-            ((DeploymentLogic) strategoGame.getCurrentState()).randomPlaceCurrentPlayer();
+            ((DeploymentLogic) strategoGame.getCurrentState()).randomPlaceCurrentPlayer(-1);
     }
 
     public void sendPlayerReady() {
-        strategoGame.getCurrentState().processPlayerReady();
+        strategoGame.getCurrentState().processPlayerReady(-1);
     }
 
     public void sendTrayPieceSelected(int playerIndex, int pieceIndex) {
@@ -62,7 +62,7 @@ public class CombinedComManager {
     }
 
     public void sendBoardTileSelected(int row, int col) {
-        strategoGame.getCurrentState().processBoardSelect(row, col);
+        strategoGame.getCurrentState().processBoardSelect(-1, row, col);
     }
 
     /* Model to view methods */

@@ -47,16 +47,16 @@ public class PlayingLogic extends GameLogic {
         MoveResult result;
         if ((result = parent.getMoveManager().lastMoveResult()) == MoveResult.MOVE) {
             System.out.println("PIECE MOVED FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
+            ModelComManager.getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKLOST) {
             System.out.println("PIECE LOST ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendAttackLost(parent.getGameID(), orRow, orCol, row, col);
+            ModelComManager.getInstance().sendAttackLost(parent.getGameID(), orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKTIE) {
             System.out.println("PIECE TIED ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendAttackTied(parent.getGameID(), orRow, orCol, row, col);
+            ModelComManager.getInstance().sendAttackTied(parent.getGameID(), orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKWON) {
             System.out.println("PIECE WON ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendAttackWon(parent.getGameID(), orRow, orCol, row, col);
+            ModelComManager.getInstance().sendAttackWon(parent.getGameID(), orRow, orCol, row, col);
         } else if (parent.getBoard()[row][col].getOccupyingPiece() != null && parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() == currentPlayer.getType()) {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
             return;
@@ -79,10 +79,10 @@ public class PlayingLogic extends GameLogic {
             //hidePieces();
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
-            //revealPieces();
+            ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
         } else {
             System.out.println("Game over");
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendGameOver(parent.getGameID());
+            ModelComManager.getInstance().sendGameOver(parent.getGameID());
         }
     }
 
@@ -91,7 +91,7 @@ public class PlayingLogic extends GameLogic {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null && temp.getPlayerType() == currentPlayer.getType() && !temp.isRevealed()) {
-                    ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendHidePiece(parent.getGameID(), currentPlayer.getType().ordinal(), temp.getRowPos(), temp.getColPos());
+                    ModelComManager.getInstance().sendHidePiece(parent.getGameID(), currentPlayer.getType().ordinal(), temp.getRowPos(), temp.getColPos());
                 }
             }
         }
@@ -110,8 +110,8 @@ public class PlayingLogic extends GameLogic {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null) {
-                    ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), 0, temp.getRowPos(), temp.getColPos());
-                    ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), 1, temp.getRowPos(), temp.getColPos());
+                    ModelComManager.getInstance().sendRevealPiece(parent.getGameID(), 0, temp.getRowPos(), temp.getColPos());
+                    ModelComManager.getInstance().sendRevealPiece(parent.getGameID(), 1, temp.getRowPos(), temp.getColPos());
                 }
             }
         }

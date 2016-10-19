@@ -75,12 +75,18 @@ public class ModelComManager {
     public void requestAutoDeploy(int gameID, int playerIndex) {
         // need proper method for this
         if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+            if (multiPlayer && !server.gameStarted(gameID)) {
+                return;
+            }
             ((DeploymentLogic) findGame(gameID).getCurrentRequestProcessor()).randomPlaceCurrentPlayer(playerIndex);
         }
     }
 
     public void requestResetDeployment(int gameID, int playerIndex) {
         if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+            if (multiPlayer && !server.gameStarted(gameID)) {
+                return;
+            }
             ((DeploymentLogic) findGame(gameID).getCurrentRequestProcessor()).resetDeployment(playerIndex);
         }
     }
@@ -90,19 +96,40 @@ public class ModelComManager {
     }
 
     public void requestTrayPieceSelected(int gameID, int playerIndex, int pieceIndex) {
-        findGame(gameID).getCurrentRequestProcessor().processTraySelect(playerIndex, pieceIndex);
+        if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+            if (multiPlayer && !server.gameStarted(gameID)) {
+                return;
+            }
+            System.out.println("Process tray select");
+            findGame(gameID).getCurrentRequestProcessor().processTraySelect(playerIndex, pieceIndex);
+        }
     }
 
     public void requestBoardTileSelected(int gameID, int playerIndex, int row, int col) {
+        if (multiPlayer && !server.gameStarted(gameID)) {
+            return;
+        }
         findGame(gameID).getCurrentRequestProcessor().processBoardSelect(playerIndex, row, col);
     }
 
     /* Model to view methods*/
 
     public void sendResetGame(int gameID) {
-        sendResetDeployment(gameID, -1);
         if (multiPlayer) {
+            server.sendCommandToClient(gameID, 0, "rg");
+            server.sendCommandToClient(gameID, 1, "rg");
             server.remove(gameID);
+        } else {
+            ViewComManager.getInstance().sendResetGame();
+        }
+    }
+
+    public void sendChangeTurn(int gameID, int playerIndex) {
+        if (multiPlayer) {
+            server.sendCommandToClient(gameID, 0, ("ct " + playerIndex));
+            server.sendCommandToClient(gameID, 1, ("ct " + playerIndex));
+        } else {
+            ViewComManager.getInstance().sendChangeTurn(playerIndex);
         }
     }
 

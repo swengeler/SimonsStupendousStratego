@@ -78,7 +78,17 @@ public class StrategoServer {
                 clients.remove(i);
             }
         }
-        ((ModelComManager) ManagerManager.getModelReceiver()).removeStrategoGame(gameID);
+        ModelComManager.getInstance().removeStrategoGame(gameID);
+    }
+
+    public boolean gameStarted(int gameID) {
+        for (StrategoServerThread c : clients) {
+            if (c.getGameID() == gameID && c.getPlayerIndex() == 1) {
+                System.out.println("Game has started (ID: " + gameID + ").");
+                return true;
+            }
+        }
+        return false;
     }
 
 }

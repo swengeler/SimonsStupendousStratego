@@ -71,7 +71,7 @@ public class ViewComManager {
 
     public void requestResetGame() {
         if (isConnected()) {
-            client.sendCommandToServer("rs");
+            client.sendCommandToServer("rg");
         } else {
             ModelComManager.getInstance().requestResetGame(-1);
         }
@@ -135,8 +135,17 @@ public class ViewComManager {
         frame.getInGameView().processHighlightDeployment(highlight == 0 ? false : true);
     }
 
+    public void sendResetGame() {
+        frame.getInGameView().processResetGame();
+        client = null;
+    }
+
     public void sendResetDeployment(int playerIndex) {
         frame.getInGameView().processResetDeployment(playerIndex);
+    }
+
+    public void sendChangeTurn(int playerIndex) {
+        frame.getInGameView().processChangeTurn(playerIndex);
     }
 
     public void sendPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {

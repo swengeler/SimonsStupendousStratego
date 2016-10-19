@@ -80,6 +80,7 @@ public class StrategoGame {
         System.out.println("States switched");
         //System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
         currentRequestProcessor = currentRequestProcessor instanceof DeploymentLogic ? new PlayingLogic(this, playerNorth, playerSouth) : new DeploymentLogic(this, playerNorth, playerSouth);
+        ModelComManager.getInstance().sendChangeTurn(gameID, 0);
     }
 
     public void resetGame() {

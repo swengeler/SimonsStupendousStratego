@@ -20,8 +20,7 @@ public class InGameView extends Pane {
 
     private BoardArea boardArea;
     private Tray tray;
-    private Text northPlayerName, southPlayerName;
-    private TextFlow northContainer, southContainer;
+    private PlayerNames playerNames;
 
     private Image tileBackground;
     private Image pieceIcons;
@@ -33,7 +32,7 @@ public class InGameView extends Pane {
         makeComponents();
         placeComponents(padding);
         //setPadding(new Insets(padding / 2));
-        setStyle("-fx-background-color: transparent;");
+        setStyle("-fx-background-color: transparent; -fx-padding: 0 20 0 0;");
     }
 
     private void loadImages() {
@@ -45,36 +44,8 @@ public class InGameView extends Pane {
     private void makeComponents() {
         boardArea = new BoardArea(tileBackground, pieceIcons, backsidePieceIcons);
         tray = new Tray(pieceIcons);
-
-        northContainer = new TextFlow();
-        northContainer.setTextAlignment(TextAlignment.CENTER);
-        northContainer.setMinWidth(boardArea.getSize());
-        northContainer.setPrefWidth(boardArea.getSize());
-        //northContainer.setStyle("-fx-border-color: black");
-
-        northPlayerName = new Text("Emperor of the North");
-        northPlayerName.setFont(Font.font("Helvetica", FontWeight.BOLD, 40));
-        northPlayerName.setFill(Color.web("#48a4f9"));
-        northPlayerName.setStroke(Color.WHITE);
-        northPlayerName.setStrokeWidth(1);
-
-        northContainer.getChildren().add(northPlayerName);
-
-        southContainer = new TextFlow();
-        southContainer.setTextAlignment(TextAlignment.CENTER);
-        southContainer.setMinWidth(boardArea.getSize());
-        southContainer.setPrefWidth(boardArea.getSize());
-        //southContainer.setStyle("-fx-border-color: black");
-
-        southPlayerName = new Text("Emperor of the South");
-        southPlayerName.setFont(Font.font("Helvetica", FontWeight.BOLD, 40));
-        southPlayerName.setFill(Color.web("#bf1c1c"));
-        southPlayerName.setStroke(Color.WHITE);
-        southPlayerName.setStrokeWidth(1);
-
-        southContainer.getChildren().add(southPlayerName);
-
-        getChildren().addAll(boardArea, tray, northContainer, southContainer);
+        playerNames = new PlayerNames(boardArea.getSize());
+        getChildren().addAll(boardArea, tray, playerNames);
     }
 
     private void placeComponents(double padding) {
@@ -84,11 +55,7 @@ public class InGameView extends Pane {
         tray.setLayoutX(0 + padding);
         tray.setLayoutY(0 + 45);
 
-        northContainer.setLayoutX(90 + padding);
-        northContainer.setLayoutY(0);
-
-        southContainer.setLayoutX(90 + padding);
-        southContainer.setLayoutY(10 + 45 + boardArea.getSize());
+        playerNames.setLayoutX(90 + padding);
     }
 
     public void processAssignSide(int playerIndex) {
@@ -104,6 +71,11 @@ public class InGameView extends Pane {
 
     public void processGameOver() {
         boardArea.revealAll();
+        playerNames.resetHighlight();
+    }
+
+    public void processChangeTurn(int playerIndex) {
+        playerNames.highlightPlayerName(playerIndex);
     }
 
     public void processPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {
@@ -121,6 +93,12 @@ public class InGameView extends Pane {
         } else {
             boardArea.resetDeployment(playerIndex);
         }
+    }
+
+    public void processResetGame() {
+        processAssignSide(-1);
+        boardArea.reset();
+        playerNames.resetHighlight();
     }
 
     public void processHidePiece(int row, int col) {

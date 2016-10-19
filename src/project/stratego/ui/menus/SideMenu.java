@@ -106,14 +106,16 @@ public class SideMenu extends Pane {
         //helpMenu.setStyle("-fx-font: 22 helvetica;");
 
         Label helpText = new Label(
-            "The game Stratego is a complex strategy game created by our proud ancestors in ancient times. " +
-            "Two players play until they capture the opponent's flag piece or until one of them cannot make any moves. " +
-            "Now go out there and make your family proud, my child."
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non tincidunt leo, " +
+            "id sodales quam. Vivamus in rutrum lorem. Aliquam hendrerit ultricies lectus a finibus. " +
+            "Maecenas augue elit, ullamcorper ac lobortis ut, scelerisque ac orci. Nam dapibus libero aliquam, " +
+            "sagittis magna finibus, consequat lorem. Etiam mollis placerat massa eu maximus. In non fringilla sapien. " +
+            "Ut feugiat condimentum enim vitae molestie. Sed blandit ultricies mauris quis sagittis."
         );
         helpText.setWrapText(true);
         helpText.setPrefWidth(220);
-        helpText.setStyle("-fx-font: 16 arial; -fx-background-color: transparent;");
-        helpText.setPadding(new Insets(20));
+        helpText.setStyle("-fx-font: 18 arial; -fx-text-fill: white; -fx-background-color: transparent;");
+        helpText.setPadding(new Insets(10));
 
         helpMenu.setContent(helpText);
 

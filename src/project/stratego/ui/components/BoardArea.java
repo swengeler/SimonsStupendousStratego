@@ -88,6 +88,14 @@ public class BoardArea extends Pane {
         }
     }
 
+    public void reset() {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                board[row][col].setOccupyingPiece(null);
+            }
+        }
+    }
+
     public void highlightDeploymentArea(int playerIndex, boolean highlight) {
         if (highlight) {
             if (playerIndex == 0) {

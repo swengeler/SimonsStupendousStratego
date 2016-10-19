@@ -43,4 +43,8 @@ public class Warnings {
         stage.showAndWait();
     }
 
+    public static void showOpponentDisonnectedWarning() {
+
+    }
+
 }

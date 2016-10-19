@@ -10,8 +10,8 @@ public class StrategoClient implements Runnable {
 
     private volatile boolean stopThread = false;
 
-    //private static final String SERVER_ADDRESS = "82.165.162.249";
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = "82.165.162.249";
+    //private static final String SERVER_ADDRESS = "localhost";
 
     private static final int SERVER_PORT = 2000;
 
@@ -78,6 +78,11 @@ public class StrategoClient implements Runnable {
         } else if (parts[0].equals("rd")) {
             // own or opponent's deployed pieces reset (clear one board side)
             Platform.runLater(() -> ViewComManager.getInstance().sendResetDeployment(Integer.parseInt(parts[1])));
+        } else if (parts[0].equals("rg")) {
+            // reset game
+            Platform.runLater(() -> ViewComManager.getInstance().sendResetGame());
+        } else if (parts[0].equals("ct")) {
+            Platform.runLater(() -> ViewComManager.getInstance().sendChangeTurn(Integer.parseInt(parts[1])));
         } else if (parts[0].equals("pp")) {
             Platform.runLater(() -> ViewComManager.getInstance().sendPiecePlaced(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4])));
         } else if (parts[0].equals("pm")) {

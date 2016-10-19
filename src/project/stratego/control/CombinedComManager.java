@@ -2,7 +2,6 @@ package project.stratego.control;
 
 import project.stratego.game.entities.Piece;
 import project.stratego.game.*;
-import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 import project.stratego.ui.StrategoFrame;
 
@@ -49,20 +48,20 @@ public class CombinedComManager {
     }
 
     public void sendAutoDeploy() {
-        if (strategoGame.getCurrentState() instanceof DeploymentLogic)
-            ((DeploymentLogic) strategoGame.getCurrentState()).randomPlaceCurrentPlayer(-1);
+        if (strategoGame.getCurrentRequestProcessor() instanceof DeploymentLogic)
+            ((DeploymentLogic) strategoGame.getCurrentRequestProcessor()).randomPlaceCurrentPlayer(-1);
     }
 
     public void sendPlayerReady() {
-        strategoGame.getCurrentState().processPlayerReady(-1);
+        strategoGame.getCurrentRequestProcessor().processPlayerReady(-1);
     }
 
     public void sendTrayPieceSelected(int playerIndex, int pieceIndex) {
-        strategoGame.getCurrentState().processTraySelect(playerIndex, pieceIndex);
+        strategoGame.getCurrentRequestProcessor().processTraySelect(playerIndex, pieceIndex);
     }
 
     public void sendBoardTileSelected(int row, int col) {
-        strategoGame.getCurrentState().processBoardSelect(-1, row, col);
+        strategoGame.getCurrentRequestProcessor().processBoardSelect(-1, row, col);
     }
 
     /* Model to view methods */

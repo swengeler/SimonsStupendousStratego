@@ -37,7 +37,7 @@ public class StrategoServer {
                 clientSocket = serverSocket.accept();
                 if (clients.size() % 2 == 0) {
                     // all games are full, a new game has to be started to connect the client to it
-                    ((ModelComManager) ManagerManager.getModelReceiver()).addStrategoGame(IDCounter);
+                    ModelComManager.getInstance().addStrategoGame(IDCounter);
                     temp = new StrategoServerThread(this, clientSocket, IDCounter, 0);
                     clients.add(temp);
                     (new Thread(temp)).start();
@@ -48,6 +48,8 @@ public class StrategoServer {
                     clients.add(temp);
                     (new Thread(temp)).start();
                     sendCommandToClient(IDCounter, 1, "sa 1");
+                    sendCommandToClient(IDCounter, 0, "hd 1");
+                    sendCommandToClient(IDCounter, 1, "hd 1");
                     System.out.println("Second client connected");
                     IDCounter++;
                 }

@@ -20,6 +20,8 @@ public class ModelComManager {
     private StrategoServer server;
     private ArrayList<StrategoGame> activeGames;
 
+    private boolean multiPlayer;
+
     private ModelComManager() {
         activeGames = new ArrayList<>();
     }
@@ -52,38 +54,57 @@ public class ModelComManager {
         return null;
     }
 
-    /* View to model methods (sent by the server) */
+    public void configureMultiPlayer() {
+        multiPlayer = true;
+    }
+
+    public void configureSinglePlayer() {
+        multiPlayer = false;
+        activeGames.add(new StrategoGame(-1));
+    }
+
+    /* View to model methods */
 
     public void requestResetGame(int gameID) {
-        findGame(gameID).resetGame();
+        if (activeGames.size() != 0) {
+            System.out.println("Request reset game");
+            findGame(gameID).resetGame();
+        }
     }
 
     public void requestAutoDeploy(int gameID, int playerIndex) {
         // need proper method for this
-        if (findGame(gameID).getCurrentState() instanceof DeploymentLogic) {
-            ((DeploymentLogic) findGame(gameID).getCurrentState()).randomPlaceCurrentPlayer(playerIndex);
+        if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+            ((DeploymentLogic) findGame(gameID).getCurrentRequestProcessor()).randomPlaceCurrentPlayer(playerIndex);
         }
     }
 
     public void requestResetDeployment(int gameID, int playerIndex) {
-        if (findGame(gameID).getCurrentState() instanceof DeploymentLogic) {
-            ((DeploymentLogic) findGame(gameID).getCurrentState()).resetDeployment(playerIndex);
+        if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+            ((DeploymentLogic) findGame(gameID).getCurrentRequestProcessor()).resetDeployment(playerIndex);
         }
     }
 
     public void requestPlayerReady(int gameID, int playerIndex) {
-        findGame(gameID).getCurrentState().processPlayerReady(playerIndex);
+        findGame(gameID).getCurrentRequestProcessor().processPlayerReady(playerIndex);
     }
 
     public void requestTrayPieceSelected(int gameID, int playerIndex, int pieceIndex) {
-        findGame(gameID).getCurrentState().processTraySelect(playerIndex, pieceIndex);
+        findGame(gameID).getCurrentRequestProcessor().processTraySelect(playerIndex, pieceIndex);
     }
 
     public void requestBoardTileSelected(int gameID, int playerIndex, int row, int col) {
-        findGame(gameID).getCurrentState().processBoardSelect(playerIndex, row, col);
+        findGame(gameID).getCurrentRequestProcessor().processBoardSelect(playerIndex, row, col);
     }
 
     /* Model to view methods*/
+
+    public void sendResetGame(int gameID) {
+        sendResetDeployment(gameID, -1);
+        if (multiPlayer) {
+            server.remove(gameID);
+        }
+    }
 
     public void sendTrayActiveUpdate(int gameID, int pieceIndex) {
 
@@ -94,32 +115,52 @@ public class ModelComManager {
     }
 
     public void sendResetDeployment(int gameID, int playerIndex) {
-        // rd = reset deployment, s = self, o = opponent
-        server.sendCommandToClient(gameID, 0, ("rd " + playerIndex));
-        server.sendCommandToClient(gameID, 1, ("rd " + playerIndex));
+        if (multiPlayer) {
+            // rd = reset deployment, s = self, o = opponent
+            server.sendCommandToClient(gameID, 0, ("rd " + playerIndex));
+            server.sendCommandToClient(gameID, 1, ("rd " + playerIndex));
+        } else {
+            ViewComManager.getInstance().sendResetDeployment(playerIndex);
+        }
     }
 
     public void sendPiecePlaced(int gameID, int playerIndex, int pieceIndex, int row, int col) {
-        // pp = piece placed, s = self, o = opponent
-        System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + ".");
-        server.sendCommandToClient(gameID, 0, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
-        server.sendCommandToClient(gameID, 1, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
+        if (multiPlayer) {
+            // pp = piece placed, s = self, o = opponent
+            System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + ".");
+            server.sendCommandToClient(gameID, 0, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
+            server.sendCommandToClient(gameID, 1, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
+        } else {
+            ViewComManager.getInstance().sendPiecePlaced(playerIndex, pieceIndex, row, col);
+        }
     }
 
     public void sendPieceMoved(int gameID, int orRow, int orCol, int destRow, int destCol) {
-        // pm = piece moved
-        server.sendCommandToClient(gameID, 0, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
-        server.sendCommandToClient(gameID, 1, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
+        if (multiPlayer) {
+            // pm = piece moved
+            server.sendCommandToClient(gameID, 0, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
+            server.sendCommandToClient(gameID, 1, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
+        } else {
+            ViewComManager.getInstance().sendPieceMoved(orRow, orCol, destRow, destCol);
+        }
     }
 
     public void sendHidePiece(int gameID, int playerIndex, int row, int col) {
-        // ph = piece hidden
-        server.sendCommandToClient(gameID, playerIndex, ("ph " + row + " " + col));
+        if (multiPlayer) {
+            // ph = piece hidden
+            server.sendCommandToClient(gameID, playerIndex, ("ph " + playerIndex + " " + row + " " + col));
+        } else {
+            ViewComManager.getInstance().sendHidePiece(playerIndex, row, col);
+        }
     }
 
     public void sendRevealPiece(int gameID, int playerIndex, int row, int col) {
-        // ph = piece revealed
-        server.sendCommandToClient(gameID, playerIndex, ("pr " + row + " " + col));
+        if (multiPlayer) {
+            // ph = piece revealed
+            server.sendCommandToClient(gameID, playerIndex, ("pr " + playerIndex + " " + row + " " + col));
+        } else {
+            ViewComManager.getInstance().sendRevealPiece(playerIndex, row, col);
+        }
     }
 
     public void sendAttackLost(int gameID, int orRow, int orCol, int destRow, int destCol) {
@@ -128,12 +169,20 @@ public class ModelComManager {
         int colDiff = destCol - orCol;
         if (rowDiff != 0) {
             // move was horizontal
-            server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
-            server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+            if (multiPlayer) {
+                server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+                server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+            } else {
+                ViewComManager.getInstance().sendAttackLost(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
+            }
         } else {
-            // move was vertical
-            server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
-            server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+            if (multiPlayer) {
+                // move was vertical
+                server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+                server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+            } else {
+                ViewComManager.getInstance().sendAttackLost(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
+            }
         }
     }
 
@@ -143,12 +192,20 @@ public class ModelComManager {
         int colDiff = destCol - orCol;
         if (rowDiff != 0) {
             // move was horizontal
-            server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
-            server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+            if (multiPlayer) {
+                server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+                server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+            } else {
+                ViewComManager.getInstance().sendAttackTied(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
+            }
         } else {
             // move was vertical
-            server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
-            server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+            if (multiPlayer) {
+                server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+                server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+            } else {
+                ViewComManager.getInstance().sendAttackTied(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
+            }
         }
     }
 
@@ -158,20 +215,32 @@ public class ModelComManager {
         int colDiff = destCol - orCol;
         if (rowDiff != 0) {
             // move was horizontal
-            server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
-            server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+            if (multiPlayer) {
+                server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+                server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
+            } else {
+                ViewComManager.getInstance().sendAttackWon(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
+            }
         } else {
             // move was vertical
-            server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
-            server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+            if (multiPlayer) {
+                server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+                server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
+            } else {
+                ViewComManager.getInstance().sendAttackWon(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
+            }
         }
     }
 
     public void sendGameOver(int gameID) {
-        server.sendCommandToClient(gameID, 0, "go");
-        server.sendCommandToClient(gameID, 1, "go");
-        server.remove(gameID);
-        activeGames.remove(findGame(gameID));
+        if (multiPlayer) {
+            server.sendCommandToClient(gameID, 0, "go");
+            server.sendCommandToClient(gameID, 1, "go");
+            server.remove(gameID);
+            activeGames.remove(findGame(gameID));
+        } else {
+            ViewComManager.getInstance().sendGameOver();
+        }
     }
 
 }

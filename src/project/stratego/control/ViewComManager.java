@@ -2,10 +2,8 @@ package project.stratego.control;
 
 import project.stratego.game.utils.PieceType;
 import project.stratego.ui.StrategoFrame;
+import project.stratego.ui.menus.InGameView;
 
-/**
- *
- */
 public class ViewComManager {
 
     private static ViewComManager instance;
@@ -20,13 +18,14 @@ public class ViewComManager {
     private ViewComManager() {}
 
     private StrategoClient client;
-
     private StrategoFrame frame;
+
+    private boolean multiPlayer;
 
     /* Methods for managing the connection */
 
     public boolean isConnected() {
-        return client != null;
+        return multiPlayer && client != null;
     }
 
     public void setStrategoClient(StrategoClient client) {
@@ -42,33 +41,79 @@ public class ViewComManager {
         this.frame = frame;
     }
 
+    public void configureMultiPlayer() {
+        multiPlayer = true;
+        frame.getInGameView().processAssignSide(-1);
+    }
+
+    public void configureSinglePlayer() {
+        multiPlayer = false;
+        if (client != null) {
+            client.stopThread();
+            client = null;
+        }
+        ModelComManager.getInstance().configureSinglePlayer();
+        requestResetGame();
+        sendAssignSide(InGameView.DEFAULT_PLAYER_ID);
+    }
+
     /* Requests from view to model */
 
+    public void requestStartGame() {
+        if (multiPlayer && client == null) {
+            StrategoClient client = new StrategoClient();
+            (new Thread(client)).start();
+            this.client = client;
+        } else {
+            // send request for AI to set up and play
+        }
+    }
+
     public void requestResetGame() {
-        client.sendCommandToServer("rs");
+        if (isConnected()) {
+            client.sendCommandToServer("rs");
+        } else {
+            ModelComManager.getInstance().requestResetGame(-1);
+        }
     }
 
     public void requestAutoDeploy() {
-        client.sendCommandToServer("ad");
+        if (isConnected()) {
+            client.sendCommandToServer("ad");
+        } else {
+            ModelComManager.getInstance().requestAutoDeploy(-1, InGameView.DEFAULT_PLAYER_ID);
+        }
     }
 
     public void requestResetDeployment() {
-        client.sendCommandToServer("rd");
+        if (isConnected()) {
+            client.sendCommandToServer("rd");
+        } else {
+            ModelComManager.getInstance().requestResetDeployment(-1, InGameView.DEFAULT_PLAYER_ID);
+        }
     }
 
     public void requestPlayerReady() {
-        client.sendCommandToServer("pr");
+        if (isConnected()) {
+            client.sendCommandToServer("pr");
+        } else {
+            ModelComManager.getInstance().requestPlayerReady(-1, InGameView.DEFAULT_PLAYER_ID);
+        }
     }
 
-    public void requestTrayPieceSelected(int playerIndex, int index) {
-        if (playerIndex == 0 || playerIndex == 1) {
+    public void requestTrayPieceSelected(int index) {
+        if (isConnected()) {
             client.sendCommandToServer("tps " + index);
+        } else {
+            ModelComManager.getInstance().requestTrayPieceSelected(-1, InGameView.DEFAULT_PLAYER_ID, index);
         }
     }
     
-    public void requestBoardTileSelected(int playerIndex, int row, int col) {
-        if (playerIndex == 0 || playerIndex == 1) {
+    public void requestBoardTileSelected(int row, int col) {
+        if (isConnected()) {
             client.sendCommandToServer("bts " + row + " " + col);
+        } else {
+            ModelComManager.getInstance().requestBoardTileSelected(-1, InGameView.DEFAULT_PLAYER_ID, row, col);
         }
     }
 
@@ -84,6 +129,10 @@ public class ViewComManager {
 
     public void sendAssignSide(int playerIndex) {
         frame.getInGameView().processAssignSide(playerIndex);
+    }
+
+    public void sendHighlightDeployment(int highlight) {
+        frame.getInGameView().processHighlightDeployment(highlight == 0 ? false : true);
     }
 
     public void sendResetDeployment(int playerIndex) {
@@ -102,12 +151,16 @@ public class ViewComManager {
         frame.getInGameView().processPieceMoved(orRow, orCol, destRow, destCol);
     }
 
-    public void sendHidePiece(int row, int col) {
-        frame.getInGameView().processHidePiece(row, col);
+    public void sendHidePiece(int playerIndex, int row, int col) {
+        if (frame.getInGameView().getPlayerIndex() != playerIndex) {
+            frame.getInGameView().processHidePiece(row, col);
+        }
     }
 
-    public void sendRevealPiece(int row, int col) {
-        frame.getInGameView().processRevealPiece(row, col);
+    public void sendRevealPiece(int playerIndex, int row, int col) {
+        if (frame.getInGameView().getPlayerIndex() != playerIndex) {
+            frame.getInGameView().processRevealPiece(row, col);
+        }
     }
 
     // NOTE: the attack methods still have to be fixed (is the processing done on the client or server side?)

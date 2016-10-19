@@ -9,6 +9,7 @@ public class ServerMain {
         StrategoServer server = new StrategoServer();
         ManagerManager.configureMultiPlayer();
         (ModelComManager.getInstance()).setStrategoServer(server);
+        ModelComManager.getInstance().configureMultiPlayer();
         server.launch();
     }
 

@@ -47,7 +47,7 @@ public class BoardTile extends Group {
 
     private void makeActions() {
         setOnMouseClicked((MouseEvent e) -> {
-            ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestBoardTileSelected(-1, rowPos, colPos);
+            ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestBoardTileSelected(rowPos, colPos);
         });
         setOnMouseEntered((MouseEvent e) -> setBorderVisible(true));
         setOnMouseExited((MouseEvent e) -> setBorderVisible(false));

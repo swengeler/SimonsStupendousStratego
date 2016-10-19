@@ -38,7 +38,7 @@ public class Tray extends Pane {
         private final int pieceIndex;
 
         private ImageView icon;
-        private Rectangle border;
+        private Rectangle background;
 
         private TrayPiece(int pieceIndex, Image pieceIcons) {
             super();
@@ -58,24 +58,31 @@ public class Tray extends Pane {
         }
 
         public void makeBackGroundAndBorder() {
-            //border = new Rectangle(Piece.PIECE_SIZE, Piece.PIECE_SIZE, (playerIndex == 0 ? Color.web("#48a4f9") : Color.web("#bf1c1c")));
-            border = new Rectangle(Piece.PIECE_SIZE, Piece.PIECE_SIZE, Color.web("#bcbcbc"));
-            border.setStrokeWidth(2);
-            getChildren().add(border);
+            //background = new Rectangle(Piece.PIECE_SIZE, Piece.PIECE_SIZE, (playerIndex == 0 ? Color.web("#48a4f9") : Color.web("#bf1c1c")));
+            background = new Rectangle(Piece.PIECE_SIZE, Piece.PIECE_SIZE, Color.web("#bcbcbc"));
+            background.setStrokeWidth(2);
+            background.setStroke(Color.BLACK);
+            getChildren().add(background);
 
-            setOnMouseEntered((MouseEvent e) -> border.setStroke(Color.WHITE));
-            setOnMouseExited((MouseEvent e) -> border.setStroke(Color.TRANSPARENT));
+            setOnMouseEntered((MouseEvent e) -> background.setStroke(Color.WHITE));
+            setOnMouseExited((MouseEvent e) -> background.setStroke(Color.BLACK));
         }
 
         public void setPlayer(int playerIndex) {
             if (playerIndex == 0) {
-                border.setFill(Color.web("#48a4f9"));
+                background.setFill(Color.web("#48a4f9"));
+                setOnMouseClicked((MouseEvent e) -> {
+                    ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestTrayPieceSelected(pieceIndex);
+                });
             } else if (playerIndex == 1) {
-                border.setFill(Color.web("#bf1c1c"));
+                background.setFill(Color.web("#bf1c1c"));
+                setOnMouseClicked((MouseEvent e) -> {
+                    ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestTrayPieceSelected(pieceIndex);
+                });
+            } else {
+                background.setFill(Color.web("#bcbcbc"));
+                setOnMouseClicked(null);
             }
-            setOnMouseClicked((MouseEvent e) -> {
-                ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestTrayPieceSelected(playerIndex, pieceIndex);
-            });
         }
 
     }

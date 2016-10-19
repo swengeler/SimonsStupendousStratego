@@ -5,8 +5,11 @@ import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class BoardArea extends Pane {
+
+    private static final double TILE_SPACING = 1;
 
     private Group northDeploymentArea;
     private Group southDeploymentArea;
@@ -27,40 +30,33 @@ public class BoardArea extends Pane {
     private void makeGrid() {
         board = new BoardTile[10][10];
 
+        northDeploymentArea = new Group();
+        southDeploymentArea = new Group();
+
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 BoardTile temp = new BoardTile(row, col, tileBackground);
-                temp.setLayoutX(col * (BoardTile.TILE_SIZE + 2) + 1);
-                temp.setLayoutY(row * (BoardTile.TILE_SIZE + 2) + 1);
-                getChildren().add(temp);
+                temp.setLayoutX(col * (BoardTile.TILE_SIZE + 2 * TILE_SPACING) + TILE_SPACING);
+                temp.setLayoutY(row * (BoardTile.TILE_SIZE + 2 * TILE_SPACING) + TILE_SPACING);
+                if ((row == 4 || row == 5) && (col == 2 || col == 3 || col == 6 || col == 7)) {
+                    temp.setBorderColor(Color.TRANSPARENT);
+                }
+                //getChildren().add(temp);
 
                 board[row][col] = temp;
 
-                /*if (row < 4) {
+
+                if (row < 4) {
                     northDeploymentArea.getChildren().add(temp);
                 } else if (row > 5) {
                     southDeploymentArea.getChildren().add(temp);
                 } else {
                     getChildren().add(temp);
-                }*/
+                }
             }
         }
 
-        northDeploymentArea = new Group();
-        southDeploymentArea = new Group();
-
         getChildren().addAll(northDeploymentArea, southDeploymentArea);
-        //setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-
-        DropShadow northHighlight = new DropShadow(100, Color.BLUE);
-        northDeploymentArea.setEffect(northHighlight);
-        DropShadow southHighlight = new DropShadow(100, Color.RED);
-        southDeploymentArea.setEffect(southHighlight);
-        /*setOnMouseClicked((MouseEvent e) -> {
-            TranslateTransition t = new TranslateTransition (new Duration(200), this);
-            t.setByX(-200);
-            t.play();
-        });*/
     }
 
     public void makePiece(int playerIndex, int pieceIndex, int row, int col) {
@@ -92,6 +88,22 @@ public class BoardArea extends Pane {
         }
     }
 
+    public void highlightDeploymentArea(int playerIndex, boolean highlight) {
+        if (highlight) {
+            if (playerIndex == 0) {
+                northDeploymentArea.setEffect(new DropShadow(10, Color.WHITE));
+            } else if (playerIndex == 1) {
+                southDeploymentArea.setEffect(new DropShadow(10, Color.WHITE));
+            }
+        } else {
+            if (playerIndex == 0) {
+                northDeploymentArea.setEffect(null);
+            } else if (playerIndex == 1) {
+                southDeploymentArea.setEffect(null);
+            }
+        }
+    }
+
     public void hidePiece(int row, int col) {
         board[row][col].getOccupyingPiece().setToHiddenState();
     }
@@ -116,6 +128,10 @@ public class BoardArea extends Pane {
 
     public void attackAnimation(int rowAttacking, int colAttacking, int rowDefending, int colDefending) {
 
+    }
+
+    public double getSize() {
+        return 10 * (BoardTile.TILE_SIZE + 2 * TILE_SPACING);
     }
 
 }

@@ -100,26 +100,26 @@ public class StrategoServerThread implements Runnable {
         System.out.println("Command received from client (on server ID: " + gameID + ", player index: " + playerIndex + "): " + command + ".");
         if (command.equals("rg")) {
             // reset game
-            ((ModelComManager) ManagerManager.getModelReceiver()).requestResetGame(gameID);
+            ModelComManager.getInstance().requestResetGame(gameID);
         } else if (command.equals("rd")) {
-            ((ModelComManager) ManagerManager.getModelReceiver()).requestResetDeployment(gameID, playerIndex);
+            ModelComManager.getInstance().requestResetDeployment(gameID, playerIndex);
         } else if (command.equals("pr")) {
             // player ready
-            ((ModelComManager) ManagerManager.getModelReceiver()).requestPlayerReady(gameID, playerIndex);
+            ModelComManager.getInstance().requestPlayerReady(gameID, playerIndex);
         } else if (command.equals("ad")) {
             // auto deploy
-            ((ModelComManager) ManagerManager.getModelReceiver()).requestAutoDeploy(gameID, playerIndex);
+            ModelComManager.getInstance().requestAutoDeploy(gameID, playerIndex);
         } else if (command.startsWith("tps")) {
             // tray piece selected
             String[] parts = command.split(" ");
             int pieceIndex = Integer.parseInt(parts[1]);
-            ((ModelComManager) ManagerManager.getModelReceiver()).requestTrayPieceSelected(gameID, playerIndex, pieceIndex);
+            ModelComManager.getInstance().requestTrayPieceSelected(gameID, playerIndex, pieceIndex);
         } else if (command.startsWith("bts")) {
             // board tile selected
             String[] parts = command.split(" ");
             int row = Integer.parseInt(parts[1]);
             int col = Integer.parseInt(parts[2]);
-            ((ModelComManager) ManagerManager.getModelReceiver()).requestBoardTileSelected(gameID, playerIndex, row, col);
+            ModelComManager.getInstance().requestBoardTileSelected(gameID, playerIndex, row, col);
         }
     }
 

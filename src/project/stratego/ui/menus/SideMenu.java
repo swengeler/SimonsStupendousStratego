@@ -35,7 +35,7 @@ public class SideMenu extends Pane {
     private void makeSinglePlayerMenu() {
         singlePlayerMenu = new TitledPane();
         singlePlayerMenu.setText("Singleplayer");
-        singlePlayerMenu.setStyle("-fx-font: 22 arial;");
+        //singlePlayerMenu.setStyle("-fx-font: 22 helvetica;");
 
         Button b1 = new Button("Placeholder button 1");
         b1.setLayoutX(5);
@@ -43,15 +43,14 @@ public class SideMenu extends Pane {
         Scene snapScene = new Scene(b1);
         snapScene.snapshot(null);
 
-        Button b2 = new Button("Placeholder button 2");
-        b2.setLayoutX(5);
-        b2.setLayoutY(b1.getHeight() + 10);
-        snapScene = new Scene(b2);
-        snapScene.snapshot(null);
+        Button autoDeployButton = new Button("Auto deploy");
+        autoDeployButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestAutoDeploy());
+
+        Button resetDeploymentButton = new Button("Reset deployment");
+        resetDeploymentButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
 
         Button startButton = new Button("Start game");
-        startButton.setLayoutX(5);
-        startButton.setLayoutY(b1.getHeight() + b2.getHeight() + 15);
+        startButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
 
         // Pane pane = new Pane();
         // pane.getChildren().addAll(b1, b2, startButton);
@@ -60,7 +59,7 @@ public class SideMenu extends Pane {
         pane.setPadding(new Insets(5));
         pane.setSpacing(5);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(b1, b2, startButton);
+        pane.getChildren().addAll(autoDeployButton, resetDeploymentButton, startButton);
 
         singlePlayerMenu.setContent(pane);
 
@@ -70,31 +69,25 @@ public class SideMenu extends Pane {
     private void makeMultiPlayerMenu() {
         multiPlayerMenu = new TitledPane();
         multiPlayerMenu.setText("Multiplayer");
-        multiPlayerMenu.setStyle("-fx-font: 22 arial;");
+        //multiPlayerMenu.setStyle("-fx-font: 22 helvetica;");
 
         Button readyButton = new Button("Ready");
-        readyButton.setOnAction((ActionEvent e) -> ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestPlayerReady());
+        readyButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestPlayerReady());
         Scene snapScene = new Scene(readyButton);
         snapScene.snapshot(null);
 
         Button startButton = new Button("Start game");
-        startButton.setOnAction((ActionEvent e) -> {
-            if (!((ViewComManager) ManagerManager.getViewReceiver()).isConnected()) {
-                StrategoClient client = new StrategoClient();
-                (new Thread(client)).start();
-                ((ViewComManager) ManagerManager.getViewReceiver()).setStrategoClient(client);
-            }
-        });
+        startButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
 
         Button autoDeployButton = new Button("Auto deploy");
         autoDeployButton.setOnAction((ActionEvent e) -> {
-            ((ViewComManager) ManagerManager.getViewReceiver()).requestAutoDeploy();
+            if (ViewComManager.getInstance().isConnected()) {
+                ViewComManager.getInstance().requestAutoDeploy();
+            }
         });
 
         Button resetDeploymentButton = new Button("Reset deployment");
-        resetDeploymentButton.setOnAction((ActionEvent e) -> {
-            ((ViewComManager) ManagerManager.getViewReceiver()).requestResetDeployment();
-        });
+        resetDeploymentButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
@@ -110,7 +103,7 @@ public class SideMenu extends Pane {
     private void makeHelpMenu() {
         helpMenu = new TitledPane();
         helpMenu.setText("Help");
-        helpMenu.setStyle("-fx-font: 22 arial;");
+        //helpMenu.setStyle("-fx-font: 22 helvetica;");
 
         Label helpText = new Label(
             "The game Stratego is a complex strategy game created by our proud ancestors in ancient times. " +
@@ -131,9 +124,11 @@ public class SideMenu extends Pane {
         menu.expandedPaneProperty().addListener(((observable, oldValue, newValue) -> {
             // change between single and multiplayer mode
             if (newValue == singlePlayerMenu) {
-                //((ViewComManager) ManagerManager.getViewReceiver()).configureSinglePlayer();
+                ViewComManager.getInstance().requestResetGame();
+                ViewComManager.getInstance().configureSinglePlayer();
             } else if (newValue == multiPlayerMenu) {
-
+                ViewComManager.getInstance().requestResetGame();
+                ViewComManager.getInstance().configureMultiPlayer();
             }
         }));
     }

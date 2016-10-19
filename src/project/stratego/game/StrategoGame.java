@@ -1,5 +1,6 @@
 package project.stratego.game;
 
+import project.stratego.control.ModelComManager;
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.MoveManager;
@@ -11,7 +12,7 @@ public class StrategoGame {
 
     private final int gameID;
 
-    private GameLogic currentState;
+    private GameLogic currentRequestProcessor;
     private MoveManager moveManager;
     private BoardTile[][] board;
 
@@ -43,7 +44,7 @@ public class StrategoGame {
     }
 
     private void componentSetup() {
-        currentState = new DeploymentLogic(this, playerNorth, playerSouth);
+        currentRequestProcessor = new DeploymentLogic(this, playerNorth, playerSouth);
         moveManager = new MoveManager(board);
     }
 
@@ -53,8 +54,8 @@ public class StrategoGame {
         return gameID;
     }
 
-    public GameLogic getCurrentState() {
-        return currentState;
+    public GameLogic getCurrentRequestProcessor() {
+        return currentRequestProcessor;
     }
 
     public MoveManager getMoveManager() {
@@ -78,12 +79,13 @@ public class StrategoGame {
     public void switchStates() {
         System.out.println("States switched");
         //System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
-        currentState = currentState instanceof DeploymentLogic ? new PlayingLogic(this, playerNorth, playerSouth) : new DeploymentLogic(this, playerNorth, playerSouth);
+        currentRequestProcessor = currentRequestProcessor instanceof DeploymentLogic ? new PlayingLogic(this, playerNorth, playerSouth) : new DeploymentLogic(this, playerNorth, playerSouth);
     }
 
     public void resetGame() {
         boardSetup();
-        currentState = new DeploymentLogic(this,playerNorth, playerSouth);
+        currentRequestProcessor = new DeploymentLogic(this,playerNorth, playerSouth);
+        ModelComManager.getInstance().sendResetGame(gameID);
     }
 
 }

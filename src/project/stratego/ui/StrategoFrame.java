@@ -1,10 +1,10 @@
 package project.stratego.ui;
 
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import project.stratego.control.ManagerManager;
 import project.stratego.control.ViewComManager;
 import project.stratego.ui.menus.*;
 
@@ -28,16 +28,17 @@ public class StrategoFrame extends Stage {
         components.getChildren().addAll(sideMenu, inGameView);
 
         Scene scene = new Scene(components);
-        setScene(scene);
         scene.getStylesheets().add("/menustyle.css");
+        setScene(scene);
         setTitle("Simon's Stupendous Stratego");
+        getIcons().add(new Image(getClass().getResourceAsStream("/icons/program_icon.png")));
         setResizable(false);
         show();
         setOnCloseRequest((WindowEvent w) -> {
-            if (((ViewComManager) ManagerManager.getViewReceiver()).isConnected()) {
+            if (ViewComManager.getInstance().isConnected()) {
                 // close client thread
                 System.out.println("window close requested");
-                ((ViewComManager) ManagerManager.getViewReceiver()).closeStrategoClient();
+                ViewComManager.getInstance().closeStrategoClient();
             }
         });
 

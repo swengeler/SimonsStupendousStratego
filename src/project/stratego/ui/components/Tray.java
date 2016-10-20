@@ -3,6 +3,7 @@ package project.stratego.ui.components;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -11,7 +12,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import project.stratego.control.*;
 
+import java.util.ArrayList;
+
 public class Tray extends Pane {
+
+    private static TrayPiece lastActive;
+
+    private ArrayList<TrayPiece> trayPieces;
 
     private double xOffset = 5;
     private double yOffset = 5;
@@ -21,9 +28,11 @@ public class Tray extends Pane {
     }
 
     private void makeIcons(Image pieceIcons) {
+        trayPieces = new ArrayList<>(12);
         for (int i = 0; i < 12; i++) {
             TrayPiece temp = new TrayPiece(i, pieceIcons);
             getChildren().add(temp);
+            trayPieces.add(temp);
         }
     }
 
@@ -33,12 +42,24 @@ public class Tray extends Pane {
         }
     }
 
+    public void setActive(int pieceIndex) {
+        if (pieceIndex == -1) {
+            lastActive.setActive(false);
+            lastActive = null;
+        } else {
+            lastActive = trayPieces.get(pieceIndex);
+            lastActive.setActive(true);
+        }
+    }
+
     class TrayPiece extends Group {
 
         private final int pieceIndex;
 
         private ImageView icon;
         private Rectangle background;
+
+        private boolean active;
 
         private TrayPiece(int pieceIndex, Image pieceIcons) {
             super();
@@ -65,19 +86,23 @@ public class Tray extends Pane {
             getChildren().add(background);
 
             setOnMouseEntered((MouseEvent e) -> background.setStroke(Color.WHITE));
-            setOnMouseExited((MouseEvent e) -> background.setStroke(Color.BLACK));
+            setOnMouseExited((MouseEvent e) -> {
+                if (!active) {
+                    background.setStroke(Color.BLACK);
+                }
+            });
         }
 
         public void setPlayer(int playerIndex) {
             if (playerIndex == 0) {
                 background.setFill(Color.web("#48a4f9"));
                 setOnMouseClicked((MouseEvent e) -> {
-                    ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestTrayPieceSelected(pieceIndex);
+                    ViewComManager.getInstance().requestTrayPieceSelected(pieceIndex);
                 });
             } else if (playerIndex == 1) {
                 background.setFill(Color.web("#bf1c1c"));
                 setOnMouseClicked((MouseEvent e) -> {
-                    ((ViewComManager) ManagerManager.getViewReceiver()).getInstance().requestTrayPieceSelected(pieceIndex);
+                    ViewComManager.getInstance().requestTrayPieceSelected(pieceIndex);
                 });
             } else {
                 background.setFill(Color.web("#bcbcbc"));
@@ -85,6 +110,9 @@ public class Tray extends Pane {
             }
         }
 
+        public void setActive(boolean active) {
+            this.active = active;
+        }
     }
 
 }

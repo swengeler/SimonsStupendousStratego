@@ -1,6 +1,7 @@
 package project.stratego.control;
 
 import project.stratego.game.utils.PieceType;
+import project.stratego.ui.Messages;
 import project.stratego.ui.StrategoFrame;
 import project.stratego.ui.menus.InGameView;
 
@@ -33,6 +34,7 @@ public class ViewComManager {
     }
 
     public void closeStrategoClient() {
+        client.sendCommandToServer("rg");
         client.stopThread();
         client = null;
     }
@@ -61,6 +63,7 @@ public class ViewComManager {
 
     public void requestStartGame() {
         if (multiPlayer && client == null) {
+            frame.getInGameView().processResetGame();
             StrategoClient client = new StrategoClient();
             (new Thread(client)).start();
             this.client = client;
@@ -101,6 +104,12 @@ public class ViewComManager {
         }
     }
 
+    public void requestPlayerQuit() {
+        if (isConnected()) {
+            client.sendCommandToServer("q");
+        }
+    }
+
     public void requestTrayPieceSelected(int index) {
         if (isConnected()) {
             client.sendCommandToServer("tps " + index);
@@ -119,12 +128,18 @@ public class ViewComManager {
 
     /* Commands from model to view */
 
-    public void sendTrayActiveUpdate(int gameID, int pieceIndex) {
-
+    public void sendTrayActiveUpdate(int pieceIndex) {
+        frame.getInGameView().processTrayActiveUpdate(pieceIndex);
     }
 
     public void sendActivePieceUpdate(int gameID, int row, int col) {
 
+    }
+
+    public void sendOpponentQuit() {
+        System.out.println("OPPONENT QUIT");
+        Messages.showOpponentDisonnectedMessage();
+        frame.getInGameView().processResetGame();
     }
 
     public void sendAssignSide(int playerIndex) {
@@ -132,12 +147,11 @@ public class ViewComManager {
     }
 
     public void sendHighlightDeployment(int highlight) {
-        frame.getInGameView().processHighlightDeployment(highlight == 0 ? false : true);
+        frame.getInGameView().processHighlightDeployment(highlight != 0);
     }
 
     public void sendResetGame() {
         frame.getInGameView().processResetGame();
-        client = null;
     }
 
     public void sendResetDeployment(int playerIndex) {
@@ -186,8 +200,9 @@ public class ViewComManager {
         frame.getInGameView().processAttackWon(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
-    public void sendGameOver() {
-        frame.getInGameView().processGameOver();
+    public void sendGameOver(int winnerPlayerIndex) {
+        frame.getInGameView().processGameOver(winnerPlayerIndex);
+        closeStrategoClient();
     }
 
 }

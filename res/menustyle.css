@@ -44,11 +44,11 @@
 }
 
 .titled-pane > *.content {
-    -fx-font: 20 helvetica;
+    -fx-font: 26 helvetica;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-background-insets: 0, 0 1 1 1;
-    -fx-padding: 0.167em;
+    //-fx-background-insets: 0, 0 1 1 1;
+    -fx-padding: 0 0 0 12;
  }
 
 .titled-pane:focused > .title > .arrow-button .arrow {

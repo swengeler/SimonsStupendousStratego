@@ -1,13 +1,7 @@
 package project.stratego.ui.menus;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
-import javafx.scene.text.*;
 import project.stratego.game.utils.PieceType;
+import project.stratego.ui.Messages;
 import project.stratego.ui.components.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -69,9 +63,15 @@ public class InGameView extends Pane {
         boardArea.highlightDeploymentArea(playerIndex, highlight);
     }
 
-    public void processGameOver() {
+    public void processGameOver(int winnerPlayerIndex) {
         boardArea.revealAll();
         playerNames.resetHighlight();
+        if (winnerPlayerIndex == playerIndex) {
+            Messages.showPlayerWon();
+        } else {
+            Messages.showOpponentWon();
+        }
+        processResetGame();
     }
 
     public void processChangeTurn(int playerIndex) {
@@ -80,6 +80,9 @@ public class InGameView extends Pane {
 
     public void processPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {
         System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + " (InGameView).");
+        /*if (playerIndex == this.playerIndex) {
+            tray.setActive(-1);
+        }*/
         boardArea.makePiece(playerIndex, pieceIndex, row, col);
     }
 
@@ -93,6 +96,10 @@ public class InGameView extends Pane {
         } else {
             boardArea.resetDeployment(playerIndex);
         }
+    }
+
+    public void processTrayActiveUpdate(int pieceIndex) {
+        //tray.setActive(pieceIndex);
     }
 
     public void processResetGame() {

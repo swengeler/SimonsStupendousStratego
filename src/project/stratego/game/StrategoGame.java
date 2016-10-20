@@ -3,8 +3,7 @@ package project.stratego.game;
 import project.stratego.control.ModelComManager;
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.Player;
-import project.stratego.game.utils.MoveManager;
-import project.stratego.game.utils.PlayerType;
+import project.stratego.game.utils.*;
 
 public class StrategoGame {
 
@@ -85,8 +84,7 @@ public class StrategoGame {
 
     public void resetGame() {
         boardSetup();
-        currentRequestProcessor = new DeploymentLogic(this,playerNorth, playerSouth);
-        ModelComManager.getInstance().sendResetGame(gameID);
+        currentRequestProcessor = new DeploymentLogic(this, playerNorth, playerSouth);
     }
 
 }

@@ -9,34 +9,37 @@ public class DeploymentLogic extends GameLogic {
 
     private Player tempPlayer;
 
+    private PieceFactory pieceFactory;
+
     private int firstPlayerReady = -1;
 
     public DeploymentLogic(StrategoGame parent, Player playerNorth, Player playerSouth) {
         super(parent, playerNorth, playerSouth);
+        pieceFactory = new PieceFactory();
     }
 
     public void randomPlaceCurrentPlayer(int playerIndex) {
         if (playerIndex == firstPlayerReady) {
             return;
         }
-        PieceFactory.reset();
+        pieceFactory.reset();
         tempPlayer = findPlayer(playerIndex);
         tempPlayer.getActivePieces().clear();
         // also needs to reset board
-        ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendResetDeployment(parent.getGameID(), playerIndex);
+        ModelComManager.getInstance().sendResetDeployment(parent.getGameID(), playerIndex);
         Piece temp;
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 10; col++) {
-                temp = PieceFactory.makeRandomPiece(tempPlayer.getType());
+                temp = pieceFactory.makeRandomPiece(tempPlayer.getType());
                 tempPlayer.addPiece(temp);
                 parent.getBoard()[tempPlayer.getType() == PlayerType.NORTH ? row : 9 - row][col].setOccupyingPiece(temp);
-                ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendPiecePlaced(parent.getGameID(), playerIndex, temp.getType().ordinal(), temp.getRowPos(), temp.getColPos());
+                ModelComManager.getInstance().sendPiecePlaced(parent.getGameID(), playerIndex, temp.getType().ordinal(), temp.getRowPos(), temp.getColPos());
             }
         }
     }
 
     public void resetDeployment(int playerIndex) {
-        PieceFactory.reset();
+        pieceFactory.reset();
         tempPlayer = findPlayer(playerIndex);
         tempPlayer.getActivePieces().clear();
         for (int row = 0; row < 4; row++) {
@@ -44,7 +47,7 @@ public class DeploymentLogic extends GameLogic {
                 parent.getBoard()[tempPlayer.getType() == PlayerType.NORTH ? row : 9 - row][col].setOccupyingPiece(null);
             }
         }
-        ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendResetDeployment(parent.getGameID(), playerIndex);
+        ModelComManager.getInstance().sendResetDeployment(parent.getGameID(), playerIndex);
     }
 
     @Override
@@ -53,10 +56,11 @@ public class DeploymentLogic extends GameLogic {
             return;
         }
         Piece temp;
-        if ((temp = PieceFactory.makePiece(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex])) != null) {
+        if ((temp = pieceFactory.makePiece(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex])) != null) {
+            System.out.println("Can place piece of type " + temp.getType());
             findPlayer(playerIndex).addPiece(temp);
             findPlayer(playerIndex).setCurrentPiece(temp);
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendTrayActiveUpdate(parent.getGameID(), pieceIndex);
+            ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
         }
     }
 
@@ -76,13 +80,13 @@ public class DeploymentLogic extends GameLogic {
                 // piece from board to be placed on occupied tile on board
                 // -> simply swaps the current active piece, not the positions of the pieces or similar
                 tempPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
-                ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendActivePieceUpdate(parent.getGameID(), playerIndex, tempPlayer.getCurrentPiece().getRowPos(), tempPlayer.getCurrentPiece().getColPos());
+                ModelComManager.getInstance().sendActivePieceUpdate(parent.getGameID(), playerIndex, tempPlayer.getCurrentPiece().getRowPos(), tempPlayer.getCurrentPiece().getColPos());
             } else if (tempPlayer.getCurrentPiece().getRowPos() < 0) {
                 // piece from tray to be placed on unoccupied tile on board
                 // -> simply place the piece
                 parent.getBoard()[row][col].setOccupyingPiece(tempPlayer.getCurrentPiece());
                 //System.out.println(tempPlayer.getCurrentPiece().getType() + " placed at " + row + ", " + col);
-                ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendPiecePlaced(parent.getGameID(), playerIndex, tempPlayer.getCurrentPiece().getType().ordinal(), tempPlayer.getCurrentPiece().getRowPos(), tempPlayer.getCurrentPiece().getColPos());
+                ModelComManager.getInstance().sendPiecePlaced(parent.getGameID(), playerIndex, tempPlayer.getCurrentPiece().getType().ordinal(), tempPlayer.getCurrentPiece().getRowPos(), tempPlayer.getCurrentPiece().getColPos());
                 //tempPlayer.setCurrentPiece(null);
             } else {
                 // piece from board to be placed on unoccupied tile on board
@@ -91,7 +95,7 @@ public class DeploymentLogic extends GameLogic {
                 int orCol = tempPlayer.getCurrentPiece().getColPos();
                 parent.getBoard()[orRow][orCol].setOccupyingPiece(null);
                 parent.getBoard()[row][col].setOccupyingPiece(tempPlayer.getCurrentPiece());
-                ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
+                ModelComManager.getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
             }
         } else {
             if (parent.getBoard()[row][col].getOccupyingPiece() != null) {
@@ -126,7 +130,7 @@ public class DeploymentLogic extends GameLogic {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 if ((temp = parent.getBoard()[row][col].getOccupyingPiece()) != null && temp.getPlayerType() == findPlayer(playerIndex).getType() && !temp.isRevealed()) {
-                    ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendHidePiece(parent.getGameID(), -1, temp.getRowPos(), temp.getColPos());
+                    ModelComManager.getInstance().sendHidePiece(parent.getGameID(), -1, temp.getRowPos(), temp.getColPos());
                 }
             }
         }

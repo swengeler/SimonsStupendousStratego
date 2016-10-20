@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class PieceFactory {
 
-    private static int[][] pieceCount = {
+    private int[][] pieceCount = {
             PieceType.pieceQuantity.clone(),
             PieceType.pieceQuantity.clone()
     };
@@ -25,7 +25,7 @@ public class PieceFactory {
      * A method that checks whether the requesting player is allowed to generate and place another
      * piece of the specified type and returns a piece of that type if the player is allowed to do so.
      */
-    public static Piece makePiece(PlayerType playerType, PieceType pieceType) {
+    public Piece makePiece(PlayerType playerType, PieceType pieceType) {
         if (pieceCount[playerType.ordinal()][pieceType.ordinal()] > 0) {
             pieceCount[playerType.ordinal()][pieceType.ordinal()]--;
             return new Piece(pieceType, playerType);
@@ -33,7 +33,7 @@ public class PieceFactory {
         return null;
     }
 
-    public static Piece makeRandomPiece(PlayerType playerType) {
+    public Piece makeRandomPiece(PlayerType playerType) {
         for (int i : pieceCount[playerType.ordinal()]) {
             if (i > 0) {
                 int pieceIndex = (int) (Math.random() * 12);
@@ -47,12 +47,12 @@ public class PieceFactory {
         return null;
     }
 
-    public static void reset() {
+    public void reset() {
         pieceCount[0] = PieceType.pieceQuantity.clone();
         pieceCount[1] = PieceType.pieceQuantity.clone();
     }
 
-    public static ArrayList<Piece> generatePieces(PlayerType pType) {
+    public ArrayList<Piece> generatePieces(PlayerType pType) {
         ArrayList<Piece> pieces = new ArrayList<>(40);
         for (int i = 0; i < PieceType.pieceQuantity.length; i++) {
             for (int j = 0; j < PieceType.pieceQuantity[i]; j++) {

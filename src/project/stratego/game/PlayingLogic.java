@@ -82,7 +82,7 @@ public class PlayingLogic extends GameLogic {
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
         } else {
             System.out.println("Game over");
-            ModelComManager.getInstance().sendGameOver(parent.getGameID());
+            ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
         }
     }
 
@@ -98,14 +98,6 @@ public class PlayingLogic extends GameLogic {
     }
 
     private void revealPieces() {
-        /*for (Piece p : currentPlayer.getActivePieces()) {
-            System.out.println("Piece revealed: " + currentOpponent.getType().ordinal() + " " + p.getRowPos() + " " + p.getColPos() + ".");
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), currentOpponent.getType().ordinal(), p.getRowPos(), p.getColPos());
-        }
-        for (Piece p : currentOpponent.getActivePieces()) {
-            System.out.println("Piece revealed: " + currentOpponent.getType().ordinal() + " " + p.getRowPos() + " " + p.getColPos() + ".");
-            ((ModelComManager) ManagerManager.getModelReceiver()).getInstance().sendRevealPiece(parent.getGameID(), currentPlayer.getType().ordinal(), p.getRowPos(), p.getColPos());
-        }*/
         Piece temp;
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {

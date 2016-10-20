@@ -1,7 +1,7 @@
 package project.stratego.control;
 
 import javafx.application.Platform;
-import project.stratego.ui.Warnings;
+import project.stratego.ui.Messages;
 
 import java.io.*;
 import java.net.Socket;
@@ -10,8 +10,8 @@ public class StrategoClient implements Runnable {
 
     private volatile boolean stopThread = false;
 
-    private static final String SERVER_ADDRESS = "82.165.162.249";
-    //private static final String SERVER_ADDRESS = "localhost";
+    //private static final String SERVER_ADDRESS = "82.165.162.249";
+    private static final String SERVER_ADDRESS = "localhost";
 
     private static final int SERVER_PORT = 2000;
 
@@ -30,7 +30,7 @@ public class StrategoClient implements Runnable {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
-            Warnings.showNoConnectionWarning();
+            Messages.showNoConnectionMessage();
             System.out.println("Could not connect to the server. Check whether server is running or whether the correct IP address is configured in the client program.");
             stopThread();
         }
@@ -49,7 +49,7 @@ public class StrategoClient implements Runnable {
             }
             // quit
             if (socket != null) {
-                sendCommandToServer("q");
+                //Platform.runLater(() -> ViewComManager.getInstance().sendResetGame());
                 socket.close();
             }
             System.out.println("client should be closed");
@@ -63,14 +63,9 @@ public class StrategoClient implements Runnable {
     private void interpretCommand(String command) {
         String[] parts = command.split(" ");
         System.out.println("Client received command: \"" + command + "\".");
-        /*System.out.println("Broken up:");
-        for (String s : parts) {
-            System.out.println(s);
-        }
-        System.out.println();*/
 
         if (parts[0].equals("go")) {
-            Platform.runLater(() -> ViewComManager.getInstance().sendGameOver());
+            Platform.runLater(() -> ViewComManager.getInstance().sendGameOver(Integer.parseInt(parts[1])));
         } else if (parts[0].equals("sa")) {
             // assign the client a side that the player play on
             System.out.println("Client received side assign command (player index: " + Integer.parseInt(parts[1]) + ").");
@@ -105,6 +100,8 @@ public class StrategoClient implements Runnable {
             Platform.runLater(() -> ViewComManager.getInstance().sendAttackWon(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), Integer.parseInt(parts[5]), Integer.parseInt(parts[6])));
         } else if (parts[0].equals("hd")) {
             //Platform.runLater(() -> ViewComManager.getInstance().sendHighlightDeployment(Integer.parseInt(parts[1])));
+        } else if (parts[0].equals("oq")) {
+            Platform.runLater(() -> ViewComManager.getInstance().sendOpponentQuit());
         }
     }
 

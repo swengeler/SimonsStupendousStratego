@@ -13,10 +13,10 @@ public class StrategoMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ManagerManager.configureMultiPlayer();
-
         primaryStage = new StrategoFrame();
-        ManagerManager.getViewReceiver().setStrategoFrame((StrategoFrame) primaryStage);
+
+        ViewComManager.getInstance().setStrategoFrame((StrategoFrame) primaryStage);
+        ViewComManager.getInstance().configureSinglePlayer();
 
         primaryStage.setTitle("Simon's Stupendous Stratego");
         primaryStage.setResizable(false);

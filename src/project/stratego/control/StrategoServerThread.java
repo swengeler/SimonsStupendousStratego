@@ -47,22 +47,11 @@ public class StrategoServerThread implements Runnable {
         String incomingCommand = "";
         try {
             while (!stopThread && (!in.ready() || (in.ready() && (incomingCommand = in.readLine()) != null && !incomingCommand.equals("q")))) {
-                if (/*in.ready() && */!incomingCommand.equals("")) {
+                if (!incomingCommand.equals("")) {
                     interpretCommand(incomingCommand);
                     incomingCommand = "";
-                    //System.out.println("Command coming in: " + incomingCommand);
                 }
                 Thread.sleep(1);
-                //System.out.println("line: " + incomingCommand + " (pi: " + playerIndex + ")");
-                /*if (in.ready()) {
-                    incomingCommand = in.readLine();
-                    if (incomingCommand == null || incomingCommand.equals("q")) {
-                        clientSocket.close();
-                        server.remove(gameID);
-                        System.out.println("server thread should be closed");
-                        return;
-                    }
-                }*/
             }
             clientSocket.close();
             server.remove(gameID);
@@ -74,31 +63,13 @@ public class StrategoServerThread implements Runnable {
             server.remove(gameID);
             e.printStackTrace();
         }
-
-        /*while (!stopThread) {
-            try {
-                incomingCommand = in.readLine();
-                if (stopThread || incomingCommand == null || incomingCommand == "QUIT") {
-                    // client disconnected
-                    System.out.println("Incoming command is null for client (ID: " + gameID + ", player index: " + playerIndex + ").");
-                    clientSocket.close();
-                    server.remove(gameID);
-                    return;
-                } else {
-                    //System.out.println("Incoming command is \"" + incomingCommand + "\" for client (ID: " + gameID + ", player index: " + playerIndex + ").");
-                    interpretCommand(incomingCommand);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                server.remove(gameID);
-                return;
-            }
-        }*/
     }
 
     private void interpretCommand(String command) {
         System.out.println("Command received from client (on server ID: " + gameID + ", player index: " + playerIndex + "): " + command + ".");
-        if (command.equals("rg")) {
+        if (command.equals("q")) {
+            ModelComManager.getInstance().sendPlayerQuit(gameID, playerIndex);
+        } else if (command.equals("rg")) {
             // reset game
             ModelComManager.getInstance().requestResetGame(gameID);
         } else if (command.equals("rd")) {

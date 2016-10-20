@@ -66,15 +66,16 @@ public class ModelComManager {
     /* View to model methods */
 
     public void requestResetGame(int gameID) {
-        if (activeGames.size() != 0) {
+        if (findGame(gameID) != null) {
             System.out.println("Request reset game");
             findGame(gameID).resetGame();
+            sendResetGame(gameID);
         }
     }
 
     public void requestAutoDeploy(int gameID, int playerIndex) {
         // need proper method for this
-        if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+        if (findGame(gameID) != null && findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
             if (multiPlayer && !server.gameStarted(gameID)) {
                 return;
             }
@@ -83,7 +84,7 @@ public class ModelComManager {
     }
 
     public void requestResetDeployment(int gameID, int playerIndex) {
-        if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+        if (findGame(gameID) != null && findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
             if (multiPlayer && !server.gameStarted(gameID)) {
                 return;
             }
@@ -92,11 +93,13 @@ public class ModelComManager {
     }
 
     public void requestPlayerReady(int gameID, int playerIndex) {
-        findGame(gameID).getCurrentRequestProcessor().processPlayerReady(playerIndex);
+        if (findGame(gameID) != null) {
+            findGame(gameID).getCurrentRequestProcessor().processPlayerReady(playerIndex);
+        }
     }
 
     public void requestTrayPieceSelected(int gameID, int playerIndex, int pieceIndex) {
-        if (findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+        if (findGame(gameID) != null && findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
             if (multiPlayer && !server.gameStarted(gameID)) {
                 return;
             }
@@ -109,7 +112,9 @@ public class ModelComManager {
         if (multiPlayer && !server.gameStarted(gameID)) {
             return;
         }
-        findGame(gameID).getCurrentRequestProcessor().processBoardSelect(playerIndex, row, col);
+        if (findGame(gameID) != null) {
+            findGame(gameID).getCurrentRequestProcessor().processBoardSelect(playerIndex, row, col);
+        }
     }
 
     /* Model to view methods*/
@@ -124,6 +129,12 @@ public class ModelComManager {
         }
     }
 
+    public void sendPlayerQuit(int gameID, int playerIndex) {
+        if (multiPlayer) {
+            server.sendCommandToClient(gameID, playerIndex == 0 ? 1 : 0, "oq");
+        }
+    }
+
     public void sendChangeTurn(int gameID, int playerIndex) {
         if (multiPlayer) {
             server.sendCommandToClient(gameID, 0, ("ct " + playerIndex));
@@ -133,8 +144,12 @@ public class ModelComManager {
         }
     }
 
-    public void sendTrayActiveUpdate(int gameID, int pieceIndex) {
-
+    public void sendTrayActiveUpdate(int gameID, int playerIndex, int pieceIndex) {
+        if (multiPlayer) {
+            server.sendCommandToClient(gameID, playerIndex, ("ta " + pieceIndex));
+        } else {
+            ViewComManager.getInstance().sendTrayActiveUpdate(pieceIndex);
+        }
     }
 
     public void sendActivePieceUpdate(int gameID, int playerIndex, int row, int col) {
@@ -259,14 +274,14 @@ public class ModelComManager {
         }
     }
 
-    public void sendGameOver(int gameID) {
+    public void sendGameOver(int gameID, int winnerPlayerIndex) {
         if (multiPlayer) {
-            server.sendCommandToClient(gameID, 0, "go");
-            server.sendCommandToClient(gameID, 1, "go");
+            server.sendCommandToClient(gameID, 0, ("go " + winnerPlayerIndex));
+            server.sendCommandToClient(gameID, 1, ("go " + winnerPlayerIndex));
             server.remove(gameID);
             activeGames.remove(findGame(gameID));
         } else {
-            ViewComManager.getInstance().sendGameOver();
+            ViewComManager.getInstance().sendGameOver(winnerPlayerIndex);
         }
     }
 

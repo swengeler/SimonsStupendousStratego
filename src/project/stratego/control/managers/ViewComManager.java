@@ -1,9 +1,10 @@
-package project.stratego.control;
+package project.stratego.control.managers;
 
+import project.stratego.control.client.StrategoClient;
 import project.stratego.game.utils.PieceType;
 import project.stratego.ui.Messages;
-import project.stratego.ui.StrategoFrame;
-import project.stratego.ui.menus.InGameView;
+import project.stratego.ui.sections.StrategoFrame;
+import project.stratego.ui.sections.InGameView;
 
 public class ViewComManager {
 
@@ -69,6 +70,7 @@ public class ViewComManager {
             this.client = client;
         } else {
             // send request for AI to set up and play
+            ModelComManager.getInstance().requestPlayerReady(-1, 0);
         }
     }
 

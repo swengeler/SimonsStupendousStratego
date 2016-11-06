@@ -1,5 +1,6 @@
-package project.stratego.game;
+package project.stratego.game.logic;
 
+import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.PieceType;

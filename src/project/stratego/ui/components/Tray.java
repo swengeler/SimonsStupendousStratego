@@ -3,14 +3,13 @@ package project.stratego.ui.components;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import project.stratego.control.*;
+import project.stratego.control.managers.ViewComManager;
 
 import java.util.ArrayList;
 

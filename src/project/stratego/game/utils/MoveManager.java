@@ -15,16 +15,39 @@ public class MoveManager {
 
     public MoveManager(BoardTile[][] board) {
         this.board = board;
+        System.out.println("BOARD IN MOVEMANAGER CONSTRUCTOR: " + board);
     }
-    
+
+    public MoveResult testMove(Piece movingPiece, int destRow, int destCol) {
+        if (destRow < 0 || destRow >= 10 || destCol < 0 || destCol >= 10) {
+            return MoveResult.NOMOVE;
+        }
+        BoardTile destTile = board[destRow][destCol];
+        if (movingPiece.getType() == PieceType.BOMB || movingPiece.getType() == PieceType.FLAG) {
+            return MoveResult.NOMOVE;
+        }
+        if (!destTile.isAccessible()) {
+            return MoveResult.NOMOVE;
+        }
+        if (destTile.getOccupyingPiece() != null && destTile.getOccupyingPiece().getPlayerType() == movingPiece.getPlayerType()) {
+            return MoveResult.NOMOVE;
+        }
+        if (!checkIfReachable(movingPiece, destRow, destCol)) {
+            return MoveResult.NOMOVE;
+        }
+        return MoveResult.MOVE;
+    }
+
     /**
      * A method that resolves the request to move a certain selected piece to a certain board position.
      * It also takes as parameters the players of the game according to their respective roles, in order
      * to possibly remove pieces from their available pieces.
      */
     public void processMove(Player movingPlayer, Player staticPlayer, Piece movingPiece, int destRow, int destCol) {
+        System.out.println("BOARD IN MOVEMANAGER: " + board);
         lastRemovedPiece = null;
         lastMoveResult = MoveResult.NOMOVE;
+
         BoardTile destTile = board[destRow][destCol];
         // doesn't account for flag/bomb because you cannot select those
         if (!destTile.isAccessible()) {
@@ -69,6 +92,7 @@ public class MoveManager {
                 movingPlayer.removePiece(movingPiece);
             }
         } else {
+            System.out.println("(" + destRow + "|" + destCol + ") is set to occupied: " + movingPiece);
             destTile.setOccupyingPiece(movingPiece);
         }
         movingPlayer.setCurrentPiece(null);

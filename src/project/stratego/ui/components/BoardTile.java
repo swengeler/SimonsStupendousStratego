@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import project.stratego.control.*;
+import project.stratego.control.managers.ViewComManager;
 
 public class BoardTile extends Group {
 

@@ -1,6 +1,8 @@
-package project.stratego.game;
+package project.stratego.game.logic;
 
-import project.stratego.control.*;
+import project.stratego.control.managers.AIComManager;
+import project.stratego.control.managers.ModelComManager;
+import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
@@ -26,18 +28,27 @@ public class PlayingLogic extends GameLogic {
     @Override
     public void processBoardSelect(int playerIndex, int row, int col) {
         if (currentPlayer.getType().ordinal() != playerIndex) {
+            // not the player's turn
+            System.out.println("processBoardSelect: return with code 0");
             return;
         }
 
         Piece temp = parent.getBoard()[row][col].getOccupyingPiece();
+        System.out.println(temp);
         if (currentPlayer.getCurrentPiece() == null && (temp == null || temp.getPlayerType() != currentPlayer.getType() || temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {
+            // no piece selected but either no piece on selected board tile or opponent's piece or unmovable piece
+            System.out.println("processBoardSelect: return with code 1");
             return;
         }
         if (temp != null && currentPlayer.getCurrentPiece() != null && temp.getPlayerType() == currentPlayer.getType() && (temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {
+            // don't switch selected piece to flag or bomb
+            System.out.println("processBoardSelect: return with code 2");
             return;
         }
         if (currentPlayer.getCurrentPiece() == null) {
+            // select piece at board position
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
+            System.out.println("processBoardSelect: return with code 3");
             return;
         }
 
@@ -47,6 +58,7 @@ public class PlayingLogic extends GameLogic {
         MoveResult result;
         if ((result = parent.getMoveManager().lastMoveResult()) == MoveResult.MOVE) {
             System.out.println("PIECE MOVED FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
+            System.out.println(parent.getBoard()[row][col].getOccupyingPiece());
             ModelComManager.getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
         } else if (result == MoveResult.ATTACKLOST) {
             System.out.println("PIECE LOST ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
@@ -58,6 +70,8 @@ public class PlayingLogic extends GameLogic {
             System.out.println("PIECE WON ATTACK FROM (" + orRow + "|" + orCol + ") TO (" + row + "|" + col + ")");
             ModelComManager.getInstance().sendAttackWon(parent.getGameID(), orRow, orCol, row, col);
         } else if (parent.getBoard()[row][col].getOccupyingPiece() != null && parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() == currentPlayer.getType()) {
+            // board tile already has piece from current player -> switch selected pieces
+            System.out.println("Switch selected pieces from " + currentPlayer.getCurrentPiece().getType() + " to " + parent.getBoard()[row][col].getOccupyingPiece());
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
             return;
         }
@@ -80,6 +94,7 @@ public class PlayingLogic extends GameLogic {
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
+            AIComManager.getInstance().tryNextMove(parent, playerIndex == 0 ? 1 : 0);
         } else {
             System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());

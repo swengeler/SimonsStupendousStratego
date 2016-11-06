@@ -1,6 +1,7 @@
-package project.stratego.control;
+package project.stratego.control.client;
 
 import javafx.application.Platform;
+import project.stratego.control.managers.ViewComManager;
 import project.stratego.ui.Messages;
 
 import java.io.*;
@@ -10,8 +11,8 @@ public class StrategoClient implements Runnable {
 
     private volatile boolean stopThread = false;
 
-    //private static final String SERVER_ADDRESS = "82.165.162.249";
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = "82.165.162.249";
+    //private static final String SERVER_ADDRESS = "localhost";
 
     private static final int SERVER_PORT = 2000;
 

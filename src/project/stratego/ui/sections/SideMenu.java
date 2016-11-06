@@ -1,13 +1,11 @@
-package project.stratego.ui.menus;
+package project.stratego.ui.sections;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import project.stratego.control.*;
-import project.stratego.ui.StrategoFrame;
+import project.stratego.control.managers.ViewComManager;
 
 public class SideMenu extends Pane {
 

@@ -1,6 +1,8 @@
-package project.stratego.game;
+package project.stratego.game.logic;
 
-import project.stratego.control.*;
+import project.stratego.control.managers.AIComManager;
+import project.stratego.control.managers.ModelComManager;
+import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
@@ -114,6 +116,7 @@ public class DeploymentLogic extends GameLogic {
             // controller.sendWaitForOtherPlayer();
             firstPlayerReady = playerIndex;
             System.out.println("Player " + playerIndex + " is ready.");
+            AIComManager.getInstance().tryBoardSetup(parent, 1);
         } else if (findPlayer(playerIndex).getActivePieces().size() == 40) {
             // both players are ready
             System.out.println("Both players are ready.");

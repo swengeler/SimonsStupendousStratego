@@ -1,6 +1,7 @@
-package project.stratego.control;
+package project.stratego.control.managers;
 
-import project.stratego.game.DeploymentLogic;
+import project.stratego.control.server.StrategoServer;
+import project.stratego.game.logic.DeploymentLogic;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.utils.PieceType;
 
@@ -56,11 +57,13 @@ public class ModelComManager {
 
     public void configureMultiPlayer() {
         multiPlayer = true;
+        AIComManager.getInstance().configureMultiPlayer();
     }
 
     public void configureSinglePlayer() {
         multiPlayer = false;
         activeGames.add(new StrategoGame(-1));
+        AIComManager.getInstance().configureSinglePlayer();
     }
 
     /* View to model methods */
@@ -70,6 +73,9 @@ public class ModelComManager {
             System.out.println("Request reset game");
             findGame(gameID).resetGame();
             sendResetGame(gameID);
+            if (!multiPlayer) {
+                AIComManager.getInstance().reset();
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package project.stratego.ui.menus;
+package project.stratego.ui.sections;
 
 import project.stratego.game.utils.PieceType;
 import project.stratego.ui.Messages;

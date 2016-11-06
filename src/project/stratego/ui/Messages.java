@@ -79,7 +79,7 @@ public class Messages {
         label.setMaxWidth(150);
         label.setWrapText(true);
 
-        Button okButton = new Button("Ayy lmao");
+        Button okButton = new Button("Great!");
         okButton.setAlignment(Pos.CENTER_RIGHT);
         okButton.setOnAction((ActionEvent e) -> stage.close());
 

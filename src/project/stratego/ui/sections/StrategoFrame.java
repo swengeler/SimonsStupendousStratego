@@ -1,12 +1,12 @@
-package project.stratego.ui;
+package project.stratego.ui.sections;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import project.stratego.control.ViewComManager;
-import project.stratego.ui.menus.*;
+import project.stratego.control.managers.ViewComManager;
+import project.stratego.ui.sections.*;
 
 public class StrategoFrame extends Stage {
 

@@ -1,4 +1,6 @@
-package project.stratego.control;
+package project.stratego.control.server;
+
+import project.stratego.control.managers.ModelComManager;
 
 /**
  *

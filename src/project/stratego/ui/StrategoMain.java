@@ -1,9 +1,9 @@
-package project.stratego.control;
+package project.stratego.ui;
 
-import project.stratego.game.StrategoGame;
+import project.stratego.control.managers.ViewComManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import project.stratego.ui.StrategoFrame;
+import project.stratego.ui.sections.StrategoFrame;
 
 public class StrategoMain extends Application {
 

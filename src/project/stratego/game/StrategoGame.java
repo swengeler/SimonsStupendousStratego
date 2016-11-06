@@ -1,8 +1,9 @@
 package project.stratego.game;
 
-import project.stratego.control.ModelComManager;
+import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.Player;
+import project.stratego.game.logic.*;
 import project.stratego.game.utils.*;
 
 public class StrategoGame {
@@ -21,6 +22,7 @@ public class StrategoGame {
         this.gameID = gameID;
         boardSetup();
         componentSetup();
+        System.out.println("BOARD IN GAME: " + board);
     }
 
     private void boardSetup() {
@@ -84,7 +86,15 @@ public class StrategoGame {
 
     public void resetGame() {
         boardSetup();
-        currentRequestProcessor = new DeploymentLogic(this, playerNorth, playerSouth);
+        componentSetup();
+    }
+
+    public Player getPlayerNorth() {
+        return playerNorth;
+    }
+
+    public Player getPlayerSouth() {
+        return playerSouth;
     }
 
 }

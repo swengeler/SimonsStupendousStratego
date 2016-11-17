@@ -1,52 +1,28 @@
 package project.stratego.game;
 
 import project.stratego.control.managers.ModelComManager;
-import project.stratego.game.entities.BoardTile;
-import project.stratego.game.entities.Player;
+import project.stratego.game.entities.*;
 import project.stratego.game.logic.*;
 import project.stratego.game.utils.*;
 
 public class StrategoGame {
 
-    public static final int BOARD_SIZE = 10;
-
     private final int gameID;
 
     private GameLogic currentRequestProcessor;
     private MoveManager moveManager;
-    private BoardTile[][] board;
 
-    private Player playerNorth, playerSouth;
+    private GameState gameState;
 
     public StrategoGame(int gameID) {
         this.gameID = gameID;
-        boardSetup();
         componentSetup();
-        System.out.println("BOARD IN GAME: " + board);
-    }
-
-    private void boardSetup() {
-        // creating the board array, setting the right accessibility of board tiles
-        board = new BoardTile[BOARD_SIZE][BOARD_SIZE];
-        // change this to be more efficient loop
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if ((row == 4 || row == 5) && (col == 2 || col == 3 || col == 6 || col == 7)) {
-                    board[row][col] = new BoardTile(false, row, col);
-                } else {
-                    board[row][col] = new BoardTile(true, row, col);
-                }
-            }
-        }
-
-        // creating and assigning all the pieces to each of the two players
-        playerNorth = new Player(PlayerType.NORTH);
-        playerSouth = new Player(PlayerType.SOUTH);
     }
 
     private void componentSetup() {
-        currentRequestProcessor = new DeploymentLogic(this, playerNorth, playerSouth);
-        moveManager = new MoveManager(board);
+        gameState = new GameState();
+        currentRequestProcessor = new DeploymentLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
+        moveManager = new MoveManager(gameState.getBoardArray());
     }
 
     /* Getter methods */
@@ -64,37 +40,30 @@ public class StrategoGame {
     }
 
     public BoardTile[][] getBoard() {
-        return board;
-    }
-
-    public BoardTile[][] getBoardClone() {
-        BoardTile[][] clone = new BoardTile[board.length][board[0].length];
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[0].length; col++) {
-                clone[row][col] = board[row][col].clone();
-            }
-        }
-        return clone;
+        return gameState.getBoardArray();
     }
 
     public void switchStates() {
         System.out.println("States switched");
         //System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
-        currentRequestProcessor = currentRequestProcessor instanceof DeploymentLogic ? new PlayingLogic(this, playerNorth, playerSouth) : new DeploymentLogic(this, playerNorth, playerSouth);
+        currentRequestProcessor = currentRequestProcessor instanceof DeploymentLogic ? new PlayingLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth()) : new DeploymentLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
         ModelComManager.getInstance().sendChangeTurn(gameID, 0);
     }
 
     public void resetGame() {
-        boardSetup();
         componentSetup();
     }
 
     public Player getPlayerNorth() {
-        return playerNorth;
+        return gameState.getPlayerNorth();
     }
 
     public Player getPlayerSouth() {
-        return playerSouth;
+        return gameState.getPlayerSouth();
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
 }

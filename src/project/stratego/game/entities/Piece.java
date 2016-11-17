@@ -29,6 +29,16 @@ public class Piece {
         this.playerType = playerType;
     }
 
+    private Piece(PieceType type, PlayerType playerType, int ID, int rowPos, int colPos, boolean isRevealed, boolean isMoveRevealed) {
+        this.ID = ID;
+        this.type = type;
+        this.playerType = playerType;
+        this.rowPos = rowPos;
+        this.colPos = colPos;
+        this.isRevealed = isRevealed;
+        this.isMoveRevealed = isMoveRevealed;
+    }
+
     /* Getter methods */
 
     public int getID() {
@@ -70,6 +80,10 @@ public class Piece {
         isMoveRevealed = true;
     }
 
+    public void markUnknown() {
+        type = PieceType.UNKNOWN;
+    }
+
     public void setPos(int rowPos, int colPos) {
         this.rowPos = rowPos;
         this.colPos = colPos;
@@ -78,8 +92,7 @@ public class Piece {
     /* Clone method */
 
     public Piece clone() {
-        Piece clone = new Piece(type, playerType, ID);
-
+        Piece clone = new Piece(type, playerType, ID, rowPos, colPos, isRevealed, isMoveRevealed);
         return clone;
     }
 

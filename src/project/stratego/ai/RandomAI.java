@@ -1,5 +1,6 @@
 package project.stratego.ai;
 
+import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.*;
 import project.stratego.game.logic.DeploymentLogic;
@@ -16,9 +17,9 @@ public class RandomAI implements AIInterface {
     }
 
     @Override
-    public AIMove getNextMove(BoardTile[][] board, Player player) {
-        moveManager.changeBoard(board);
-        ArrayList<Piece> movablePieces = getMovablePieces(board, player);;
+    public AIMove getNextMove(GameState state, int playerIndex) {
+        moveManager.changeBoard(state.getBoardArray());
+        ArrayList<Piece> movablePieces = getMovablePieces(state.getBoardArray(), state.getPlayer(playerIndex));;
         Piece selectedPiece = movablePieces.get((int) (Math.random() * movablePieces.size()));;
         int radius;
         int destRow, destCol;
@@ -40,8 +41,8 @@ public class RandomAI implements AIInterface {
     }
 
     @Override
-    public void makeBoardSetup(StrategoGame game, int playerIndex) {
-        ((DeploymentLogic) game.getCurrentRequestProcessor()).randomPlaceCurrentPlayer(playerIndex);
+    public void makeBoardSetup(GameState state, int playerIndex) {
+        ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
     }
 
     private ArrayList<Piece> getMovablePieces(BoardTile[][] board, Player player) {

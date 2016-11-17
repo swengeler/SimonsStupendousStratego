@@ -50,4 +50,14 @@ public class Player {
         activePieces.remove(piece);
     }
 
+    /* Clone methods */
+
+    public Player clone() {
+        Player clone = new Player(type);
+        for (Piece p : activePieces)
+            clone.addPiece(p.clone());
+        clone.setCurrentPiece(currentPiece.clone());
+        return clone;
+    }
+
 }

@@ -1,12 +1,10 @@
 package project.stratego.ai;
 
-import project.stratego.game.StrategoGame;
-import project.stratego.game.entities.BoardTile;
-import project.stratego.game.entities.Player;
+import project.stratego.game.entities.*;
 
 public interface AIInterface {
 
-    AIMove getNextMove(BoardTile[][] board, Player player);
-    void makeBoardSetup(StrategoGame game, int playerIndex);
+    AIMove getNextMove(GameState state, int playerIndex);
+    void makeBoardSetup(GameState state, int playerIndex);
 
 }

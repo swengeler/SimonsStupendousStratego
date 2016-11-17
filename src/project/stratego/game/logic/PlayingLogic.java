@@ -94,7 +94,7 @@ public class PlayingLogic extends GameLogic {
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
-            AIComManager.getInstance().tryNextMove(parent, playerIndex == 0 ? 1 : 0);
+            AIComManager.getInstance().tryNextMove(parent.getGameState(), playerIndex == 0 ? 1 : 0);
         } else {
             System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());

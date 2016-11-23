@@ -29,11 +29,15 @@ public class ExpectimaxAI implements AIInterface {
     }
 
     private ArrayList<TreeSearchNode> generateSuccessors(TreeSearchNode root) {
-        if (playerIndexTurn == playerIndex) {
+        if (root.getPlayerIndex() == playerIndex) {
             // find all movable pieces
             // construct nodes with all possible resulting moves
 
         } else {
+            // find movable "positions"/pieces of opponents
+            // assign probabilities for each to be a certain piece
+            // expand all possible moves for that piece
+            // -> results in first a layer of chance nodes, then one of concrete states
 
         }
 

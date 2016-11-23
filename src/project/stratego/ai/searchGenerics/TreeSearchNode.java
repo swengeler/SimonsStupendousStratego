@@ -6,11 +6,24 @@ public class TreeSearchNode {
 
     private GameState state;
 
-    private int identifyingIndex; // 0 = north, 1 = south, -1 = chance
+    private int playerIndex; // 0 = north, 1 = south, -1 = chance
+    private double probability; // if != 1 then it is a chance node
 
-    public TreeSearchNode(GameState state, int identifyingIndex) {
+    public TreeSearchNode(GameState state, int playerIndex) {
         this.state = state;
-        this.identifyingIndex = identifyingIndex;
+        this.playerIndex = playerIndex;
+    }
+
+    public int getPlayerIndex() {
+        return playerIndex;
+    }
+
+    public double getProbability() {
+        return probability;
+    }
+
+    public boolean isChanceNode() {
+        return probability == 1.0;
     }
 
 }

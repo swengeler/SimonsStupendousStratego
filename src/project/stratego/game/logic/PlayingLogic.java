@@ -7,11 +7,15 @@ import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
 import project.stratego.game.utils.*;
 
+import java.util.LinkedList;
+
 public class PlayingLogic extends GameLogic {
 
     boolean testing = false;
 
     private Player currentPlayer, currentOpponent;
+
+    private LinkedList<Move> moveHistory;
 
     public PlayingLogic(StrategoGame parent, Player firstPlayer, Player secondPlayer) {
         super(parent, firstPlayer, secondPlayer);
@@ -76,6 +80,7 @@ public class PlayingLogic extends GameLogic {
             return;
         }
         if (result != MoveResult.NOMOVE && !testing) {
+            moveHistory.add(new Move(orRow, orCol, row, col, currentPiece, parent.getBoard()[orRow][orCol].getOccupyingPiece())); // maybe move to MoveManager?
             processPlayerReady(currentPlayer.getType().ordinal());
         }
     }

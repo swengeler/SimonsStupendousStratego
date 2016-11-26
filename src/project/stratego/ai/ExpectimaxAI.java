@@ -23,7 +23,7 @@ public class ExpectimaxAI implements AIInterface {
     }
 
     private AIMove expectimaxAlphaBetaSearch(GameState state, int playerIndex) {
-        root = new TreeSearchNode(state.clone(playerIndex));
+        root = new TreeSearchNode(state.clone(playerIndex), playerIndex);
         this.playerIndex = playerIndex;
         return null;
     }
@@ -40,7 +40,7 @@ public class ExpectimaxAI implements AIInterface {
             // -> results in first a layer of chance nodes, then one of concrete states
 
         }
-
+        return null;
     }
 
     private ArrayList<Piece> getMovablePieces(BoardTile[][] board, Player player) {

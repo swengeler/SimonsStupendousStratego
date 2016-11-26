@@ -1,5 +1,7 @@
 package project.stratego.game.entities;
 
+import project.stratego.ai.AIMove;
+import project.stratego.game.utils.MoveManager;
 import project.stratego.game.utils.PlayerType;
 
 public class GameState {
@@ -72,6 +74,15 @@ public class GameState {
 
     public Player getPlayer(int index) {
         return index == 0 ? playerNorth : playerSouth;
+    }
+
+    public void applyMove(AIMove move) {
+        Piece movingPiece = board[move.orRow][move.orCol].getOccupyingPiece();
+        if (movingPiece == null) {
+            return;
+        }
+        MoveManager moveManager = new MoveManager(board);
+        moveManager.processMove(movingPiece.getPlayerType() == PlayerType.NORTH ? playerNorth : playerSouth, movingPiece.getPlayerType() == PlayerType.NORTH ? playerSouth : playerNorth, movingPiece, move.destRow, move.destCol);
     }
 
     /* Clone methods */

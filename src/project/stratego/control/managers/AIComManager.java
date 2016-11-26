@@ -34,7 +34,7 @@ public class AIComManager {
         if (aiType.equals("random")) {
             currentAI = new RandomAI();
         } else if (aiType.equals("expectimax")) {
-            currentAI = new ExpectimaxAI();
+            currentAI = new ExpectiNegamaxAI();
         }
     }
 

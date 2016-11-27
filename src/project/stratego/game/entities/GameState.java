@@ -2,6 +2,7 @@ package project.stratego.game.entities;
 
 import project.stratego.ai.AIMove;
 import project.stratego.game.utils.MoveManager;
+import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 
 public class GameState {
@@ -33,7 +34,7 @@ public class GameState {
             for (int col = 0; col < board.length; col++) {
                 this.board[row][col] = board[row][col].clone();
                 if (this.board[row][col].getOccupyingPiece().getPlayerType() == PlayerType.values()[opponentIndex]) {
-                    this.board[row][col].getOccupyingPiece().markUnknown();
+                    this.board[row][col].getOccupyingPiece().setType(PieceType.UNKNOWN);
                 }
             }
         }

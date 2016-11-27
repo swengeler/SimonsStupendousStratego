@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public enum PieceType {
 
-    FLAG, BOMB, SPY, SCOUT, MINER, SERGEANT, LIEUTENANT, CAPTAIN, MAJOR, COLONEL, GENERAL, MARSHAL, UNKNOWN, MOVEKNOWN;
+    FLAG, BOMB, SPY, SCOUT, MINER, SERGEANT, LIEUTENANT, CAPTAIN, MAJOR, COLONEL, GENERAL, MARSHAL, UNKNOWN;
 
     public static final int[] pieceQuantity = {1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1};
 

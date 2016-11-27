@@ -80,8 +80,8 @@ public class Piece {
         isMoveRevealed = true;
     }
 
-    public void markUnknown() {
-        type = PieceType.UNKNOWN;
+    public void setType(PieceType newType) {
+        type = newType;
     }
 
     public void setPos(int rowPos, int colPos) {

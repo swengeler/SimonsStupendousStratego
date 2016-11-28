@@ -52,8 +52,8 @@ public class AIComManager {
         System.out.println("TEST: " + state.getBoardArray()[4][1].getOccupyingPiece());
         if (isActive && currentAI != null && playerIndex == 1) {
             AIMove nextMove = currentAI.getNextMove(state, playerIndex);
-            ModelComManager.getInstance().requestBoardTileSelected(-1, playerIndex, nextMove.orRow, nextMove.orCol);
-            ModelComManager.getInstance().requestBoardTileSelected(-1, playerIndex, nextMove.destRow, nextMove.destCol);
+            ModelComManager.getInstance().requestBoardTileSelected(-1, playerIndex, nextMove.getOrRow(), nextMove.getOrCol());
+            ModelComManager.getInstance().requestBoardTileSelected(-1, playerIndex, nextMove.getDestRow(), nextMove.getDestCol());
         }
     }
 

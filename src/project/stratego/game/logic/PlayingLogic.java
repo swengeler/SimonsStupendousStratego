@@ -15,7 +15,7 @@ public class PlayingLogic extends GameLogic {
 
     private Player currentPlayer, currentOpponent;
 
-    private LinkedList<Move> moveHistory;
+    private LinkedList<InGameMove> moveHistory;
 
     public PlayingLogic(StrategoGame parent, Player firstPlayer, Player secondPlayer) {
         super(parent, firstPlayer, secondPlayer);
@@ -80,7 +80,8 @@ public class PlayingLogic extends GameLogic {
             return;
         }
         if (result != MoveResult.NOMOVE && !testing) {
-            moveHistory.add(new Move(orRow, orCol, row, col, currentPiece, parent.getBoard()[orRow][orCol].getOccupyingPiece())); // maybe move to MoveManager?
+            moveHistory.add(new InGameMove(orRow, orCol, row, col, currentPiece, parent.getBoard()[orRow][orCol].getOccupyingPiece())); // maybe move to MoveManager?
+            // call AIComManager to update AI's board
             processPlayerReady(currentPlayer.getType().ordinal());
         }
     }

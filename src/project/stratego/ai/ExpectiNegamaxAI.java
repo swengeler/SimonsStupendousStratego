@@ -3,6 +3,7 @@ package project.stratego.ai;
 import project.stratego.ai.searchGenerics.EvaluationFunction;
 import project.stratego.ai.searchGenerics.TreeSearchNode;
 import project.stratego.game.entities.*;
+import project.stratego.game.utils.Move;
 import project.stratego.game.utils.PieceType;
 
 import java.util.ArrayList;
@@ -17,8 +18,12 @@ public class ExpectiNegamaxAI implements AIInterface {
 
     private int maxDepth = 6;
 
+    public ExpectiNegamaxAI() {
+
+    }
+
     @Override
-    public AIMove getNextMove(GameState state, int playerIndex) {
+    public Move getNextMove(GameState state, int playerIndex) {
         return expectiNegamaxSearch(state, playerIndex);
     }
 
@@ -27,7 +32,7 @@ public class ExpectiNegamaxAI implements AIInterface {
 
     }
 
-    private AIMove expectiNegamaxSearch(GameState state, int playerIndex) {
+    private Move expectiNegamaxSearch(GameState state, int playerIndex) {
         initGameState = state;
         initPlayerIndex = playerIndex;
         updateProbabilities(state);
@@ -42,7 +47,7 @@ public class ExpectiNegamaxAI implements AIInterface {
         for (AIMove m : legalMoves) {
             // do move, more or less
             clone = state.clone();
-            if (m.isChanceMove) {
+            if (m.isChanceMove()) {
                 // do expectimax evaluation
                 currentValue = -expectimaxSearch(1, state.clone(), m);
             } else {
@@ -73,7 +78,7 @@ public class ExpectiNegamaxAI implements AIInterface {
         for (AIMove m : legalMoves) {
             // do move, more or less
             clone = state.clone();
-            if (m.isChanceMove) {
+            if (m.isChanceMove()) {
                 // do expectimax evaluation
                 currentValue = -expectimaxSearch(currentDepth + 1, clone, m);
             } else {
@@ -95,8 +100,8 @@ public class ExpectiNegamaxAI implements AIInterface {
 
         double sum = 0;
         GameState clone;
-        int unknownPieceRowPos = currentDepth % 2 == 0 ? chanceMove.destRow : chanceMove.orRow;
-        int unknownPieceColPos = currentDepth % 2 == 0 ? chanceMove.destCol : chanceMove.orCol;
+        int unknownPieceRowPos = currentDepth % 2 == 0 ? chanceMove.getDestRow() : chanceMove.getOrRow();
+        int unknownPieceColPos = currentDepth % 2 == 0 ? chanceMove.getDestCol() : chanceMove.getOrCol();
 
         for (int i = 0; i < PieceType.values().length - 1; i++) {
             if (probabilities[unknownPieceRowPos][unknownPieceColPos][i] != 0) {

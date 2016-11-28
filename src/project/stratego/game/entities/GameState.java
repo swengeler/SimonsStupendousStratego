@@ -1,6 +1,7 @@
 package project.stratego.game.entities;
 
 import project.stratego.ai.AIMove;
+import project.stratego.game.utils.Move;
 import project.stratego.game.utils.MoveManager;
 import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
@@ -9,8 +10,8 @@ public class GameState {
 
     public static final int BOARD_SIZE = 10;
 
-    private BoardTile[][] board;
-    private Player playerNorth, playerSouth;
+    protected BoardTile[][] board;
+    protected Player playerNorth, playerSouth;
 
     public GameState() {
         boardSetup();
@@ -77,13 +78,13 @@ public class GameState {
         return index == 0 ? playerNorth : playerSouth;
     }
 
-    public void applyMove(AIMove move) {
-        Piece movingPiece = board[move.orRow][move.orCol].getOccupyingPiece();
+    public void applyMove(Move move) {
+        Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         if (movingPiece == null) {
             return;
         }
         MoveManager moveManager = new MoveManager(board);
-        moveManager.processMove(movingPiece.getPlayerType() == PlayerType.NORTH ? playerNorth : playerSouth, movingPiece.getPlayerType() == PlayerType.NORTH ? playerSouth : playerNorth, movingPiece, move.destRow, move.destCol);
+        moveManager.processMove(movingPiece.getPlayerType() == PlayerType.NORTH ? playerNorth : playerSouth, movingPiece.getPlayerType() == PlayerType.NORTH ? playerSouth : playerNorth, movingPiece, move.getDestRow(), move.getDestCol());
     }
 
     /* Clone methods */

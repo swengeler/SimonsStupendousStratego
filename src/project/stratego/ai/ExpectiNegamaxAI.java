@@ -30,6 +30,7 @@ public class ExpectiNegamaxAI implements AIInterface {
     private AIMove expectiNegamaxSearch(GameState state, int playerIndex) {
         initGameState = state;
         initPlayerIndex = playerIndex;
+        updateProbabilities(state);
 
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, initPlayerIndex);
         AIMove bestMove = legalMoves.get(0);
@@ -74,7 +75,7 @@ public class ExpectiNegamaxAI implements AIInterface {
             clone = state.clone();
             if (m.isChanceMove) {
                 // do expectimax evaluation
-                currentValue = -expectimaxSearch(currentDepth + 1, state.clone(), m);
+                currentValue = -expectimaxSearch(currentDepth + 1, clone, m);
             } else {
                 clone.applyMove(m);
                 currentValue = -negamaxSearch(currentDepth + 1, clone);
@@ -183,6 +184,12 @@ public class ExpectiNegamaxAI implements AIInterface {
             }
         }
         return true;
+    }
+
+    private void updateProbabilities(GameState state) {
+        if (probabilities == null) {
+            probabilities = new double[GameState.BOARD_SIZE][GameState.BOARD_SIZE][PieceType.values().length - 1];
+        }
     }
 
 }

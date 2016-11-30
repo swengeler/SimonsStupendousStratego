@@ -9,7 +9,7 @@ public class Player {
     private PlayerType type;
     
     /**
-     * An arraylist that keeps track of all the pieces that the player has on the board (that have
+     * An ArrayList that keeps track of all the pieces that the player has on the board (that have
      * been placed and not been eliminated yet).
      */
     private ArrayList<Piece> activePieces;
@@ -54,9 +54,10 @@ public class Player {
 
     public Player clone() {
         Player clone = new Player(type);
-        for (Piece p : activePieces)
+        for (Piece p : activePieces) {
             clone.addPiece(p.clone());
-        clone.setCurrentPiece(currentPiece.clone());
+        }
+        clone.setCurrentPiece(currentPiece == null ? null : currentPiece.clone());
         return clone;
     }
 

@@ -6,5 +6,6 @@ public interface Move {
     int getOrCol();
     int getDestRow();
     int getDestCol();
+    int length();
 
 }

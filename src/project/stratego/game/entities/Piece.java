@@ -102,4 +102,21 @@ public class Piece {
         return "Piece (model) belonging to player " + playerType + " , of type " + type + ", at position (" + rowPos + "|" + colPos + ")";
     }
 
+    /* equals method */
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Piece)) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        Piece cast = (Piece) o;
+        return cast.getID() == ID && cast.getType() == type && cast.getPlayerType() == playerType && cast.getRowPos() == rowPos && cast.getColPos() == colPos;
+    }
+
+    public int hashCode() {
+        return ID + 24912;
+    }
+
 }

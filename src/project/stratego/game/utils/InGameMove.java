@@ -9,25 +9,39 @@ public class InGameMove implements Move {
     private Piece movedPiece, encounteredPiece;
 
     public InGameMove(int orRow, int orCol, int destRow, int destCol, Piece movedPiece, Piece encounteredPiece) {
-
+        this.orRow = orRow;
+        this.orCol = orCol;
+        this.destRow = destRow;
+        this.destCol = destCol;
+        this.movedPiece = movedPiece;
+        this.encounteredPiece = encounteredPiece;
     }
 
     /* Getter methods */
 
+    @Override
     public int getOrRow() {
         return orRow;
     }
 
+    @Override
     public int getOrCol() {
         return orCol;
     }
 
+    @Override
     public int getDestRow() {
         return destRow;
     }
 
+    @Override
     public int getDestCol() {
         return destCol;
+    }
+
+    @Override
+    public int length() {
+        return Math.abs(destRow - orRow + destCol - orCol);
     }
 
     public Piece getMovedPiece() {

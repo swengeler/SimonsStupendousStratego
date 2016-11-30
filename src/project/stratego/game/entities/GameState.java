@@ -1,6 +1,5 @@
 package project.stratego.game.entities;
 
-import project.stratego.ai.AIMove;
 import project.stratego.game.utils.Move;
 import project.stratego.game.utils.MoveManager;
 import project.stratego.game.utils.PieceType;
@@ -17,7 +16,7 @@ public class GameState {
         boardSetup();
     }
 
-    private GameState(BoardTile[][] board, Player playerNorth, Player playerSouth) {
+    protected GameState(BoardTile[][] board, Player playerNorth, Player playerSouth) {
         this.board = new BoardTile[BOARD_SIZE][BOARD_SIZE];
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board.length; col++) {
@@ -28,7 +27,7 @@ public class GameState {
         this.playerSouth = playerSouth.clone();
     }
 
-    private GameState(BoardTile[][] board, Player playerNorth, Player playerSouth, int playerIndex) {
+    protected GameState(BoardTile[][] board, Player playerNorth, Player playerSouth, int playerIndex) {
         int opponentIndex = playerIndex == 0 ? 1 : 0;
         this.board = new BoardTile[BOARD_SIZE][BOARD_SIZE];
         for (int row = 0; row < board.length; row++) {

@@ -4,6 +4,7 @@ import project.stratego.control.server.StrategoServer;
 import project.stratego.game.logic.DeploymentLogic;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.utils.PieceType;
+import project.stratego.game.utils.PlayerType;
 
 import java.util.ArrayList;
 
@@ -64,6 +65,7 @@ public class ModelComManager {
         multiPlayer = false;
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureSinglePlayer();
+        AIComManager.getInstance().setAIMode("expectinegamax", PlayerType.SOUTH.ordinal());
     }
 
     /* View to model methods */
@@ -175,7 +177,7 @@ public class ModelComManager {
     public void sendPiecePlaced(int gameID, int playerIndex, int pieceIndex, int row, int col) {
         if (multiPlayer) {
             // pp = piece placed, s = self, o = opponent
-            System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + ".");
+            //System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + ".");
             server.sendCommandToClient(gameID, 0, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
             server.sendCommandToClient(gameID, 1, ("pp " + playerIndex + " " + pieceIndex + " " + row + " " + col));
         } else {
@@ -287,6 +289,9 @@ public class ModelComManager {
             server.remove(gameID);
             activeGames.remove(findGame(gameID));
         } else {
+            activeGames.remove(findGame(-1));
+            configureMultiPlayer();
+            configureSinglePlayer();
             ViewComManager.getInstance().sendGameOver(winnerPlayerIndex);
         }
     }

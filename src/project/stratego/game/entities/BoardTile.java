@@ -18,7 +18,7 @@ public class BoardTile {
         this.isAccessible = isAccessible;
         this.rowPos = rowPos;
         this.colPos = colPos;
-        this.occupyingPiece = occupyingPiece.clone();
+        this.occupyingPiece = occupyingPiece;
     }
 
     /* Getter methods */
@@ -43,7 +43,7 @@ public class BoardTile {
     /* Clone method */
 
     public BoardTile clone() {
-        BoardTile clone = new BoardTile(isAccessible, rowPos, colPos, occupyingPiece.clone());
+        BoardTile clone = new BoardTile(isAccessible, rowPos, colPos, occupyingPiece == null ? null : occupyingPiece.clone());
         return clone;
     }
 

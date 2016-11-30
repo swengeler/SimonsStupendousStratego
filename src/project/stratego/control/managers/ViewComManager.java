@@ -165,7 +165,7 @@ public class ViewComManager {
     }
 
     public void sendPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {
-        System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + " (ViewComManager).");
+        //System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + " (ViewComManager).");
         frame.getInGameView().processPiecePlaced(playerIndex, pieceIndex, row, col);
         if (frame.getInGameView().getPlayerIndex() != playerIndex) {
             frame.getInGameView().processHidePiece(row, col);
@@ -204,7 +204,9 @@ public class ViewComManager {
 
     public void sendGameOver(int winnerPlayerIndex) {
         frame.getInGameView().processGameOver(winnerPlayerIndex);
-        closeStrategoClient();
+        if (multiPlayer) {
+            closeStrategoClient();
+        }
     }
 
 }

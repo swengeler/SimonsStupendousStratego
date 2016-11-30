@@ -116,7 +116,7 @@ public class DeploymentLogic extends GameLogic {
             // controller.sendWaitForOtherPlayer();
             firstPlayerReady = playerIndex;
             System.out.println("Player " + playerIndex + " is ready.");
-            AIComManager.getInstance().tryBoardSetup(parent.getGameState(), 1);
+            AIComManager.getInstance().tryBoardSetup(parent.getGameState());
         } else if (findPlayer(playerIndex).getActivePieces().size() == 40) {
             // both players are ready
             System.out.println("Both players are ready.");

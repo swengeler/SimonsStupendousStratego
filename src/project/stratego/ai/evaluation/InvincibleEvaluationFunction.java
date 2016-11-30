@@ -1,5 +1,7 @@
-package project.stratego.ai.searchGenerics;
+package project.stratego.ai.evaluation;
 
+import project.stratego.ai.searchGenerics.EvaluationFunction;
+import project.stratego.ai.searchGenerics.EvaluationPlan;
 import project.stratego.game.entities.GameState;
 
 import java.util.ArrayList;

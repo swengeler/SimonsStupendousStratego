@@ -1,4 +1,4 @@
-package project.stratego.ai;
+package project.stratego.ai.searchGenerics;
 
 import project.stratego.game.utils.Move;
 
@@ -34,6 +34,11 @@ public class AIMove implements Move {
     @Override
     public int getDestCol() {
         return destCol;
+    }
+
+    @Override
+    public int length() {
+        return Math.abs(destRow - orRow + destCol - orCol);
     }
 
     public boolean isChanceMove() {

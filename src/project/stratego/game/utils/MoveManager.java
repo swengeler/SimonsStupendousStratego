@@ -15,7 +15,6 @@ public class MoveManager {
 
     public MoveManager(BoardTile[][] board) {
         this.board = board;
-        System.out.println("BOARD IN MOVEMANAGER CONSTRUCTOR: " + board);
     }
 
     public MoveResult testMove(Piece movingPiece, int destRow, int destCol) {
@@ -44,7 +43,6 @@ public class MoveManager {
      * to possibly remove pieces from their available pieces.
      */
     public void processMove(Player movingPlayer, Player staticPlayer, Piece movingPiece, int destRow, int destCol) {
-        System.out.println("BOARD IN MOVEMANAGER: " + board);
         lastRemovedPiece = null;
         lastMoveResult = MoveResult.NOMOVE;
 

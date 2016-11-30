@@ -21,6 +21,7 @@ public class PlayingLogic extends GameLogic {
         super(parent, firstPlayer, secondPlayer);
         currentPlayer = firstPlayer;
         currentOpponent = secondPlayer;
+        moveHistory = new LinkedList<>();
         //revealPieces();
     }
 
@@ -81,6 +82,7 @@ public class PlayingLogic extends GameLogic {
         }
         if (result != MoveResult.NOMOVE && !testing) {
             moveHistory.add(new InGameMove(orRow, orCol, row, col, currentPiece, parent.getBoard()[orRow][orCol].getOccupyingPiece())); // maybe move to MoveManager?
+            System.out.println("last move added: " + moveHistory.get(0) + " (" + moveHistory.get(0).getOrRow() + ") (" + orRow + ")");
             // call AIComManager to update AI's board
             processPlayerReady(currentPlayer.getType().ordinal());
         }
@@ -94,13 +96,13 @@ public class PlayingLogic extends GameLogic {
 
         boolean gameOver = checkGameOver();
         if (!gameOver) {
-            System.out.println("player: " + currentPlayer.getActivePieces().size());
-            System.out.println("opponent: " + currentOpponent.getActivePieces().size());
+            //System.out.println("player: " + currentPlayer.getActivePieces().size());
+            //System.out.println("opponent: " + currentOpponent.getActivePieces().size());
             //hidePieces();
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
-            AIComManager.getInstance().tryNextMove(parent.getGameState(), playerIndex == 0 ? 1 : 0);
+            AIComManager.getInstance().tryNextMove(moveHistory.getLast()); // needs to give last move made here
         } else {
             System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
@@ -160,7 +162,7 @@ public class PlayingLogic extends GameLogic {
     private boolean checkPlayerCanMove(Player player) {
         for (Piece p : player.getActivePieces()) {
             if (p.getType() != PieceType.FLAG && p.getType() != PieceType.BOMB) {
-                System.out.println("Player can move");
+                //System.out.println("Player can move");
                 return true;
             }
         }
@@ -170,7 +172,7 @@ public class PlayingLogic extends GameLogic {
     private boolean checkPlayerHasFlag(Player player) {
         for (Piece p : player.getActivePieces()) {
             if (p.getType() == PieceType.FLAG) {
-                System.out.println("Player has flag");
+                //System.out.println("Player has flag");
                 return true;
             }
         }

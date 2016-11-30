@@ -1,8 +1,10 @@
 package project.stratego.control.managers;
 
-import project.stratego.ai.*;
-import project.stratego.game.StrategoGame;
+import project.stratego.ai.search.ExpectiNegamaxAI;
+import project.stratego.ai.search.RandomAI;
+import project.stratego.ai.searchGenerics.GenericAI;
 import project.stratego.game.entities.GameState;
+import project.stratego.game.utils.Move;
 
 public class AIComManager {
 
@@ -16,10 +18,10 @@ public class AIComManager {
     }
 
     private AIComManager() {
-        setAIMode("random");
+        setAIMode("expectinegamax", 1);
     }
 
-    private AIInterface currentAI;
+    private GenericAI currentAI;
     private boolean isActive;
 
     public void configureMultiPlayer() {
@@ -30,39 +32,32 @@ public class AIComManager {
         isActive = true;
     }
 
-    public void setAIMode(String aiType) {
+    public void setAIMode(String aiType, int playerIndex) {
         if (aiType.equals("random")) {
-            currentAI = new RandomAI();
-        } else if (aiType.equals("expectimax")) {
-            currentAI = new ExpectiNegamaxAI();
+            currentAI = new RandomAI(playerIndex);
+        } else if (aiType.equals("expectinegamax")) {
+            currentAI = new ExpectiNegamaxAI(playerIndex);
         }
     }
 
-    public void tryBoardSetup(GameState state, int playerIndex) {
+    public void tryBoardSetup(GameState state) {
         if (isActive && currentAI != null) {
-            currentAI.makeBoardSetup(state, playerIndex);
+            currentAI.copyOpponentSetup(state);
+            currentAI.makeBoardSetup(state);
         }
     }
 
-    public void tryBoardSetup(StrategoGame game, int playerIndex, String aiType) {
-
-    }
-
-    public void tryNextMove(GameState state, int playerIndex) {
-        System.out.println("TEST: " + state.getBoardArray()[4][1].getOccupyingPiece());
-        if (isActive && currentAI != null && playerIndex == 1) {
-            AIMove nextMove = currentAI.getNextMove(state, playerIndex);
-            ModelComManager.getInstance().requestBoardTileSelected(-1, playerIndex, nextMove.getOrRow(), nextMove.getOrCol());
-            ModelComManager.getInstance().requestBoardTileSelected(-1, playerIndex, nextMove.getDestRow(), nextMove.getDestCol());
+    public void tryNextMove(Move move) {
+        if (isActive && currentAI != null) {
+            System.out.println("CHECK 2 + " + "move from: (" + move.getOrRow() + "|" + move.getOrCol() + ") to (" + move.getDestRow() + "|" + move.getDestCol() + ")");
+            Move nextMove = currentAI.getNextMove(move);
+            ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
+            ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
         }
-    }
-
-    public void tryNextMove(StrategoGame game, int playerIndex, String aiType) {
-
     }
 
     public void reset() {
-        setAIMode("random");
+        setAIMode("expectinegamax", 1);
     }
 
 }

@@ -1,5 +1,6 @@
-package project.stratego.ai.searchGenerics;
+package project.stratego.ai.evaluation;
 
+import project.stratego.ai.searchGenerics.EvaluationFunction;
 import project.stratego.game.entities.GameState;
 
 public class TestEvaluationFunction implements EvaluationFunction {

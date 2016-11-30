@@ -34,7 +34,7 @@ public class Piece extends Group {
     }
 
     public void setToRevealedState() {
-        System.out.println("Piece revealed");
+        //System.out.println("Piece revealed");
         icon.setImage(revealedImage);
         icon.setViewport(revealedViewPort);
     }

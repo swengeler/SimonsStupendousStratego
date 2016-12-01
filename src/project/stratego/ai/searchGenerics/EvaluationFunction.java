@@ -1,9 +1,9 @@
 package project.stratego.ai.searchGenerics;
 
-import project.stratego.game.entities.GameState;
+import project.stratego.ai.EnhancedGameState;
 
 public interface EvaluationFunction {
 
-    double evaluate(GameState state, int playerIndex);
+    double evaluate(EnhancedGameState gameState);
 
 }

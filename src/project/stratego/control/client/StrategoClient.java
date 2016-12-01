@@ -42,7 +42,7 @@ public class StrategoClient implements Runnable {
         try {
             while (!stopThread && (!in.ready() || (in.ready() && (incomingCommand = in.readLine()) != null && !incomingCommand.equals("dc")))) {
                 if (!incomingCommand.equals("")) {
-                    System.out.println("Client received: " + incomingCommand);
+                    //System.out.println("Client received: " + incomingCommand);
                     interpretCommand(incomingCommand);
                     incomingCommand = "";
                 }
@@ -53,7 +53,7 @@ public class StrategoClient implements Runnable {
                 //Platform.runLater(() -> ViewComManager.getInstance().sendResetGame());
                 socket.close();
             }
-            System.out.println("client should be closed");
+            //System.out.println("client should be closed");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -63,13 +63,13 @@ public class StrategoClient implements Runnable {
 
     private void interpretCommand(String command) {
         String[] parts = command.split(" ");
-        System.out.println("Client received command: \"" + command + "\".");
+        //System.out.println("Client received command: \"" + command + "\".");
 
         if (parts[0].equals("go")) {
             Platform.runLater(() -> ViewComManager.getInstance().sendGameOver(Integer.parseInt(parts[1])));
         } else if (parts[0].equals("sa")) {
             // assign the client a side that the player play on
-            System.out.println("Client received side assign command (player index: " + Integer.parseInt(parts[1]) + ").");
+            //System.out.println("Client received side assign command (player index: " + Integer.parseInt(parts[1]) + ").");
             Platform.runLater(() -> ViewComManager.getInstance().sendAssignSide(Integer.parseInt(parts[1])));
         } else if (parts[0].equals("rd")) {
             // own or opponent's deployed pieces reset (clear one board side)
@@ -109,7 +109,7 @@ public class StrategoClient implements Runnable {
     public void sendCommandToServer(String command) {
         if (out != null) {
             out.println(command);
-            System.out.println("Command sent to server: " + command);
+            //System.out.println("Command sent to server: " + command);
         } else {
             System.out.println("Client could not send command to server.");
         }

@@ -4,16 +4,22 @@ import project.stratego.game.utils.Move;
 
 public class AIMove implements Move {
 
-    private final int orRow, orCol, destRow, destCol;
+    private int playerIndex, orRow, orCol, destRow, destCol;
 
-    private final boolean isChanceMove;
+    private boolean isChanceMove;
 
-    public AIMove(int orRow, int orCol, int destRow, int destCol, boolean isChanceMove) {
+    public AIMove(int playerIndex, int orRow, int orCol, int destRow, int destCol, boolean isChanceMove) {
+        this.playerIndex = playerIndex;
         this.orRow = orRow;
         this.orCol = orCol;
         this.destRow = destRow;
         this.destCol = destCol;
         this.isChanceMove = isChanceMove;
+    }
+
+    @Override
+    public int getPlayerIndex() {
+        return playerIndex;
     }
 
     @Override

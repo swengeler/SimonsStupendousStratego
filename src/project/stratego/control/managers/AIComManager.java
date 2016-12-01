@@ -48,11 +48,12 @@ public class AIComManager {
     }
 
     public void tryNextMove(Move move) {
-        if (isActive && currentAI != null) {
-            System.out.println("CHECK 2 + " + "move from: (" + move.getOrRow() + "|" + move.getOrCol() + ") to (" + move.getDestRow() + "|" + move.getDestCol() + ")");
+        if (isActive && currentAI != null && move.getPlayerIndex() != currentAI.getPlayerIndex()) {
             Move nextMove = currentAI.getNextMove(move);
             ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
+        } else if (isActive && currentAI != null) {
+            currentAI.applyMove(move);
         }
     }
 

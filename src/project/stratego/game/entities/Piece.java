@@ -72,7 +72,7 @@ public class Piece {
     /* Setter methods */
 
     public void reveal() {
-        System.out.println("Piece at (" + rowPos + "|" + colPos + ") revealed.");
+        //System.out.println("Piece at (" + rowPos + "|" + colPos + ") revealed.");
         isRevealed = true;
     }
 
@@ -99,7 +99,7 @@ public class Piece {
     /* toString method */
 
     public String toString() {
-        return "Piece (model) belonging to player " + playerType + " , of type " + type + ", at position (" + rowPos + "|" + colPos + ")";
+        return "Piece (model) belonging to player " + playerType + ", of type " + type + ", at position (" + rowPos + "|" + colPos + ")";
     }
 
     /* equals method */
@@ -112,7 +112,7 @@ public class Piece {
             return true;
         }
         Piece cast = (Piece) o;
-        return cast.getID() == ID && cast.getType() == type && cast.getPlayerType() == playerType && cast.getRowPos() == rowPos && cast.getColPos() == colPos;
+        return cast.getID() == ID && cast.getType() == type && cast.getPlayerType() == playerType;
     }
 
     public int hashCode() {

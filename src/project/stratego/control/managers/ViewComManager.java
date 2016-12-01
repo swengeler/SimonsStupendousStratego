@@ -139,7 +139,7 @@ public class ViewComManager {
     }
 
     public void sendOpponentQuit() {
-        System.out.println("OPPONENT QUIT");
+        //System.out.println("OPPONENT QUIT");
         Messages.showOpponentDisonnectedMessage();
         frame.getInGameView().processResetGame();
     }
@@ -207,6 +207,10 @@ public class ViewComManager {
         if (multiPlayer) {
             closeStrategoClient();
         }
+    }
+
+    public void sendRevealAll() {
+        frame.getInGameView().revealAll();
     }
 
 }

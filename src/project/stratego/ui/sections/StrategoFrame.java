@@ -5,6 +5,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import project.stratego.control.DebugHelper;
 import project.stratego.control.managers.ViewComManager;
 import project.stratego.ui.sections.*;
 
@@ -18,6 +19,8 @@ public class StrategoFrame extends Stage {
     }
 
     private void setUp() {
+        DebugHelper debugHelper = new DebugHelper();
+
         HBox components = new HBox();
         //components.setStyle("-fx-background-color: #bf1c1c");
         components.setStyle("-fx-background-color: linear-gradient(from 20% 50% to 100% 50%, #48a4f9, #bf1c1c);");
@@ -37,13 +40,12 @@ public class StrategoFrame extends Stage {
         setOnCloseRequest((WindowEvent w) -> {
             if (ViewComManager.getInstance().isConnected()) {
                 // close client thread
-                System.out.println("window close requested");
+                //System.out.println("window close requested");
                 ViewComManager.getInstance().closeStrategoClient();
             }
+            debugHelper.close();
         });
 
-        System.out.println(inGameView.getWidth() + " " + inGameView.getHeight());
-        System.out.println(sideMenu.getHeight());
     }
 
     public InGameView getInGameView() {

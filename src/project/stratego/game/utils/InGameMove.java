@@ -4,11 +4,12 @@ import project.stratego.game.entities.Piece;
 
 public class InGameMove implements Move {
 
-    private int orRow, orCol, destRow, destCol;
+    private int playerIndex, orRow, orCol, destRow, destCol;
 
     private Piece movedPiece, encounteredPiece;
 
-    public InGameMove(int orRow, int orCol, int destRow, int destCol, Piece movedPiece, Piece encounteredPiece) {
+    public InGameMove(int playerIndex, int orRow, int orCol, int destRow, int destCol, Piece movedPiece, Piece encounteredPiece) {
+        this.playerIndex = playerIndex;
         this.orRow = orRow;
         this.orCol = orCol;
         this.destRow = destRow;
@@ -18,6 +19,11 @@ public class InGameMove implements Move {
     }
 
     /* Getter methods */
+
+    @Override
+    public int getPlayerIndex() {
+        return playerIndex;
+    }
 
     @Override
     public int getOrRow() {
@@ -55,7 +61,7 @@ public class InGameMove implements Move {
     /* Clone method */
 
     public InGameMove clone() {
-        return new InGameMove(orRow, orCol, destRow, destCol, movedPiece.clone(), encounteredPiece.clone());
+        return new InGameMove(playerIndex, orRow, orCol, destRow, destCol, movedPiece.clone(), encounteredPiece.clone());
     }
 
 }

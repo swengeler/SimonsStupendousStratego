@@ -7,5 +7,6 @@ public interface Move {
     int getDestRow();
     int getDestCol();
     int length();
+    int getPlayerIndex();
 
 }

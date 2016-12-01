@@ -23,9 +23,9 @@ public class ExpectiNegamaxAI extends GenericAI {
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
-        System.out.println("CHECK 3");
+        //System.out.println("CHECK 3");
         gameState.applyMove(lastOpponentMove);
-        System.out.println("CHECK 1");
+        //System.out.println("CHECK 1");
         return expectiNegamaxSearch();
     }
 
@@ -53,11 +53,17 @@ public class ExpectiNegamaxAI extends GenericAI {
 
     private Move expectiNegamaxSearch() {
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
-        //System.out.println("Number of legal moves: " + legalMoves.size());
+        System.out.println("Number of legal moves: " + legalMoves.size());/*
+        for (AIMove m : legalMoves) {
+            System.out.println("Move FROM: (" + m.getOrRow() + "|" + m.getOrCol() + ") TO (" + m.getDestRow() + "|" + m.getDestCol() + ")");
+        }*/
         AIMove bestMove = legalMoves.get(0);
         EnhancedGameState clone;
         double maxValue = -Double.MAX_VALUE;
         double currentValue;
+
+        System.out.println("PRINTOUT ON LEVEL: 0");
+        gameState.printBoard();
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -81,6 +87,7 @@ public class ExpectiNegamaxAI extends GenericAI {
 
     private double negamaxSearch(int currentDepth, EnhancedGameState state) {
         if (currentDepth == maxDepth) {
+            System.out.println("Negamax evaluation at depth: " + currentDepth);
             return evaluationFunction.evaluate(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex); // return evaluate(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
         }
 
@@ -88,7 +95,11 @@ public class ExpectiNegamaxAI extends GenericAI {
         double currentValue;
         // generate all moves
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
+        System.out.println("\nNumber of legal moves for this node at depth " + currentDepth + ": " + legalMoves.size());
         EnhancedGameState clone;
+
+        System.out.println("PRINTOUTS ON LEVEL: " + currentDepth);
+        state.printBoard();
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -111,18 +122,22 @@ public class ExpectiNegamaxAI extends GenericAI {
 
     private double expectimaxSearch(int currentDepth, EnhancedGameState state, AIMove chanceMove) {
         if (currentDepth == maxDepth) {
+            System.out.println("Expectimax evaluation at depth: " + currentDepth);
             return evaluationFunction.evaluate(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex); // return evaluate(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex); ?
         }
 
         double sum = 0;
         double prevProbability;
         EnhancedGameState clone;
-        Piece unknownPiece = state.getBoardArray()[currentDepth % 2 == 0 ? chanceMove.getDestRow() : chanceMove.getOrRow()][currentDepth % 2 == 0 ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
+        Piece unknownPiece = state.getBoardArray()[currentDepth % 2 != 0 ? chanceMove.getDestRow() : chanceMove.getOrRow()][currentDepth % 2 != 0 ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
+
+        //System.out.println("EXPECTIMAX PRINTOUTS ON LEVEL: " + currentDepth);
 
         // make clones of all possible assignments for either the piece that is moved or the piece that is attacked
         // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)
         // sum over all possible scenarios arising from chanceMove
         for (int i = 0; i < PieceType.values().length - 1; i++) {
+            //System.out.println("probability for " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i) + " (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ")");
             if ((prevProbability = state.getProbability(unknownPiece, i)) != 0) {
                 clone = state.clone();
                 clone.assignPieceType(unknownPiece, PieceType.values()[i]);

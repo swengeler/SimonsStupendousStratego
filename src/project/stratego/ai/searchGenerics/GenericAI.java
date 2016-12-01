@@ -22,6 +22,10 @@ public class GenericAI {
         return null;
     }
 
+    public void applyMove(Move move) {
+        gameState.applyMove(move);
+    }
+
     public int getPlayerIndex() {
         return -1;
     }
@@ -36,11 +40,22 @@ public class GenericAI {
         int destRow, destCol;
         for (Piece p : state.getPlayer(playerIndex).getActivePieces()) {
             // check for unmovable pieces
-            if ((p.getPlayerType().ordinal() == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
-                    (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) <= EnhancedGameState.PROB_EPSILON && Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) <= EnhancedGameState.PROB_EPSILON)) {
+            if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
+                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) > EnhancedGameState.PROB_EPSILON || Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) > EnhancedGameState.PROB_EPSILON))) {
                 int moveRadius = 1;
                 // scouts can move more squares than the other pieces
-                if ((p.getType() == PieceType.SCOUT && p.getPlayerType().ordinal() != state.getPlayerIndex()) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) <= EnhancedGameState.PROB_EPSILON) {
+                if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) <= EnhancedGameState.PROB_EPSILON) {
+                    System.out.println("Scout at position: (" + p.getRowPos() + "|" + p.getColPos() + ") and board says: " + state.getBoardArray()[p.getRowPos()][p.getColPos()].getOccupyingPiece());
+                    if (state.getBoardArray()[p.getRowPos()][p.getColPos()].getOccupyingPiece() == null) {
+                        for (int i = 0; i < 10; i++) {
+                            for (int j = 0; j < 10; j++) {
+                                if (state.getBoardArray()[i][j].getOccupyingPiece() == p) {
+                                    p.setPos(i, j);
+                                    System.out.println("Scout corrected to (" + i + "|" + j + ")");
+                                }
+                            }
+                        }
+                    }
                     moveRadius = 9;
                 }
                 // loop through the positions around the piece and check whether they can be moved there
@@ -57,7 +72,7 @@ public class GenericAI {
                                 // OR same playerIndex as root (initPlayerIndex) AND position to be moved to is taken by opponent's unrevealed piece
                                 chanceEvent = chanceEvent || (playerIndex == this.playerIndex && !state.getBoardArray()[destRow][destCol].getOccupyingPiece().isRevealed());
                             }
-                            legalMoves.add(new AIMove(p.getRowPos(), p.getColPos(), destRow, destCol, chanceEvent));
+                            legalMoves.add(new AIMove(playerIndex, p.getRowPos(), p.getColPos(), destRow, destCol, chanceEvent));
                             chanceEvent = false;
                         }
                     }
@@ -85,7 +100,7 @@ public class GenericAI {
             return false;
         }
         // check if path to position is blocked by other piece/inaccessible tile
-        if (((p.getType() == PieceType.SCOUT && p.getPlayerType().ordinal() != state.getPlayerIndex()) || Math.abs(state.getProbability(p, PieceType.SCOUT.ordinal()) - 1.0) <= EnhancedGameState.PROB_EPSILON) && !checkScoutPath(state, p, destRow, destCol)) {
+        if (((p.getPlayerType().ordinal() == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT.ordinal()) - 1.0) <= EnhancedGameState.PROB_EPSILON) && !checkScoutPath(state, p, destRow, destCol)) {
             return false;
         }
         return true;
@@ -94,13 +109,13 @@ public class GenericAI {
     protected boolean checkScoutPath(EnhancedGameState state, Piece scout, int destRow, int destCol) {
         // target position is in the same column as current position
         if (scout.getColPos() - destCol == 0) {
-            for (int row = scout.getRowPos(); row != destRow; row += (destRow - scout.getRowPos() < 0 ? -1 : 1)) {
+            for (int row = scout.getRowPos() + (destRow - scout.getRowPos() < 0 ? -1 : 1); row != destRow; row += (destRow - scout.getRowPos() < 0 ? -1 : 1)) {
                 if (state.getBoardArray()[row][destCol].getOccupyingPiece() != null || !state.getBoardArray()[row][destCol].isAccessible()) {
                     return false;
                 }
             }
         } else if (scout.getRowPos() - destRow == 0) {
-            for (int col = scout.getColPos(); col != destRow; col += (destRow - scout.getColPos() < 0 ? -1 : 1)) {
+            for (int col = scout.getColPos() + (destCol - scout.getColPos() < 0 ? -1 : 1); col != destCol; col += (destCol - scout.getColPos() < 0 ? -1 : 1)) {
                 if (state.getBoardArray()[destRow][col].getOccupyingPiece() != null || !state.getBoardArray()[destRow][col].isAccessible()) {
                     return false;
                 }

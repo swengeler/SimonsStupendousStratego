@@ -17,7 +17,7 @@ public class RandomAI extends GenericAI {
     @Override
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
-        System.out.println("CHECK 249z6");
+        //System.out.println("CHECK 249z6");
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         int randIndex = (int) (Math.random() * legalMoves.size());
         return legalMoves.get(randIndex);

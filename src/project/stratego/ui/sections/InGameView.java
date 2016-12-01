@@ -56,7 +56,7 @@ public class InGameView extends Pane {
         this.playerIndex = playerIndex;
         tray.setPlayerIndex(playerIndex);
         // possibly do other stuff, e.g. change the color of the tray or smth
-        System.out.println("Side assign received in the GUI.");
+        //System.out.println("Side assign received in the GUI.");
     }
 
     public void processHighlightDeployment(boolean highlight) {
@@ -140,6 +140,10 @@ public class InGameView extends Pane {
         boardArea.attackAnimation(stopRow, stopCol, destRow, destCol);
         boardArea.removePiece(destRow, destCol);
         boardArea.movePiece(stopRow, stopCol, destRow, destCol);
+    }
+
+    public void revealAll() {
+        boardArea.revealAll();
     }
 
     public int getPlayerIndex() {

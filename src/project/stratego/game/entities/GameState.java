@@ -17,14 +17,20 @@ public class GameState {
     }
 
     protected GameState(BoardTile[][] board, Player playerNorth, Player playerSouth) {
+        this.playerNorth = new Player(playerNorth.getType());
+        this.playerSouth = new Player(playerSouth.getType());
+
         this.board = new BoardTile[BOARD_SIZE][BOARD_SIZE];
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board.length; col++) {
                 this.board[row][col] = board[row][col].clone();
+                if (this.board[row][col].getOccupyingPiece() != null && this.board[row][col].getOccupyingPiece().getPlayerType() == PlayerType.NORTH) {
+                    playerNorth.addPiece(this.board[row][col].getOccupyingPiece());
+                } else if (this.board[row][col].getOccupyingPiece() != null) {
+                    playerSouth.addPiece(this.board[row][col].getOccupyingPiece());
+                }
             }
         }
-        this.playerNorth = playerNorth.clone();
-        this.playerSouth = playerSouth.clone();
     }
 
     protected GameState(BoardTile[][] board, Player playerNorth, Player playerSouth, int playerIndex) {
@@ -96,6 +102,24 @@ public class GameState {
     public GameState clone(int playerIndex) {
         GameState clone = new GameState(board, playerNorth, playerSouth, playerIndex);
         return clone;
+    }
+
+    public void printBoard() {
+        System.out.println("\nBOARD:");
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            System.out.print("---------------------------------------------------\n|");
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (!board[row][col].isAccessible()) {
+                    System.out.print(" ~~ |");
+                } else if (board[row][col].getOccupyingPiece() == null) {
+                    System.out.print("    |");
+                } else {
+                    System.out.print(" " + board[row][col].getOccupyingPiece().getType().toString().substring(0, 2) + " |");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("---------------------------------------------------\n");
     }
 
 }

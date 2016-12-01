@@ -35,7 +35,7 @@ public class ModelComManager {
     public void addStrategoGame(int gameID) {
         // note: the activeGames.size() call returns the size before adding new game
         activeGames.add(new StrategoGame(gameID));
-        System.out.println("New game created (ID: " + gameID + ").");
+        //System.out.println("New game created (ID: " + gameID + ").");
     }
 
     public void removeStrategoGame(int gameID) {
@@ -72,7 +72,7 @@ public class ModelComManager {
 
     public void requestResetGame(int gameID) {
         if (findGame(gameID) != null) {
-            System.out.println("Request reset game");
+            //System.out.println("Request reset game");
             findGame(gameID).resetGame();
             sendResetGame(gameID);
             if (!multiPlayer) {
@@ -111,7 +111,7 @@ public class ModelComManager {
             if (multiPlayer && !server.gameStarted(gameID)) {
                 return;
             }
-            System.out.println("Process tray select");
+            //System.out.println("Process tray select");
             findGame(gameID).getCurrentRequestProcessor().processTraySelect(playerIndex, pieceIndex);
         }
     }

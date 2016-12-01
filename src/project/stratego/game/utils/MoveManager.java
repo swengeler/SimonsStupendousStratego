@@ -17,26 +17,6 @@ public class MoveManager {
         this.board = board;
     }
 
-    public MoveResult testMove(Piece movingPiece, int destRow, int destCol) {
-        if (destRow < 0 || destRow >= 10 || destCol < 0 || destCol >= 10) {
-            return MoveResult.NOMOVE;
-        }
-        BoardTile destTile = board[destRow][destCol];
-        if (movingPiece.getType() == PieceType.BOMB || movingPiece.getType() == PieceType.FLAG) {
-            return MoveResult.NOMOVE;
-        }
-        if (!destTile.isAccessible()) {
-            return MoveResult.NOMOVE;
-        }
-        if (destTile.getOccupyingPiece() != null && destTile.getOccupyingPiece().getPlayerType() == movingPiece.getPlayerType()) {
-            return MoveResult.NOMOVE;
-        }
-        if (!checkIfReachable(movingPiece, destRow, destCol)) {
-            return MoveResult.NOMOVE;
-        }
-        return MoveResult.MOVE;
-    }
-
     /**
      * A method that resolves the request to move a certain selected piece to a certain board position.
      * It also takes as parameters the players of the game according to their respective roles, in order
@@ -46,19 +26,23 @@ public class MoveManager {
         lastRemovedPiece = null;
         lastMoveResult = MoveResult.NOMOVE;
 
+        if (movingPiece.getType() == PieceType.SCOUT && movingPiece.getPlayerType().ordinal() == 1) {
+            System.out.println("Scout move FROM (" + movingPiece.getRowPos() + "|" + movingPiece.getColPos() + ") TO (" + destRow + "|" + destCol + ") attempted");
+        }
+
         BoardTile destTile = board[destRow][destCol];
         // doesn't account for flag/bomb because you cannot select those
         if (!destTile.isAccessible()) {
-            System.out.println("Did not move because not accessible");
+            //System.out.println("Did not move because not accessible");
             return;
         }
         if (destTile.getOccupyingPiece() != null && destTile.getOccupyingPiece().getPlayerType() == movingPiece.getPlayerType()) {
             // also accounts for clicking the same tile again
-            System.out.println("Did not move because occupied by own piece");
+            //System.out.println("Did not move because occupied by own piece");
             return;
         }
         if (!checkIfReachable(movingPiece, destRow, destCol)) {
-            System.out.println("Did not move because unreachable");
+            //System.out.println("Did not move because unreachable");
             return;
         }
 
@@ -66,6 +50,10 @@ public class MoveManager {
         lastMoveResult = MoveResult.MOVE;
         movingPiece.revealMove();
         board[movingPiece.getRowPos()][movingPiece.getColPos()].setOccupyingPiece(null);
+
+        if (movingPiece.getType() == PieceType.SCOUT && movingPiece.getPlayerType().ordinal() == 1) {
+            System.out.println("Scout move FROM (" + movingPiece.getRowPos() + "|" + movingPiece.getColPos() + ") TO (" + destRow + "|" + destCol + ")");
+        }
 
         if (destTile.getOccupyingPiece() != null) {
             movingPiece.reveal();
@@ -90,8 +78,11 @@ public class MoveManager {
                 movingPlayer.removePiece(movingPiece);
             }
         } else {
-            System.out.println("(" + destRow + "|" + destCol + ") is set to occupied: " + movingPiece);
+            //System.out.println("(" + destRow + "|" + destCol + ") is set to occupied: " + movingPiece);
             destTile.setOccupyingPiece(movingPiece);
+            if (movingPiece.getType() == PieceType.SCOUT && movingPiece.getPlayerType().ordinal() == 1) {
+                System.out.println("Check scout is at (" + movingPiece.getRowPos() + "|" + movingPiece.getColPos() + "), correct: " + (movingPiece.getRowPos() == destRow && movingPiece.getColPos() == destCol));
+            }
         }
         movingPlayer.setCurrentPiece(null);
     }
@@ -121,19 +112,21 @@ public class MoveManager {
         if (((rowDiff == 0 && Math.abs(colDiff) > 1) || (colDiff == 0 && Math.abs(rowDiff) > 1)) && movingPiece.getType() != PieceType.SCOUT) {
             return false;
         }
-        int c;
-        if (rowDiff == 0) {
-            c = colDiff > 0 ? 1 : -1;
-            for (int i = 1; i < Math.abs(colDiff); i++) {
-                if (board[destRow][movingPiece.getColPos() + i * c].getOccupyingPiece() != null || !board[destRow][movingPiece.getColPos() + i * c].isAccessible()) {
-                    return false;
+        if (movingPiece.getType() == PieceType.SCOUT) {
+            int c;
+            if (rowDiff == 0) {
+                c = colDiff > 0 ? 1 : -1;
+                for (int i = 1; i < Math.abs(colDiff); i++) {
+                    if (board[destRow][movingPiece.getColPos() + i * c].getOccupyingPiece() != null || !board[destRow][movingPiece.getColPos() + i * c].isAccessible()) {
+                        return false;
+                    }
                 }
-            }
-        } else if (colDiff == 0) {
-            c = rowDiff > 0 ? 1 : -1;
-            for (int i = 1; i < Math.abs(rowDiff); i++) {
-                if (board[movingPiece.getRowPos() + i * c][destCol].getOccupyingPiece() != null || !board[movingPiece.getRowPos() + i * c][destCol].isAccessible()) {
-                    return false;
+            } else {
+                c = rowDiff > 0 ? 1 : -1;
+                for (int i = 1; i < Math.abs(rowDiff); i++) {
+                    if (board[movingPiece.getRowPos() + i * c][destCol].getOccupyingPiece() != null || !board[movingPiece.getRowPos() + i * c][destCol].isAccessible()) {
+                        return false;
+                    }
                 }
             }
         }

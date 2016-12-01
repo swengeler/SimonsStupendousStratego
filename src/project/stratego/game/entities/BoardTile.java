@@ -18,7 +18,7 @@ public class BoardTile {
         this.isAccessible = isAccessible;
         this.rowPos = rowPos;
         this.colPos = colPos;
-        this.occupyingPiece = occupyingPiece;
+        this.setOccupyingPiece(occupyingPiece);
     }
 
     /* Getter methods */

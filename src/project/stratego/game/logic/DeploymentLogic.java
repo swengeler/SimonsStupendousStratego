@@ -59,7 +59,7 @@ public class DeploymentLogic extends GameLogic {
         }
         Piece temp;
         if ((temp = pieceFactory.makePiece(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex])) != null) {
-            System.out.println("Can place piece of type " + temp.getType());
+            //System.out.println("Can place piece of type " + temp.getType());
             findPlayer(playerIndex).addPiece(temp);
             findPlayer(playerIndex).setCurrentPiece(temp);
             ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
@@ -110,7 +110,7 @@ public class DeploymentLogic extends GameLogic {
 
     @Override
     public void processPlayerReady(int playerIndex) {
-        System.out.println(findPlayer(playerIndex).getActivePieces().size());
+        //System.out.println(findPlayer(playerIndex).getActivePieces().size());
         if (firstPlayerReady == -1 && findPlayer(playerIndex).getActivePieces().size() == 40) {
             // player sending "ready" is the first to be ready, have to wait for other player
             // controller.sendWaitForOtherPlayer();

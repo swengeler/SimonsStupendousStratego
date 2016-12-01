@@ -64,7 +64,7 @@ public class StrategoServer {
     public void sendCommandToClient(int gameID, int playerIndex, String command) {
         for (StrategoServerThread s : clients) {
             if (s.getGameID() == gameID && s.getPlayerIndex() == playerIndex) {
-                System.out.println("Client found to send command to: \"" + command + "\".");
+                //System.out.println("Client found to send command to: \"" + command + "\".");
                 s.sendCommand(command);
                 return;
             }
@@ -74,7 +74,7 @@ public class StrategoServer {
     public void remove(int gameID) {
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).getGameID() == gameID) {
-                System.out.println("Game removed (ID: " + gameID + ").");
+                //System.out.println("Game removed (ID: " + gameID + ").");
                 clients.get(i).sendCommand("dc");
                 clients.get(i).stopThread();
                 clients.remove(i);
@@ -86,7 +86,7 @@ public class StrategoServer {
     public boolean gameStarted(int gameID) {
         for (StrategoServerThread c : clients) {
             if (c.getGameID() == gameID && c.getPlayerIndex() == 1) {
-                System.out.println("Game has started (ID: " + gameID + ").");
+                //System.out.println("Game has started (ID: " + gameID + ").");
                 return true;
             }
         }

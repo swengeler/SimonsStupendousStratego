@@ -27,7 +27,7 @@ public class StrategoServerThread implements Runnable {
         this.gameID = gameID;
         this.playerIndex = playerIndex;
         setUp();
-        System.out.println("Client connected (ID: " + gameID + ", player index: " + playerIndex + ").");
+        //System.out.println("Client connected (ID: " + gameID + ", player index: " + playerIndex + ").");
     }
 
     private void setUp() {
@@ -57,7 +57,7 @@ public class StrategoServerThread implements Runnable {
             }
             clientSocket.close();
             server.remove(gameID);
-            System.out.println("Server thread (ID: " + gameID + ", player index: " + playerIndex + ") is removed.");
+            //System.out.println("Server thread (ID: " + gameID + ", player index: " + playerIndex + ") is removed.");
         } catch (IOException e) {
             server.remove(gameID);
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class StrategoServerThread implements Runnable {
     }
 
     private void interpretCommand(String command) {
-        System.out.println("Command received from client (on server ID: " + gameID + ", player index: " + playerIndex + "): " + command + ".");
+        //System.out.println("Command received from client (on server ID: " + gameID + ", player index: " + playerIndex + "): " + command + ".");
         if (command.equals("q")) {
             ModelComManager.getInstance().sendPlayerQuit(gameID, playerIndex);
         } else if (command.equals("rg")) {
@@ -99,7 +99,7 @@ public class StrategoServerThread implements Runnable {
     public void sendCommand(String command) {
         if (out != null) {
             out.println(command);
-            System.out.println("Server sent command: \"" + command + "\".");
+            //System.out.println("Server sent command: \"" + command + "\".");
         } else {
             System.out.println("Server could not send command to client.");
         }

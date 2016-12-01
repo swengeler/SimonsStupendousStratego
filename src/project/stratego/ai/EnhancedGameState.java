@@ -51,6 +51,21 @@ public class EnhancedGameState extends GameState {
 
 
         // depending on the outcome of the move, update probabilities
+           
+        /*
+        	1) Flag always has the highest value
+        	2) Spy.value = 1/2 * Marshal.value
+        	3) If the spy is in game: Marshal.value = Marshal.value * 0.8 
+        	4) If =< 3 Miners: Miners.value = Miners.value * (4 - Miners.count)
+        	5) If =< 3 Scouts: Scouts.value = Scouts.value * (4 - Scouts.count)
+        	6) Bomb.value = Opponents Highest piece value * 0.5
+        	7) For every piece type, piece.value += 1/(piece.count)    // EX: If there are 5 scouts, scout.value += 1/5
+        	8) If the opponent has a spy: Marshal.value = Marshal.value * 0.5
+        	9) For every piece that is know, give a penalty. Value ????
+        	10) For a specific piece type, if piece.type.count > than opponent.piece.type.count then piece.type.value += value (?) //Ex: I have 3 miners, opponent has 2 then my miners get an increased value
+        	 
+        */
+        
         // what should matter for probabilities is whether the opponent's piece was moved or revealed
         // mappings would not have to be removed from the hash-map, instead they should just be set to 1
         // which would produce the same effect for the other probabilities as removing them

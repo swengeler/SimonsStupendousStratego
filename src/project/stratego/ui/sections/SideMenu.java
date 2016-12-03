@@ -183,4 +183,8 @@ public class SideMenu extends Pane {
         }));
     }
 
+    public void reset() {
+        menu.setExpandedPane(null);
+    }
+
 }

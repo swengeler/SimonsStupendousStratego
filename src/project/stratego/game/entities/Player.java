@@ -43,6 +43,7 @@ public class Player {
     /* Other methods */
 
     public void addPiece(Piece piece) {
+        //System.out.println("Piece added for " + type + ": " + piece);
         activePieces.add(piece);
     }
 

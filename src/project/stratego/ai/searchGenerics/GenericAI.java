@@ -8,33 +8,28 @@ import project.stratego.game.utils.PieceType;
 
 import java.util.ArrayList;
 
-public class GenericAI {
+public abstract class GenericAI {
 
     protected int playerIndex;
     protected EnhancedGameState gameState;
 
-    public GenericAI(int playerIndex) {
+    protected GenericAI(int playerIndex) {
         this.playerIndex = playerIndex;
         gameState = new EnhancedGameState(playerIndex);
     }
 
-    public Move getNextMove(Move lastOpponentMove) {
-        return null;
-    }
+    public abstract Move getNextMove(Move lastOpponentMove);
 
-    public void applyMove(Move move) {
-        gameState.applyMove(move);
-    }
+    public abstract void applyMove(Move move);
 
-    public int getPlayerIndex() {
-        return -1;
-    }
+    public abstract int getPlayerIndex();
 
-    public void makeBoardSetup(GameState state) {}
+    public abstract void makeBoardSetup(GameState inGameState);
 
-    public void copyOpponentSetup(GameState state) {}
+    public abstract void copyOpponentSetup(GameState inGameState);
 
     protected ArrayList<AIMove> generateLegalMoves(EnhancedGameState state, int playerIndex) {
+        System.out.println("Number of player pieces: " + state.getPlayer(playerIndex).getActivePieces().size());
         ArrayList<AIMove> legalMoves = new ArrayList<>();
         boolean chanceEvent = false;
         int destRow, destCol;
@@ -45,17 +40,6 @@ public class GenericAI {
                 int moveRadius = 1;
                 // scouts can move more squares than the other pieces
                 if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) <= EnhancedGameState.PROB_EPSILON) {
-                    System.out.println("Scout at position: (" + p.getRowPos() + "|" + p.getColPos() + ") and board says: " + state.getBoardArray()[p.getRowPos()][p.getColPos()].getOccupyingPiece());
-                    if (state.getBoardArray()[p.getRowPos()][p.getColPos()].getOccupyingPiece() == null) {
-                        for (int i = 0; i < 10; i++) {
-                            for (int j = 0; j < 10; j++) {
-                                if (state.getBoardArray()[i][j].getOccupyingPiece() == p) {
-                                    p.setPos(i, j);
-                                    System.out.println("Scout corrected to (" + i + "|" + j + ")");
-                                }
-                            }
-                        }
-                    }
                     moveRadius = 9;
                 }
                 // loop through the positions around the piece and check whether they can be moved there
@@ -78,7 +62,44 @@ public class GenericAI {
                     }
                 }
             }
-        }
+        }/*
+        Piece p;
+        for (int bRow = 0; bRow < GameState.BOARD_SIZE; bRow++) {
+            for (int bCol = 0; bCol < GameState.BOARD_SIZE; bCol++) {
+                //System.out.println("Piece: " + state.getBoardArray()[bRow][bCol].getOccupyingPiece() + ", condition: " + (state.getBoardArray()[bRow][bCol].getOccupyingPiece().getPlayerType().ordinal() == playerIndex));
+                if (state.getBoardArray()[bRow][bCol].getOccupyingPiece() != null && state.getBoardArray()[bRow][bCol].getOccupyingPiece().getPlayerType().ordinal() == playerIndex) {
+                    p = state.getBoardArray()[bRow][bCol].getOccupyingPiece();
+                    //System.out.println("Selected for possible moves: " + p);
+                    if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
+                            (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) > EnhancedGameState.PROB_EPSILON || Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) > EnhancedGameState.PROB_EPSILON))) {
+                        int moveRadius = 1;
+                        // scouts can move more squares than the other pieces
+                        if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) <= EnhancedGameState.PROB_EPSILON) {
+                            moveRadius = 9;
+                        }
+                        // loop through the positions around the piece and check whether they can be moved there
+                        for (int row = -moveRadius; row <= moveRadius; row++) {
+                            destRow = p.getRowPos() + row;
+                            for (int col = -moveRadius; col <= moveRadius; col++) {
+                                destCol = p.getColPos() + col;
+                                // check whether the given piece can move to the target position
+                                if (!(row == 0 && col == 0) && checkMovePossible(state, p, destRow, destCol)) {
+                                    // add legal move to list and also specify whether it will induce a chance event
+                                    if (state.getBoardArray()[destRow][destCol].getOccupyingPiece() != null) {
+                                        // either different playerIndex from root (initPlayerIndex) AND piece to be moved is not revealed AND position to be moved to is taken by root player
+                                        chanceEvent = playerIndex != this.playerIndex && !p.isRevealed(); // last check not necessary because of the if-statement checking for null; move would not be possible anyway if position was occupied by own piece
+                                        // OR same playerIndex as root (initPlayerIndex) AND position to be moved to is taken by opponent's unrevealed piece
+                                        chanceEvent = chanceEvent || (playerIndex == this.playerIndex && !state.getBoardArray()[destRow][destCol].getOccupyingPiece().isRevealed());
+                                    }
+                                    legalMoves.add(new AIMove(playerIndex, p.getRowPos(), p.getColPos(), destRow, destCol, chanceEvent));
+                                    chanceEvent = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
         return legalMoves;
     }
 

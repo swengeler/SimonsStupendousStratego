@@ -204,6 +204,7 @@ public class ViewComManager {
 
     public void sendGameOver(int winnerPlayerIndex) {
         frame.getInGameView().processGameOver(winnerPlayerIndex);
+        frame.getSideMenu().reset();
         if (multiPlayer) {
             closeStrategoClient();
         }

@@ -24,19 +24,24 @@ public class RandomAI extends GenericAI {
     }
 
     @Override
+    public void applyMove(Move move) {
+        gameState.applyMove(move);
+    }
+
+    @Override
     public int getPlayerIndex() {
         return playerIndex;
     }
 
     @Override
-    public void makeBoardSetup(GameState state) {
+    public void makeBoardSetup(GameState inGameState) {
         ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
-        gameState.copySetup(state, playerIndex);
+        gameState.copySetup(inGameState, playerIndex);
     }
 
     @Override
-    public void copyOpponentSetup(GameState state) {
-        gameState.copySetup(state, 1 - playerIndex);
+    public void copyOpponentSetup(GameState inGameState) {
+        gameState.copySetup(inGameState, 1 - playerIndex);
     }
 
 }

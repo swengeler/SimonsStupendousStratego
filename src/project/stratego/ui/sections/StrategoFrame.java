@@ -52,4 +52,8 @@ public class StrategoFrame extends Stage {
         return inGameView;
     }
 
+    public SideMenu getSideMenu() {
+        return sideMenu;
+    }
+
 }

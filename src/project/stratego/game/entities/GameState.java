@@ -25,9 +25,9 @@ public class GameState {
             for (int col = 0; col < board.length; col++) {
                 this.board[row][col] = board[row][col].clone();
                 if (this.board[row][col].getOccupyingPiece() != null && this.board[row][col].getOccupyingPiece().getPlayerType() == PlayerType.NORTH) {
-                    playerNorth.addPiece(this.board[row][col].getOccupyingPiece());
+                    this.playerNorth.addPiece(this.board[row][col].getOccupyingPiece());
                 } else if (this.board[row][col].getOccupyingPiece() != null) {
-                    playerSouth.addPiece(this.board[row][col].getOccupyingPiece());
+                    this.playerSouth.addPiece(this.board[row][col].getOccupyingPiece());
                 }
             }
         }
@@ -81,6 +81,10 @@ public class GameState {
 
     public Player getPlayer(int index) {
         return index == 0 ? playerNorth : playerSouth;
+    }
+
+    public Player getPlayer(PlayerType type) {
+        return type == playerNorth.getType() ? playerNorth : playerSouth;
     }
 
     public void applyMove(Move move) {

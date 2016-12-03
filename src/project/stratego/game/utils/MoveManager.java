@@ -26,10 +26,6 @@ public class MoveManager {
         lastRemovedPiece = null;
         lastMoveResult = MoveResult.NOMOVE;
 
-        if (movingPiece.getType() == PieceType.SCOUT && movingPiece.getPlayerType().ordinal() == 1) {
-            System.out.println("Scout move FROM (" + movingPiece.getRowPos() + "|" + movingPiece.getColPos() + ") TO (" + destRow + "|" + destCol + ") attempted");
-        }
-
         BoardTile destTile = board[destRow][destCol];
         // doesn't account for flag/bomb because you cannot select those
         if (!destTile.isAccessible()) {
@@ -50,10 +46,6 @@ public class MoveManager {
         lastMoveResult = MoveResult.MOVE;
         movingPiece.revealMove();
         board[movingPiece.getRowPos()][movingPiece.getColPos()].setOccupyingPiece(null);
-
-        if (movingPiece.getType() == PieceType.SCOUT && movingPiece.getPlayerType().ordinal() == 1) {
-            System.out.println("Scout move FROM (" + movingPiece.getRowPos() + "|" + movingPiece.getColPos() + ") TO (" + destRow + "|" + destCol + ")");
-        }
 
         if (destTile.getOccupyingPiece() != null) {
             movingPiece.reveal();
@@ -80,9 +72,6 @@ public class MoveManager {
         } else {
             //System.out.println("(" + destRow + "|" + destCol + ") is set to occupied: " + movingPiece);
             destTile.setOccupyingPiece(movingPiece);
-            if (movingPiece.getType() == PieceType.SCOUT && movingPiece.getPlayerType().ordinal() == 1) {
-                System.out.println("Check scout is at (" + movingPiece.getRowPos() + "|" + movingPiece.getColPos() + "), correct: " + (movingPiece.getRowPos() == destRow && movingPiece.getColPos() == destCol));
-            }
         }
         movingPlayer.setCurrentPiece(null);
     }
@@ -134,7 +123,7 @@ public class MoveManager {
     }
 
     private boolean checkIfAttackWins(Piece attackingPiece, Piece defendingPiece) {
-        if (attackingPiece.getType() == PieceType.SPY && defendingPiece.getType() == PieceType.MARSHAL) {
+        if (attackingPiece.getType() == PieceType.SPY && defendingPiece.getType() == PieceType.MARSHAL || attackingPiece.getType() == PieceType.MARSHAL && defendingPiece.getType() == PieceType.SPY) {
             return true;
         }
         if (attackingPiece.getType() == PieceType.MINER && defendingPiece.getType() == PieceType.BOMB) {

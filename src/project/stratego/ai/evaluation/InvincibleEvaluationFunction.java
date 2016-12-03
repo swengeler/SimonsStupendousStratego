@@ -1,14 +1,18 @@
 package project.stratego.ai.evaluation;
 
 import project.stratego.ai.EnhancedGameState;
-import project.stratego.ai.searchGenerics.EvaluationFunction;
+import project.stratego.ai.searchGenerics.GenericEvaluationFunction;
 import project.stratego.ai.searchGenerics.EvaluationPlan;
 
 import java.util.ArrayList;
 
-public class InvincibleEvaluationFunction implements EvaluationFunction {
+public class InvincibleEvaluationFunction extends GenericEvaluationFunction {
 
     private ArrayList<EvaluationPlan> evaluationPlans;
+
+    public InvincibleEvaluationFunction(int playerIndex) {
+        super(playerIndex);
+    }
 
     @Override
     public double evaluate(EnhancedGameState gameState) {

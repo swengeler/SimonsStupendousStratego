@@ -1,5 +1,6 @@
 package project.stratego.game.entities;
 
+import project.stratego.game.moves.*;
 import project.stratego.game.utils.*;
 
 public class GameState {

@@ -1,4 +1,4 @@
-package project.stratego.ai.searchGenerics;
+package project.stratego.ai.evaluation;
 
 import project.stratego.ai.utils.EnhancedGameState;
 

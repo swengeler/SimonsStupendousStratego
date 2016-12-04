@@ -3,7 +3,8 @@ package project.stratego.game;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.*;
 import project.stratego.game.logic.*;
-import project.stratego.game.utils.*;
+import project.stratego.game.moves.DiscreteMoveManager;
+import project.stratego.game.moves.MoveManager;
 
 public class StrategoGame {
 

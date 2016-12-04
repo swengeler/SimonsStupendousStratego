@@ -26,6 +26,14 @@ public class ViewComManager {
 
     /* Methods for managing the connection */
 
+    public void closeProgram() {
+        if (isConnected()) {
+            closeStrategoClient();
+        } else if (!multiPlayer) {
+            ModelComManager.getInstance().closeProgram();
+        }
+    }
+
     public boolean isConnected() {
         return multiPlayer && client != null;
     }

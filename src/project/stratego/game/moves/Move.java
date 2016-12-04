@@ -1,4 +1,4 @@
-package project.stratego.game.utils;
+package project.stratego.game.moves;
 
 public interface Move {
 

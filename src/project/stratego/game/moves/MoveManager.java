@@ -1,6 +1,7 @@
-package project.stratego.game.utils;
+package project.stratego.game.moves;
 
 import project.stratego.game.entities.*;
+import project.stratego.game.utils.PieceType;
 
 /**
  * A class that operates on a specific instance of a board (array of board tiles). When a move

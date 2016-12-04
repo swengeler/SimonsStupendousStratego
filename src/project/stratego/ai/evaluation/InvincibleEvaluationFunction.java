@@ -1,8 +1,6 @@
 package project.stratego.ai.evaluation;
 
 import project.stratego.ai.utils.EnhancedGameState;
-import project.stratego.ai.searchGenerics.GenericEvaluationFunction;
-import project.stratego.ai.searchGenerics.EvaluationPlan;
 
 import java.util.ArrayList;
 

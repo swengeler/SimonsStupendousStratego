@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import project.stratego.control.DebugHelper;
 import project.stratego.control.managers.ViewComManager;
-import project.stratego.ui.sections.*;
 
 public class StrategoFrame extends Stage {
 
@@ -38,11 +37,7 @@ public class StrategoFrame extends Stage {
         setResizable(false);
         show();
         setOnCloseRequest((WindowEvent w) -> {
-            if (ViewComManager.getInstance().isConnected()) {
-                // close client thread
-                //System.out.println("window close requested");
-                ViewComManager.getInstance().closeStrategoClient();
-            }
+            ViewComManager.getInstance().closeProgram();
             debugHelper.close();
         });
 

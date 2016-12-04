@@ -5,6 +5,7 @@ import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.entities.Player;
+import project.stratego.game.moves.*;
 import project.stratego.game.utils.*;
 
 import java.util.LinkedList;
@@ -81,10 +82,9 @@ public class PlayingLogic extends GameLogic {
             return;
         }
         if (result != MoveResult.NOMOVE && !testing) {
-            moveHistory.add(new InGameMove(playerIndex, orRow, orCol, row, col, currentPiece, parent.getBoard()[orRow][orCol].getOccupyingPiece())); // maybe move to MoveManager?
+            moveHistory.add(new InGameMove(playerIndex, orRow, orCol, row, col, currentPiece, parent.getBoard()[orRow][orCol].getOccupyingPiece()));
             Move m = moveHistory.getLast();
             System.out.println("Last move added: FROM (" + m.getOrRow() + "|" + m.getOrCol() + ") TO (" + m.getDestRow() + "|" + m.getDestCol() + ")");
-            // call AIComManager to update AI's board
             processPlayerReady(currentPlayer.getType().ordinal());
         }
     }
@@ -97,13 +97,10 @@ public class PlayingLogic extends GameLogic {
 
         boolean gameOver = checkGameOver();
         if (!gameOver) {
-            //System.out.println("player: " + currentPlayer.getActivePieces().size());
-            //System.out.println("opponent: " + currentOpponent.getActivePieces().size());
-            //hidePieces();
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
-            AIComManager.getInstance().tryNextMove(moveHistory.getLast()); // needs to give last move made here
+            AIComManager.getInstance().tryNextMove(moveHistory.getLast());
         } else {
             System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());

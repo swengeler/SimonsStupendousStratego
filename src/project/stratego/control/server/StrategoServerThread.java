@@ -96,7 +96,7 @@ public class StrategoServerThread implements Runnable {
         }
     }
 
-    public void sendCommand(String command) {
+    void sendCommand(String command) {
         if (out != null) {
             out.println(command);
             //System.out.println("Server sent command: \"" + command + "\".");
@@ -105,7 +105,7 @@ public class StrategoServerThread implements Runnable {
         }
     }
 
-    public int getGameID() {
+    int getGameID() {
         return gameID;
     }
 
@@ -113,7 +113,7 @@ public class StrategoServerThread implements Runnable {
         return playerIndex;
     }
 
-    public void stopThread() {
+    void stopThread() {
         stopThread = true;
     }
 

@@ -1,6 +1,6 @@
 package project.stratego.ai.utils;
 
-import project.stratego.game.utils.Move;
+import project.stratego.game.moves.Move;
 
 public class AIMove implements Move {
 

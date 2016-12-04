@@ -24,8 +24,14 @@ public class ModelComManager {
 
     private boolean multiPlayer;
 
+    private boolean programRunning;
+
     private ModelComManager() {
         activeGames = new ArrayList<>();
+    }
+
+    public void closeProgram() {
+        programRunning = false;
     }
 
     public void setStrategoServer(StrategoServer server) {

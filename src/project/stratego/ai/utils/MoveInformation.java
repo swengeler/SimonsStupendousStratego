@@ -1,8 +1,8 @@
 package project.stratego.ai.utils;
 
 import project.stratego.game.entities.Piece;
-import project.stratego.game.utils.Move;
-import project.stratego.game.utils.MoveResult;
+import project.stratego.game.moves.Move;
+import project.stratego.game.moves.MoveResult;
 
 import java.util.HashMap;
 

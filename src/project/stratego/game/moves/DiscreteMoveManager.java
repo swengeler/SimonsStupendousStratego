@@ -1,7 +1,8 @@
-package project.stratego.game.utils;
+package project.stratego.game.moves;
 
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.Piece;
+import project.stratego.game.utils.PieceType;
 
 public class DiscreteMoveManager extends MoveManager {
 

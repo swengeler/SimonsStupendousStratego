@@ -1,10 +1,9 @@
 package project.stratego.ai.search;
 
-import project.stratego.ai.searchGenerics.*;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.*;
-import project.stratego.game.utils.*;
+import project.stratego.game.moves.Move;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,6 @@ public class RandomAI extends GenericAI {
     @Override
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
-        //System.out.println("CHECK 249z6");
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         int randIndex = (int) (Math.random() * legalMoves.size());
         return legalMoves.get(randIndex);

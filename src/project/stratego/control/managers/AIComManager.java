@@ -2,17 +2,18 @@ package project.stratego.control.managers;
 
 import project.stratego.ai.search.ExpectiNegamaxAI;
 import project.stratego.ai.search.RandomAI;
-import project.stratego.ai.searchGenerics.GenericAI;
+import project.stratego.ai.search.GenericAI;
 import project.stratego.game.entities.GameState;
-import project.stratego.game.utils.Move;
+import project.stratego.game.moves.Move;
 
-public class AIComManager {
+public class AIComManager implements Runnable {
 
     private static AIComManager instance;
 
     public static AIComManager getInstance() {
         if (instance == null) {
             instance = new AIComManager();
+            instance.run();
         }
         return instance;
     }
@@ -24,15 +25,20 @@ public class AIComManager {
     private GenericAI currentAI;
     private boolean isActive;
 
-    public void configureMultiPlayer() {
+    @Override
+    public void run() {
+
+    }
+
+    void configureMultiPlayer() {
         isActive = false;
     }
 
-    public void configureSinglePlayer() {
+    void configureSinglePlayer() {
         isActive = true;
     }
 
-    public void setAIMode(String aiType, int playerIndex) {
+    void setAIMode(String aiType, int playerIndex) {
         if (aiType.equals("random")) {
             currentAI = new RandomAI(playerIndex);
         } else if (aiType.equals("expectinegamax")) {

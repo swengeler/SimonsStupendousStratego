@@ -1,4 +1,4 @@
-package project.stratego.ai.searchGenerics;
+package project.stratego.ai.setup;
 
 import project.stratego.game.entities.GameState;
 

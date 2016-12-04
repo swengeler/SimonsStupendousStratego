@@ -2,7 +2,7 @@ package project.stratego.ai.utils;
 
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.Piece;
-import project.stratego.game.utils.MoveManager;
+import project.stratego.game.moves.MoveManager;
 import project.stratego.game.utils.PieceType;
 
 import java.util.HashMap;

@@ -1,10 +1,10 @@
-package project.stratego.ai.searchGenerics;
+package project.stratego.ai.search;
 
 import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.entities.Piece;
-import project.stratego.game.utils.Move;
+import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PieceType;
 
 import java.util.ArrayList;

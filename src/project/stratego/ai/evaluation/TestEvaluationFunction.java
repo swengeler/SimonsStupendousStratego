@@ -1,6 +1,6 @@
 package project.stratego.ai.evaluation;
 
-import project.stratego.ai.EnhancedGameState;
+import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.ai.searchGenerics.GenericEvaluationFunction;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.utils.PieceType;

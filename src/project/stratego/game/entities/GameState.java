@@ -1,9 +1,6 @@
 package project.stratego.game.entities;
 
-import project.stratego.game.utils.Move;
-import project.stratego.game.utils.MoveManager;
-import project.stratego.game.utils.PieceType;
-import project.stratego.game.utils.PlayerType;
+import project.stratego.game.utils.*;
 
 public class GameState {
 
@@ -92,7 +89,7 @@ public class GameState {
         if (movingPiece == null) {
             return;
         }
-        MoveManager moveManager = new MoveManager(board);
+        MoveManager moveManager = new DiscreteMoveManager(board);
         moveManager.processMove(movingPiece.getPlayerType() == PlayerType.NORTH ? playerNorth : playerSouth, movingPiece.getPlayerType() == PlayerType.NORTH ? playerSouth : playerNorth, movingPiece, move.getDestRow(), move.getDestCol());
     }
 

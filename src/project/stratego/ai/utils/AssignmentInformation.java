@@ -1,4 +1,4 @@
-package project.stratego.ai;
+package project.stratego.ai.utils;
 
 import project.stratego.game.entities.Piece;
 

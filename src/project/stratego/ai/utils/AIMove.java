@@ -1,4 +1,4 @@
-package project.stratego.ai.searchGenerics;
+package project.stratego.ai.utils;
 
 import project.stratego.game.utils.Move;
 

@@ -1,6 +1,7 @@
 package project.stratego.ai.searchGenerics;
 
-import project.stratego.ai.EnhancedGameState;
+import project.stratego.ai.utils.EnhancedGameState;
+import project.stratego.ai.utils.AIMove;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.utils.Move;
@@ -103,7 +104,7 @@ public abstract class GenericAI {
         return legalMoves;
     }
 
-    protected boolean checkMovePossible(EnhancedGameState state, Piece p, int destRow, int destCol) {
+    private boolean checkMovePossible(EnhancedGameState state, Piece p, int destRow, int destCol) {
         // check if position is on the board
         if (destRow < 0 || destRow >= 10 || destCol < 0 || destCol >= 10) {
             return false;
@@ -127,7 +128,7 @@ public abstract class GenericAI {
         return true;
     }
 
-    protected boolean checkScoutPath(EnhancedGameState state, Piece scout, int destRow, int destCol) {
+    private boolean checkScoutPath(EnhancedGameState state, Piece scout, int destRow, int destCol) {
         // target position is in the same column as current position
         if (scout.getColPos() - destCol == 0) {
             for (int row = scout.getRowPos() + (destRow - scout.getRowPos() < 0 ? -1 : 1); row != destRow; row += (destRow - scout.getRowPos() < 0 ? -1 : 1)) {

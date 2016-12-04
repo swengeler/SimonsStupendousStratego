@@ -1,8 +1,9 @@
 package project.stratego.ai.search;
 
-import project.stratego.ai.EnhancedGameState;
+import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.ai.evaluation.TestEvaluationFunction;
 import project.stratego.ai.searchGenerics.*;
+import project.stratego.ai.utils.AIMove;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.*;
 import project.stratego.game.utils.Move;
@@ -177,8 +178,6 @@ public class ExpectiNegamaxAI extends GenericAI {
         double prevProbability;
         EnhancedGameState clone;
         Piece unknownPiece = state.getBoardArray()[currentDepth % 2 != 0 ? chanceMove.getDestRow() : chanceMove.getOrRow()][currentDepth % 2 != 0 ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
-
-        //System.out.println("EXPECTIMAX PRINTOUTS ON LEVEL: " + currentDepth);
 
         // make clones of all possible assignments for either the piece that is moved or the piece that is attacked
         // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)

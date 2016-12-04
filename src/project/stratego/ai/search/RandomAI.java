@@ -1,7 +1,7 @@
 package project.stratego.ai.search;
 
-import project.stratego.ai.EnhancedGameState;
 import project.stratego.ai.searchGenerics.*;
+import project.stratego.ai.utils.AIMove;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.*;
 import project.stratego.game.utils.*;

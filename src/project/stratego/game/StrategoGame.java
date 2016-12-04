@@ -22,7 +22,7 @@ public class StrategoGame {
     private void componentSetup() {
         gameState = new GameState();
         currentRequestProcessor = new DeploymentLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
-        moveManager = new MoveManager(gameState.getBoardArray());
+        moveManager = new DiscreteMoveManager(gameState.getBoardArray());
     }
 
     /* Getter methods */

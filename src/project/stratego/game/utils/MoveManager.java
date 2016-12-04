@@ -6,14 +6,14 @@ import project.stratego.game.entities.*;
  * A class that operates on a specific instance of a board (array of board tiles). When a move
  * should be made on that board this class can process it and change the state of the board.
  */
-public class MoveManager {
+public abstract class MoveManager {
 
-    private BoardTile[][] board;
+    protected BoardTile[][] board;
 
     private MoveResult lastMoveResult;
     private Piece lastRemovedPiece;
 
-    public MoveManager(BoardTile[][] board) {
+    protected MoveManager(BoardTile[][] board) {
         this.board = board;
     }
 
@@ -49,7 +49,7 @@ public class MoveManager {
 
         if (destTile.getOccupyingPiece() != null) {
             movingPiece.reveal();
-            if (destTile.getOccupyingPiece().getType() == movingPiece.getType()) {
+            if (checkIfDraw(destTile.getOccupyingPiece(), movingPiece)) {
                 lastMoveResult = MoveResult.ATTACKTIE;
                 destTile.getOccupyingPiece().reveal();
                 lastRemovedPiece = destTile.getOccupyingPiece();
@@ -122,14 +122,8 @@ public class MoveManager {
         return true;
     }
 
-    private boolean checkIfAttackWins(Piece attackingPiece, Piece defendingPiece) {
-        if (attackingPiece.getType() == PieceType.SPY && defendingPiece.getType() == PieceType.MARSHAL || attackingPiece.getType() == PieceType.MARSHAL && defendingPiece.getType() == PieceType.SPY) {
-            return true;
-        }
-        if (attackingPiece.getType() == PieceType.MINER && defendingPiece.getType() == PieceType.BOMB) {
-            return true;
-        }
-        return (PieceType.pieceLvlMap.get(attackingPiece.getType())) > (PieceType.pieceLvlMap.get(defendingPiece.getType()));
-    }
+    protected abstract boolean checkIfAttackWins(Piece attackingPiece, Piece defendingPiece);
+
+    protected abstract boolean checkIfDraw(Piece attackingPiece, Piece defendingPiece);
 
 }

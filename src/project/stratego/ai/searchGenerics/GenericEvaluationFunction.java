@@ -1,6 +1,6 @@
 package project.stratego.ai.searchGenerics;
 
-import project.stratego.ai.EnhancedGameState;
+import project.stratego.ai.utils.EnhancedGameState;
 
 public abstract class GenericEvaluationFunction {
 

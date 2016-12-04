@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ExpectiNegamaxAI extends GenericAI {
 
     private GenericEvaluationFunction evaluationFunction;
-    private int maxDepth = 1;
+    private int maxDepth = 3;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);
@@ -92,7 +92,7 @@ public class ExpectiNegamaxAI extends GenericAI {
                 gameState.undoLastMove();
                 //System.out.println("AFTER REVERSE:");
             }
-            System.out.println("Current value: " + currentValue);
+            //System.out.println("Current value: " + currentValue);
             if (currentValue > maxValue) {
                 maxValue = currentValue;
                 bestMove = m;
@@ -124,11 +124,11 @@ public class ExpectiNegamaxAI extends GenericAI {
             //clone = state.clone();
             if (m.isChanceMove()) {
                 // do expectimax evaluation
-                System.out.println("\n\n");
-                System.out.println("----------------------------------------------------------------------------");
+                //System.out.println("\n\n");
+                //System.out.println("----------------------------------------------------------------------------");
                 currentValue = expectimaxSearch(currentDepth + 1, gameState, m);
-                System.out.println("----------------------------------------------------------------------------");
-                System.out.println("\n\n");
+                //System.out.println("----------------------------------------------------------------------------");
+                //System.out.println("\n\n");
             } else {
                 //clone.applyMove(m);
                 gameState.applyMove(m);
@@ -152,7 +152,7 @@ public class ExpectiNegamaxAI extends GenericAI {
             Piece unknownPiece = state.getBoardArray()[currentDepth % 2 != 0 ? chanceMove.getDestRow() : chanceMove.getOrRow()][currentDepth % 2 != 0 ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
             for (int i = 0; i < PieceType.values().length - 1; i++) {
-                if ((prevProbability = state.getProbability(unknownPiece, i)) != 0) {
+                if ((prevProbability = state.getProbability(unknownPiece, i)) > EnhancedGameState.PROB_EPSILON) {
                     //System.out.println();
                     //System.out.println("BEFORE ASSIGNMENT:");
                     //gameState.printProbabilitiesTable();
@@ -185,7 +185,7 @@ public class ExpectiNegamaxAI extends GenericAI {
         // sum over all possible scenarios arising from chanceMove
         for (int i = 0; i < PieceType.values().length - 1; i++) {
             //System.out.println("probability for " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i) + " (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ")");
-            if ((prevProbability = state.getProbability(unknownPiece, i)) != 0) {
+            if ((prevProbability = state.getProbability(unknownPiece, i)) > EnhancedGameState.PROB_EPSILON) {
                 //clone = state.clone();
                 //clone.assignPieceType(unknownPiece, PieceType.values()[i]);
                 //clone.applyMove(chanceMove);

@@ -46,7 +46,7 @@ public class EnhancedGameState extends GameState {
 
     @Override
     public void applyMove(Move move) {
-        System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
+        //System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         Piece encounteredPiece = board[move.getDestRow()][move.getDestCol()].getOccupyingPiece();
         Piece opponentPiece = movingPiece.getPlayerType().ordinal() == playerIndex ? encounteredPiece : movingPiece;
@@ -259,6 +259,10 @@ public class EnhancedGameState extends GameState {
         long before = System.nanoTime();
         int counter = 0;
         while (!updated) {
+            /*if (counter % 1000 == 0) {
+                System.out.println(counter);
+            }*/
+            counter++;
             updated = true;
 
             // go through each rank

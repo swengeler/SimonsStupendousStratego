@@ -4,11 +4,11 @@ import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.utils.PieceType;
 
-public abstract class GenericEvaluationFunction {
+public abstract class AbstractEvaluationFunction {
 
     protected int playerIndex;
 
-    protected GenericEvaluationFunction(int playerIndex) {
+    protected AbstractEvaluationFunction(int playerIndex) {
         this.playerIndex = playerIndex;
     }
 

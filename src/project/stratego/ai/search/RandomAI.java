@@ -7,7 +7,7 @@ import project.stratego.game.moves.Move;
 
 import java.util.ArrayList;
 
-public class RandomAI extends GenericAI {
+public class RandomAI extends AbstractAI {
 
     public RandomAI(int playerIndex) {
         super(playerIndex);
@@ -19,11 +19,6 @@ public class RandomAI extends GenericAI {
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         int randIndex = (int) (Math.random() * legalMoves.size());
         return legalMoves.get(randIndex);
-    }
-
-    @Override
-    public void applyMove(Move move) {
-        gameState.applyMove(move);
     }
 
     @Override

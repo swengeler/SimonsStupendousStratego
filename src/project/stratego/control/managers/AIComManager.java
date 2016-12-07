@@ -2,11 +2,17 @@ package project.stratego.control.managers;
 
 import project.stratego.ai.search.ExpectiNegamaxAI;
 import project.stratego.ai.search.RandomAI;
-import project.stratego.ai.search.GenericAI;
+import project.stratego.ai.search.AbstractAI;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 public class AIComManager implements Runnable {
+
+    public static final BlockingQueue<Move> moveQueue = new LinkedBlockingQueue<>();
+    public static final BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
 
     private static AIComManager instance;
 
@@ -18,16 +24,42 @@ public class AIComManager implements Runnable {
         return instance;
     }
 
+    public static void putMove(Move move) {
+        try {
+            moveQueue.put(move);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void putCommand(String command) {
+        try {
+            commandQueue.put(command);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private AIComManager() {
         setAIMode("expectinegamax", 1);
     }
 
-    private GenericAI currentAI;
+    private AbstractAI currentAI;
     private boolean isActive;
 
     @Override
     public void run() {
+        while(true) {
+            String cmd;
+            Move move;
+            while ((move = moveQueue.poll()) != null || (cmd = commandQueue.poll()) != null) {
+                if (move != null) {
 
+                } else if (cmd != null) {
+
+                }
+            }
+        }
     }
 
     void configureMultiPlayer() {

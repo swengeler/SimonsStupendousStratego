@@ -1,6 +1,6 @@
 package project.stratego.ai.search;
 
-import project.stratego.ai.evaluation.GenericEvaluationFunction;
+import project.stratego.ai.evaluation.AbstractEvaluationFunction;
 import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.ai.evaluation.TestEvaluationFunction;
 import project.stratego.ai.setup.*;
@@ -12,9 +12,9 @@ import project.stratego.game.utils.PieceType;
 
 import java.util.ArrayList;
 
-public class ExpectiNegamaxAI extends GenericAI {
+public class ExpectiNegamaxAI extends AbstractAI {
 
-    private GenericEvaluationFunction evaluationFunction;
+    private AbstractEvaluationFunction evaluationFunction;
     private int maxDepth = 4;
 
     public ExpectiNegamaxAI(int playerIndex) {
@@ -27,11 +27,6 @@ public class ExpectiNegamaxAI extends GenericAI {
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
         return expectiNegamaxSearch();
-    }
-
-    @Override
-    public void applyMove(Move move) {
-        gameState.applyMove(move);
     }
 
     @Override

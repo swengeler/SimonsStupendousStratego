@@ -9,25 +9,27 @@ import project.stratego.game.utils.PieceType;
 
 import java.util.ArrayList;
 
-public abstract class GenericAI {
+public abstract class AbstractAI {
 
     protected int playerIndex;
     protected EnhancedGameState gameState;
 
-    protected GenericAI(int playerIndex) {
+    protected AbstractAI(int playerIndex) {
         this.playerIndex = playerIndex;
         gameState = new EnhancedGameState(playerIndex);
     }
 
     public abstract Move getNextMove(Move lastOpponentMove);
 
-    public abstract void applyMove(Move move);
-
     public abstract int getPlayerIndex();
 
     public abstract void makeBoardSetup(GameState inGameState);
 
     public abstract void copyOpponentSetup(GameState inGameState);
+
+    public void applyMove(Move move) {
+        gameState.applyMove(move);
+    }
 
     protected ArrayList<AIMove> generateLegalMoves(EnhancedGameState state, int playerIndex) {
         System.out.println("Number of player pieces: " + state.getPlayer(playerIndex).getActivePieces().size());

@@ -47,6 +47,10 @@ public class EnhancedGameState extends GameState {
 
     @Override
     public void applyMove(Move move) {
+        if (move.getOrRow() == -1) {
+            return;
+        }
+
         //System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         Piece encounteredPiece = board[move.getDestRow()][move.getDestCol()].getOccupyingPiece();

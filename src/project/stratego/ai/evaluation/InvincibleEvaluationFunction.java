@@ -4,7 +4,7 @@ import project.stratego.ai.utils.EnhancedGameState;
 
 import java.util.ArrayList;
 
-public class InvincibleEvaluationFunction extends GenericEvaluationFunction {
+public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
     private ArrayList<EvaluationPlan> evaluationPlans;
 

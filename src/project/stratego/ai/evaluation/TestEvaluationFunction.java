@@ -4,7 +4,7 @@ import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.utils.PieceType;
 
-public class TestEvaluationFunction extends GenericEvaluationFunction {
+public class TestEvaluationFunction extends AbstractEvaluationFunction {
 
     public TestEvaluationFunction(int playerIndex) {
         super(playerIndex);

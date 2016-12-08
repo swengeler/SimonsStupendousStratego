@@ -25,7 +25,10 @@ public abstract class AbstractAI {
 
     public abstract void makeBoardSetup(GameState inGameState);
 
-    public abstract void copyOpponentSetup(GameState inGameState);
+    public void copySetup(GameState inGameState) {
+        gameState.copySetup(inGameState, playerIndex);
+        gameState.copySetup(inGameState, 1 - playerIndex);
+    }
 
     public void applyMove(Move move) {
         gameState.applyMove(move);

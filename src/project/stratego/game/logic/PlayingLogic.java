@@ -1,6 +1,5 @@
 package project.stratego.game.logic;
 
-import project.stratego.control.managers.AIComManager;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.Piece;
@@ -100,7 +99,10 @@ public class PlayingLogic extends GameLogic {
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
-            AIComManager.getInstance().tryNextMove(moveHistory.getLast());
+            if (!moveHistory.isEmpty()) {
+                System.out.println("CHECK 5");
+                ModelComManager.getInstance().offerMove(moveHistory.getLast());
+            }
         } else {
             System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());

@@ -1,5 +1,6 @@
 package project.stratego.ai.search;
 
+import javafx.application.Platform;
 import project.stratego.ai.evaluation.AbstractEvaluationFunction;
 import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.ai.evaluation.TestEvaluationFunction;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class ExpectiNegamaxAI extends AbstractAI {
 
     private AbstractEvaluationFunction evaluationFunction;
-    private int maxDepth = 4;
+    private int maxDepth = 1;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);
@@ -42,12 +43,12 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 // something something
             }
         };
-        ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
+        Platform.runLater(() -> ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex));
         gameState.copySetup(inGameState, playerIndex);
     }
 
     @Override
-    public void copyOpponentSetup(GameState inGameState) {
+    public void copySetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
     }
 

@@ -55,14 +55,6 @@ public class StrategoGame {
         componentSetup();
     }
 
-    public Player getPlayerNorth() {
-        return gameState.getPlayerNorth();
-    }
-
-    public Player getPlayerSouth() {
-        return gameState.getPlayerSouth();
-    }
-
     public GameState getGameState() {
         return gameState;
     }

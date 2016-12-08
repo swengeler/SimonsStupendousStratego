@@ -1,5 +1,6 @@
 package project.stratego.ai.search;
 
+import javafx.application.Platform;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.*;
@@ -28,13 +29,8 @@ public class RandomAI extends AbstractAI {
 
     @Override
     public void makeBoardSetup(GameState inGameState) {
-        ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
+        Platform.runLater(() -> ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex));
         gameState.copySetup(inGameState, playerIndex);
-    }
-
-    @Override
-    public void copyOpponentSetup(GameState inGameState) {
-        gameState.copySetup(inGameState, 1 - playerIndex);
     }
 
 }

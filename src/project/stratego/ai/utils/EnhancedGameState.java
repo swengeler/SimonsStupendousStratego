@@ -47,11 +47,12 @@ public class EnhancedGameState extends GameState {
 
     @Override
     public void applyMove(Move move) {
-        if (move.getOrRow() == -1) {
+        printBoard();
+        if (move.getOrRow() < 0) {
             return;
         }
 
-        //System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
+        System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         Piece encounteredPiece = board[move.getDestRow()][move.getDestCol()].getOccupyingPiece();
         Piece opponentPiece = movingPiece.getPlayerType().ordinal() == playerIndex ? encounteredPiece : movingPiece;
@@ -235,10 +236,10 @@ public class EnhancedGameState extends GameState {
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col] = state.getBoardArray()[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].clone();
-                //System.out.println("EnhancedGameState");
                 getPlayer(playerIndex).addPiece(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
             }
         }
+        printBoard();
         if (this.playerIndex != playerIndex) {
             probabilitiesMap = new HashMap<>(40);
             double[] initProbabilities = new double[PieceType.values().length - 1];

@@ -1,7 +1,6 @@
 package project.stratego.control.managers;
 
 import project.stratego.control.client.StrategoClient;
-import project.stratego.game.utils.PieceType;
 import project.stratego.ui.Messages;
 import project.stratego.ui.sections.StrategoFrame;
 import project.stratego.ui.sections.InGameView;
@@ -23,19 +22,20 @@ public class ViewComManager {
     private StrategoFrame frame;
 
     private boolean multiPlayer;
+    private GameMode gameMode;
 
     /* Methods for managing the connection */
 
     public void closeProgram() {
         if (isConnected()) {
             closeStrategoClient();
-        } else if (!multiPlayer) {
+        } else if (gameMode != GameMode.MULTIPLAYER) {
             ModelComManager.getInstance().closeProgram();
         }
     }
 
     public boolean isConnected() {
-        return multiPlayer && client != null;
+        return gameMode == GameMode.MULTIPLAYER && client != null;
     }
 
     public void setStrategoClient(StrategoClient client) {
@@ -53,25 +53,36 @@ public class ViewComManager {
     }
 
     public void configureMultiPlayer() {
-        multiPlayer = true;
+        gameMode = GameMode.MULTIPLAYER;
         frame.getInGameView().processAssignSide(-1);
     }
 
     public void configureSinglePlayer() {
-        multiPlayer = false;
+        gameMode = GameMode.SINGLEPLAYER;
         if (client != null) {
             client.stopThread();
             client = null;
         }
-        ModelComManager.getInstance().configureSinglePlayer();
         requestResetGame();
+        ModelComManager.getInstance().configureSinglePlayer();
         sendAssignSide(InGameView.DEFAULT_PLAYER_ID);
+    }
+
+    public void configureAIShowMatch() {
+        gameMode = GameMode.AISHOWMATCH;
+        if (client != null) {
+            client.stopThread();
+            client = null;
+        }
+        requestResetGame();
+        ModelComManager.getInstance().configureAIShowMatch();
+        frame.getInGameView().processAssignSide(-1);
     }
 
     /* Requests from view to model */
 
     public void requestStartGame() {
-        if (multiPlayer && client == null) {
+        if (gameMode == GameMode.MULTIPLAYER && client == null) {
             frame.getInGameView().processResetGame();
             StrategoClient client = new StrategoClient();
             (new Thread(client)).start();
@@ -85,7 +96,7 @@ public class ViewComManager {
     public void requestResetGame() {
         if (isConnected()) {
             client.sendCommandToServer("rg");
-        } else {
+        } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
             ModelComManager.getInstance().requestResetGame(-1);
         }
     }
@@ -93,7 +104,7 @@ public class ViewComManager {
     public void requestAutoDeploy() {
         if (isConnected()) {
             client.sendCommandToServer("ad");
-        } else {
+        } else if (gameMode == GameMode.SINGLEPLAYER) {
             ModelComManager.getInstance().requestAutoDeploy(-1, InGameView.DEFAULT_PLAYER_ID);
         }
     }
@@ -101,7 +112,7 @@ public class ViewComManager {
     public void requestResetDeployment() {
         if (isConnected()) {
             client.sendCommandToServer("rd");
-        } else {
+        } else if (gameMode == GameMode.SINGLEPLAYER) {
             ModelComManager.getInstance().requestResetDeployment(-1, InGameView.DEFAULT_PLAYER_ID);
         }
     }
@@ -109,7 +120,7 @@ public class ViewComManager {
     public void requestPlayerReady() {
         if (isConnected()) {
             client.sendCommandToServer("pr");
-        } else {
+        } else if (gameMode != GameMode.AIMATCH) {
             ModelComManager.getInstance().requestPlayerReady(-1, InGameView.DEFAULT_PLAYER_ID);
         }
     }
@@ -123,7 +134,7 @@ public class ViewComManager {
     public void requestTrayPieceSelected(int index) {
         if (isConnected()) {
             client.sendCommandToServer("tps " + index);
-        } else {
+        } else if (gameMode == GameMode.SINGLEPLAYER) {
             ModelComManager.getInstance().requestTrayPieceSelected(-1, InGameView.DEFAULT_PLAYER_ID, index);
         }
     }
@@ -131,7 +142,7 @@ public class ViewComManager {
     public void requestBoardTileSelected(int row, int col) {
         if (isConnected()) {
             client.sendCommandToServer("bts " + row + " " + col);
-        } else {
+        } else if (gameMode == GameMode.SINGLEPLAYER) {
             ModelComManager.getInstance().requestBoardTileSelected(-1, InGameView.DEFAULT_PLAYER_ID, row, col);
         }
     }
@@ -175,7 +186,7 @@ public class ViewComManager {
     public void sendPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {
         //System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + " (ViewComManager).");
         frame.getInGameView().processPiecePlaced(playerIndex, pieceIndex, row, col);
-        if (frame.getInGameView().getPlayerIndex() != playerIndex) {
+        if (gameMode != GameMode.AISHOWMATCH && frame.getInGameView().getPlayerIndex() != playerIndex) {
             frame.getInGameView().processHidePiece(row, col);
         }
     }
@@ -185,7 +196,7 @@ public class ViewComManager {
     }
 
     public void sendHidePiece(int playerIndex, int row, int col) {
-        if (frame.getInGameView().getPlayerIndex() != playerIndex) {
+        if (gameMode != GameMode.AISHOWMATCH && frame.getInGameView().getPlayerIndex() != playerIndex) {
             frame.getInGameView().processHidePiece(row, col);
         }
     }
@@ -211,9 +222,11 @@ public class ViewComManager {
     }
 
     public void sendGameOver(int winnerPlayerIndex) {
-        frame.getInGameView().processGameOver(winnerPlayerIndex);
+        if (gameMode == GameMode.SINGLEPLAYER) {
+            frame.getInGameView().processGameOver(winnerPlayerIndex);
+        }
         frame.getSideMenu().reset();
-        if (multiPlayer) {
+        if (gameMode == GameMode.MULTIPLAYER) {
             closeStrategoClient();
         }
     }

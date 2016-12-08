@@ -53,7 +53,6 @@ public class EnhancedGameState extends GameState {
 
         System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
-        System.out.println("movingPiece in players pieces: " + getPlayer(move.getPlayerIndex()).getActivePieces().contains(movingPiece));
         Piece encounteredPiece = board[move.getDestRow()][move.getDestCol()].getOccupyingPiece();
         Piece opponentPiece = movingPiece.getPlayerType().ordinal() == playerIndex ? encounteredPiece : movingPiece;
         MoveInformation moveInformation = new MoveInformation(move, movingPiece, encounteredPiece);
@@ -277,6 +276,21 @@ public class EnhancedGameState extends GameState {
             return 0;
         }
         return probabilitiesMap.get(piece)[typeIndex];
+    }
+
+    /**
+     * A method that checks whether a piece is "technically"/effectively revealed by the fact that it has a
+     * probability of 1 for a certain rank/type.
+     * */
+    public boolean probabilityRevealed(Piece piece) {
+        for (double val : probabilitiesMap.get(piece)) {
+            if (Math.abs(val - 1.0) < PROB_EPSILON) {
+                return true;
+            } else if (val > PROB_EPSILON) {
+                return false;
+            }
+        }
+        return false;
     }
 
     public void assignPieceType(Piece piece, PieceType assignedType) {

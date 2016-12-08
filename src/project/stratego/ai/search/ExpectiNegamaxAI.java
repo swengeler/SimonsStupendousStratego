@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ExpectiNegamaxAI extends AbstractAI {
 
     private AbstractEvaluationFunction evaluationFunction;
-    private int maxDepth = 1;
+    private int maxDepth = 3;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);
@@ -65,9 +65,9 @@ public class ExpectiNegamaxAI extends AbstractAI {
         }
         System.out.println("Number of chance moves: " + sum);
 
-        System.out.println("PRINTOUT ON LEVEL: 0");
+        //System.out.println("PRINTOUT ON LEVEL: 0");
         gameState.printProbabilitiesTable();
-        gameState.printBoard();
+        //gameState.printBoard();
 
         AIMove bestMove = legalMoves.get(0);
         double maxValue = -Double.MAX_VALUE;
@@ -93,9 +93,9 @@ public class ExpectiNegamaxAI extends AbstractAI {
     }
 
     private double negamaxSearch(int currentDepth, EnhancedGameState state) {
-        System.out.println("PRINTOUT ON LEVEL: 1");
-        gameState.printProbabilitiesTable();
-        gameState.printBoard();
+        //System.out.println("PRINTOUT ON LEVEL: 1");
+        //gameState.printProbabilitiesTable();
+        //gameState.printBoard();
         if (currentDepth == maxDepth) {
             return evaluationFunction.evaluate(state);
         }
@@ -124,9 +124,9 @@ public class ExpectiNegamaxAI extends AbstractAI {
     }
 
     private double expectimaxSearch(int currentDepth, EnhancedGameState state, AIMove chanceMove) {
-        System.out.println("PRINTOUT ON LEVEL: 1");
-        gameState.printProbabilitiesTable();
-        gameState.printBoard();
+        //System.out.println("PRINTOUT ON LEVEL: 1");
+        //gameState.printProbabilitiesTable();
+        //gameState.printBoard();
         if (currentDepth == maxDepth) {
             double evalSum = 0;
             double prevProbability;

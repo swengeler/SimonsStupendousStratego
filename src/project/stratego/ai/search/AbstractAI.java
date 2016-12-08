@@ -56,7 +56,7 @@ public abstract class AbstractAI {
                             // add legal move to list and also specify whether it will induce a chance event
                             if (state.getBoardArray()[destRow][destCol].getOccupyingPiece() != null) {
                                 // either different playerIndex from root (initPlayerIndex) AND piece to be moved is not revealed AND position to be moved to is taken by root player
-                                chanceEvent = playerIndex != this.playerIndex && !p.isRevealed(); // last check not necessary because of the if-statement checking for null; move would not be possible anyway if position was occupied by own piece
+                                chanceEvent = playerIndex != this.playerIndex && (!p.isRevealed() || !state.probabilityRevealed(p)); // last check not necessary because of the if-statement checking for null; move would not be possible anyway if position was occupied by own piece
                                 // OR same playerIndex as root (initPlayerIndex) AND position to be moved to is taken by opponent's unrevealed piece
                                 chanceEvent = chanceEvent || (playerIndex == this.playerIndex && !state.getBoardArray()[destRow][destCol].getOccupyingPiece().isRevealed());
                             }

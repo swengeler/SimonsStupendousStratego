@@ -32,11 +32,12 @@ public abstract class AbstractAI {
     }
 
     protected ArrayList<AIMove> generateLegalMoves(EnhancedGameState state, int playerIndex) {
-        System.out.println("Number of player pieces: " + state.getPlayer(playerIndex).getActivePieces().size());
+        //System.out.println("Number of player pieces: " + state.getPlayer(playerIndex).getActivePieces().size());
         ArrayList<AIMove> legalMoves = new ArrayList<>();
         boolean chanceEvent = false;
         int destRow, destCol;
         for (Piece p : state.getPlayer(playerIndex).getActivePieces()) {
+            System.out.println(p);
             // check for unmovable pieces
             if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
                     (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) > EnhancedGameState.PROB_EPSILON || Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) > EnhancedGameState.PROB_EPSILON))) {

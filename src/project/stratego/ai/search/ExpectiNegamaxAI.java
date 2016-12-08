@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ExpectiNegamaxAI extends AbstractAI {
 
     private AbstractEvaluationFunction evaluationFunction;
-    private int maxDepth = 4;
+    private int maxDepth = 1;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);
@@ -25,6 +25,8 @@ public class ExpectiNegamaxAI extends AbstractAI {
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
+        System.out.println("Start of getNextMove");
+        gameState.printProbabilitiesTable();
         gameState.applyMove(lastOpponentMove);
         return expectiNegamaxSearch();
     }
@@ -56,12 +58,15 @@ public class ExpectiNegamaxAI extends AbstractAI {
         System.out.println("Number of legal moves: " + legalMoves.size());
         int sum = 0;
         for (AIMove m : legalMoves) {
+            System.out.println("Move FROM (" + m.getOrRow() + "|" + m.getOrCol() + ") TO (" + m.getDestRow() + "|" + m.getDestCol() + ")");
+
             if (m.isChanceMove())
                 sum++;
         }
         System.out.println("Number of chance moves: " + sum);
 
         System.out.println("PRINTOUT ON LEVEL: 0");
+        gameState.printProbabilitiesTable();
         gameState.printBoard();
 
         AIMove bestMove = legalMoves.get(0);
@@ -88,6 +93,9 @@ public class ExpectiNegamaxAI extends AbstractAI {
     }
 
     private double negamaxSearch(int currentDepth, EnhancedGameState state) {
+        System.out.println("PRINTOUT ON LEVEL: 1");
+        gameState.printProbabilitiesTable();
+        gameState.printBoard();
         if (currentDepth == maxDepth) {
             return evaluationFunction.evaluate(state);
         }
@@ -116,6 +124,9 @@ public class ExpectiNegamaxAI extends AbstractAI {
     }
 
     private double expectimaxSearch(int currentDepth, EnhancedGameState state, AIMove chanceMove) {
+        System.out.println("PRINTOUT ON LEVEL: 1");
+        gameState.printProbabilitiesTable();
+        gameState.printBoard();
         if (currentDepth == maxDepth) {
             double evalSum = 0;
             double prevProbability;

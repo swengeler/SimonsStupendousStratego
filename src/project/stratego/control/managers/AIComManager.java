@@ -19,7 +19,7 @@ public class AIComManager implements Runnable {
     public static AIComManager getInstance() {
         if (instance == null) {
             instance = new AIComManager();
-            instance.run();
+            //instance.run();
         }
         return instance;
     }
@@ -50,7 +50,7 @@ public class AIComManager implements Runnable {
     @Override
     public void run() {
         while(true) {
-            String cmd;
+            String cmd = "";
             Move move;
             while ((move = moveQueue.poll()) != null || (cmd = commandQueue.poll()) != null) {
                 if (move != null) {

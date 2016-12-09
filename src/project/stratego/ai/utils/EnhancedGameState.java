@@ -51,7 +51,7 @@ public class EnhancedGameState extends GameState {
             return;
         }
 
-        System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
+        //System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         Piece encounteredPiece = board[move.getDestRow()][move.getDestCol()].getOccupyingPiece();
         Piece opponentPiece = movingPiece.getPlayerType().ordinal() == playerIndex ? encounteredPiece : movingPiece;
@@ -283,10 +283,10 @@ public class EnhancedGameState extends GameState {
      * probability of 1 for a certain rank/type.
      * */
     public boolean probabilityRevealed(Piece piece) {
-        for (double val : probabilitiesMap.get(piece)) {
-            if (Math.abs(val - 1.0) < PROB_EPSILON) {
+        for (double prob : probabilitiesMap.get(piece)) {
+            if (Math.abs(prob - 1.0) < PROB_EPSILON) {
                 return true;
-            } else if (val > PROB_EPSILON) {
+            } else if (prob > PROB_EPSILON) {
                 return false;
             }
         }

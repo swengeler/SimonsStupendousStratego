@@ -1,6 +1,7 @@
 package project.stratego.ai.utils;
 
 import project.stratego.game.moves.Move;
+import project.stratego.game.utils.PlayerType;
 
 public class AIMove implements Move {
 
@@ -49,6 +50,11 @@ public class AIMove implements Move {
 
     public boolean isChanceMove() {
         return isChanceMove;
+    }
+
+    @Override
+    public String toString() {
+        return "Move (isChanceMove = " + isChanceMove + ") FROM (" + orRow + "|" + orCol + ") TO (" + destRow + "|" + destCol + ") by player " + PlayerType.values()[playerIndex];
     }
 
 }

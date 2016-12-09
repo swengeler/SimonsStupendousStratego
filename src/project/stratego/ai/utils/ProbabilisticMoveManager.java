@@ -44,8 +44,10 @@ public class ProbabilisticMoveManager extends MoveManager {
             defendingPieceType = opponentPieceType;
         }
 
-        if (attackingPieceType == PieceType.SPY && defendingPieceType == PieceType.MARSHAL || attackingPieceType == PieceType.MARSHAL && defendingPieceType == PieceType.SPY) {
+        if (attackingPieceType == PieceType.SPY && defendingPieceType == PieceType.MARSHAL) {
             return true;
+        } else if (attackingPieceType == PieceType.MARSHAL && defendingPieceType == PieceType.SPY) {
+            return false;
         }
         if (attackingPieceType == PieceType.MINER && defendingPieceType == PieceType.BOMB) {
             return true;

@@ -13,8 +13,10 @@ public class DiscreteMoveManager extends MoveManager {
 
     @Override
     protected boolean checkIfAttackWins(Piece attackingPiece, Piece defendingPiece) {
-        if (attackingPiece.getType() == PieceType.SPY && defendingPiece.getType() == PieceType.MARSHAL || attackingPiece.getType() == PieceType.MARSHAL && defendingPiece.getType() == PieceType.SPY) {
+        if (attackingPiece.getType() == PieceType.SPY && defendingPiece.getType() == PieceType.MARSHAL) {
             return true;
+        } else if (attackingPiece.getType() == PieceType.MARSHAL && defendingPiece.getType() == PieceType.SPY) {
+            return false;
         }
         if (attackingPiece.getType() == PieceType.MINER && defendingPiece.getType() == PieceType.BOMB) {
             return true;

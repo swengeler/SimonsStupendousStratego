@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ExpectiNegamaxAI extends AbstractAI {
 
     private AbstractEvaluationFunction evaluationFunction;
-    private int maxDepth = 3;
+    private int maxDepth = 2;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);
@@ -58,7 +58,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
         System.out.println("Number of legal moves: " + legalMoves.size());
         int sum = 0;
         for (AIMove m : legalMoves) {
-            System.out.println("Move FROM (" + m.getOrRow() + "|" + m.getOrCol() + ") TO (" + m.getDestRow() + "|" + m.getDestCol() + ")");
+            System.out.println(m);
 
             if (m.isChanceMove())
                 sum++;
@@ -77,12 +77,14 @@ public class ExpectiNegamaxAI extends AbstractAI {
         for (AIMove m : legalMoves) {
             if (m.isChanceMove()) {
                 // do expectimax evaluation
-                currentValue = expectimaxSearch(1, gameState, m);
+                currentValue = -expectimaxSearch(1, gameState, m);
             } else {
                 gameState.applyMove(m);
-                currentValue = negamaxSearch(1, gameState);
+                currentValue = -negamaxSearch(1, gameState);
                 gameState.undoLastMove();
             }
+            System.out.println(m);
+            System.out.println("Value: " + currentValue + "\n");
             if (currentValue > maxValue) {
                 maxValue = currentValue;
                 bestMove = m;
@@ -109,7 +111,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
         for (AIMove m : legalMoves) {
             if (m.isChanceMove()) {
                 // do expectimax evaluation
-                currentValue = expectimaxSearch(currentDepth + 1, gameState, m);
+                currentValue = -expectimaxSearch(currentDepth + 1, gameState, m);
             } else {
                 gameState.applyMove(m);
                 currentValue = -negamaxSearch(currentDepth + 1, gameState);
@@ -146,7 +148,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
 
         double sum = 0;
         double prevProbability;
-        Piece unknownPiece = state.getBoardArray()[currentDepth % 2 != 0 ? chanceMove.getDestRow() : chanceMove.getOrRow()][currentDepth % 2 != 0 ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
+        Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
         // make clones of all possible assignments for either the piece that is moved or the piece that is attacked
         // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)
@@ -156,7 +158,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
             if ((prevProbability = state.getProbability(unknownPiece, i)) > EnhancedGameState.PROB_EPSILON) {
                 gameState.assignPieceType(unknownPiece, PieceType.values()[i]);
                 gameState.applyMove(chanceMove);
-                sum += prevProbability * -negamaxSearch(currentDepth + 1, gameState);
+                sum += prevProbability * negamaxSearch(currentDepth, gameState);
                 gameState.undoLastMove();
                 gameState.undoLastAssignment();
             }

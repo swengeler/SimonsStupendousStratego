@@ -13,7 +13,7 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
     }
 
     @Override
-    public double evaluate(EnhancedGameState gameState) {
+    public double evaluate(EnhancedGameState gameState, int playerType) {
         double sum = 0;
         for (EvaluationPlan p : evaluationPlans) {
             sum += p.evaluate(gameState);

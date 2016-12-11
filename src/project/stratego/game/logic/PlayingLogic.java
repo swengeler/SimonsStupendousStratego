@@ -104,6 +104,7 @@ public class PlayingLogic extends GameLogic {
         } else {
             System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
+            AIComManager.getInstance().gameOver(parent);
         }
     }
 

@@ -61,7 +61,9 @@ public class BoardArea extends Pane {
 
     public void makePiece(int playerIndex, int pieceIndex, int row, int col) {
         //System.out.println("makePiece in BoardArea called");
-        board[row][col].setOccupyingPiece(new Piece(playerIndex, pieceIndex, pieceIcons, backsidePieceIcons));
+        if (board[row][col].getOccupyingPiece() == null) {
+            board[row][col].setOccupyingPiece(new Piece(playerIndex, pieceIndex, pieceIcons, backsidePieceIcons));
+        }
     }
 
     public void movePiece(int orRow, int orCol, int destRow, int destCol) {

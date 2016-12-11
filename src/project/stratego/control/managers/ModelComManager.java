@@ -1,6 +1,8 @@
 package project.stratego.control.managers;
 
 import project.stratego.control.server.StrategoServer;
+import project.stratego.game.entities.BoardTile;
+import project.stratego.game.entities.GameState;
 import project.stratego.game.logic.DeploymentLogic;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.utils.PieceType;
@@ -23,6 +25,8 @@ public class ModelComManager {
     private ArrayList<StrategoGame> activeGames;
 
     private boolean multiPlayer;
+
+    private GameMode gameMode;
 
     private boolean programRunning;
 
@@ -64,6 +68,7 @@ public class ModelComManager {
 
     public void configureMultiPlayer() {
         multiPlayer = true;
+
         AIComManager.getInstance().configureMultiPlayer();
     }
 
@@ -140,6 +145,19 @@ public class ModelComManager {
             server.remove(gameID);
         } else {
             ViewComManager.getInstance().sendResetGame();
+        }
+    }
+
+    public void sendDeploymentUpdate(int gameID, int playerIndex) {
+        if (!multiPlayer) {
+            BoardTile[][] board = findGame(-1).getBoard();
+            for (int row = 0; row < GameState.BOARD_SIZE; row++) {
+                for (int col = 0; col < GameState.BOARD_SIZE; col++) {
+                    if (board[row][col].getOccupyingPiece() != null && board[row][col].getOccupyingPiece().getPlayerType().ordinal() == playerIndex) {
+                        sendPiecePlaced(-1, playerIndex, board[row][col].getOccupyingPiece().getType().ordinal(), row, col);
+                    }
+                }
+            }
         }
     }
 

@@ -12,7 +12,7 @@ public abstract class AbstractEvaluationFunction {
         this.playerIndex = playerIndex;
     }
 
-    public abstract double evaluate(EnhancedGameState state);
+    public abstract double evaluate(EnhancedGameState state, int playerType);
 
     public boolean won(EnhancedGameState state) {
         for (Piece p : state.getPlayer(1 - state.getPlayerIndex()).getActivePieces()) {

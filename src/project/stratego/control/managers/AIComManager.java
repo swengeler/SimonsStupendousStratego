@@ -3,6 +3,7 @@ package project.stratego.control.managers;
 import project.stratego.ai.search.ExpectiNegamaxAI;
 import project.stratego.ai.search.RandomAI;
 import project.stratego.ai.search.AbstractAI;
+import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
 
@@ -93,6 +94,10 @@ public class AIComManager implements Runnable {
         } else if (isActive && currentAI != null) {
             currentAI.applyMove(move);
         }
+    }
+
+    public void gameOver(StrategoGame game) {
+        // if AI matches and shit are running, then document the one that just ended and start a new one
     }
 
     public void reset() {

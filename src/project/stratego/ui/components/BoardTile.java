@@ -53,15 +53,15 @@ public class BoardTile extends Group {
         setOnMouseExited((MouseEvent e) -> setBorderVisible(false));
     }
 
-    public void setBorderVisible(boolean visible) {
+    private void setBorderVisible(boolean visible) {
         border.setVisible(visible);
     }
 
-    public void setBorderColor(Color color) {
+    void setBorderColor(Color color) {
         border.setStroke(color);
     }
 
-    public void setOccupyingPiece(Piece newPiece) {
+    void setOccupyingPiece(Piece newPiece) {
         //System.out.println("setOccupyingPiece in BoardTile at (" + rowPos + "|" + colPos + ") called");
         if (newPiece == null) {
             getChildren().remove(occupyingPiece);

@@ -21,20 +21,20 @@ public class EnhancedGameState extends GameState {
     private Stack<MoveInformation> moveHistory;
     private Stack<AssignmentInformation> assignmentHistory;
 
-    // need queue to keep track of moves here
-
     // from the perspective of the player whose pieces are all known
     // the opponent (1 - playerIndex) is associated with the probabilitiesMap
     private int playerIndex;
+    private int playerWonIndex;
 
     public EnhancedGameState(int playerIndex) {
         super();
         this.playerIndex = playerIndex;
         moveHistory = new Stack<>();
         assignmentHistory = new Stack<>();
+        playerWonIndex = -1;
     }
 
-    protected EnhancedGameState(int playerIndex, BoardTile[][] board, Player playerNorth, Player playerSouth, HashMap<Piece, double[]> probabilitiesMap) {
+    private EnhancedGameState(int playerIndex, BoardTile[][] board, Player playerNorth, Player playerSouth, HashMap<Piece, double[]> probabilitiesMap) {
         super(board, playerNorth, playerSouth);
         this.playerIndex = playerIndex;
         this.probabilitiesMap = new HashMap<>(40);
@@ -43,6 +43,7 @@ public class EnhancedGameState extends GameState {
         }
         moveHistory = new Stack<>();
         assignmentHistory = new Stack<>();
+        playerWonIndex = -1;
     }
 
     @Override
@@ -244,13 +245,7 @@ public class EnhancedGameState extends GameState {
      * initialised.
      * */
     public void copySetup(GameState state, int playerIndex) {
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col] = state.getBoardArray()[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].clone();
-                //System.out.println("EnhancedGameState");
-                getPlayer(playerIndex).addPiece(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
-            }
-        }
+        super.copySetup(state, playerIndex);
         if (this.playerIndex != playerIndex) {
             probabilitiesMap = new HashMap<>(40);
             double[] initProbabilities = new double[PieceType.values().length - 1];
@@ -263,8 +258,41 @@ public class EnhancedGameState extends GameState {
         }
     }
 
+    public void interpretAndCopySetup(String encodedSetup) {
+        String example1 = "SCOUT MINER BOMB SCOUT MINER BOMB FLAG BOMB MINER MINER " +
+                "SERGEANT BOMB SERGEANT MAJOR COLONEL LIEUTENANT BOMB LIEUTENANT CAPTAIN SERGEANT " +
+                "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
+                "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
+        String example2 = "SERGEANT SCOUT MINER BOMB SERGEANT MINER MINER BOMB FLAG BOMB " +
+                "BOMB CAPTAIN SPY MAJOR BOMB LIEUTENANT SCOUT CAPTAIN LIEUTENANT BOMB SERGEANT " +
+                "MINER SCOUT COLONEL MAJOR BOMB LIEUTENANT MARSHAL MAJOR LIEUTENANT COLONEL " +
+                "GENERAL CAPTAIN SCOUT SERGEANT SCOUT SCOUT SCOUT MINER CAPTAIN SCOUT";
+        String example3 = "CAPTAIN SCOUT SERGEANT GENERAL CAPTAIN SCOUT SCOUT MARSHAL SCOUT CAPTAIN " +
+                "LIEUTENANT SCOUT MAJOR LIEUTENANT BOMB SCOUT MAJOR MAJOR COLONEL MINER " +
+                "SERGEANT COLONEL SPY MINER BOMB SCOUT CAPTAIN LIEUTENANT LIEUTENANT BOMB " +
+                "MINER BOMB SERGEANT BOMB SERGEANT SCOUT MINER MINER BOMB FLAG";
+        String[] pieceEncodings = encodedSetup.split(" ");
+        int counter = 0;
+        // note that since this counts up/down from the back row of the setup this has to be taken into account when a setup is supplied
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].setOccupyingPiece(new Piece(PieceType.valueOf(pieceEncodings[counter++]), PlayerType.values()[playerIndex]));
+                //System.out.println("EnhancedGameState");
+                getPlayer(playerIndex).addPiece(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
+            }
+        }
+    }
+
     public int getPlayerIndex() {
         return playerIndex;
+    }
+
+    public boolean isGameOver() {
+        return playerWonIndex != -1;
+    }
+
+    public boolean playerWon() {
+        return playerWonIndex == playerIndex;
     }
 
     public double getProbability(Piece piece, PieceType type) {

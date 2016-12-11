@@ -11,10 +11,13 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
     }
 
     @Override
-    public double evaluate(EnhancedGameState gameState) {
-        /*if (gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces().size() != 0) {
-            return gameState.getPlayer(gameState.getPlayerIndex()).getActivePieces().size() / gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces().size();
-        }*/
+    public double evaluate(EnhancedGameState gameState, int playerType) {
+        if (gameState.isGameOver() && gameState.playerWon()) {
+            return 1000.0;
+        } else if (gameState.isGameOver()) {
+            return 0.0;
+        }
+
         double opponentSum = 0;
         for (Piece p : gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces()) {
             if (p.getType() == PieceType.BOMB) {
@@ -36,6 +39,7 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
             }
         }
         if (opponentSum != 0) {
+            //return playerIndex == gameState.getPlayerIndex() ? ownSum / opponentSum : opponentSum / ownSum;
             return ownSum / opponentSum;
         }
         return 1000.0;

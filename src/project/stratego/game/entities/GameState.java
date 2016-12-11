@@ -94,6 +94,17 @@ public class GameState {
         moveManager.processMove(movingPiece.getPlayerType() == PlayerType.NORTH ? playerNorth : playerSouth, movingPiece.getPlayerType() == PlayerType.NORTH ? playerSouth : playerNorth, movingPiece, move.getDestRow(), move.getDestCol());
     }
 
+    public void copySetup(GameState state, int playerIndex) {
+        System.out.println("Setup should be copied to gamestate");
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col] = state.getBoardArray()[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].clone();
+                //System.out.println("EnhancedGameState");
+                getPlayer(playerIndex).addPiece(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
+            }
+        }
+    }
+
     /* Clone methods */
 
     public GameState clone() {

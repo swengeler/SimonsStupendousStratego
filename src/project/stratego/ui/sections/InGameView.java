@@ -79,10 +79,6 @@ public class InGameView extends Pane {
     }
 
     public void processPiecePlaced(int playerIndex, int pieceIndex, int row, int col) {
-        //System.out.println("Piece placed at (" + row + "|" + col + "): " + PieceType.values()[pieceIndex] + " (InGameView).");
-        /*if (playerIndex == this.playerIndex) {
-            tray.setActive(-1);
-        }*/
         boardArea.makePiece(playerIndex, pieceIndex, row, col);
     }
 

@@ -6,7 +6,7 @@ import project.stratego.game.moves.MoveResult;
 
 import java.util.HashMap;
 
-public class MoveInformation implements Move {
+public class MoveInformation {
 
     private Piece movingPieceReference, movingPieceClone, encounteredPieceReference, encounteredPieceClone;
 
@@ -68,32 +68,26 @@ public class MoveInformation implements Move {
         }
     }
 
-    @Override
     public int getOrRow() {
         return orRow;
     }
 
-    @Override
     public int getOrCol() {
         return orCol;
     }
 
-    @Override
     public int getDestRow() {
         return destRow;
     }
 
-    @Override
     public int getDestCol() {
         return destCol;
     }
 
-    @Override
     public int length() {
         return Math.abs(destRow - orRow + destCol - orCol);
     }
 
-    @Override
     public int getPlayerIndex() {
         return movingPieceReference.getPlayerType().ordinal();
     }

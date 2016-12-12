@@ -56,7 +56,7 @@ public class Player {
     public Player clone() {
         Player clone = new Player(type);
         for (Piece p : activePieces) {
-            clone.addPiece(p.clone());
+            clone.getActivePieces().add(p.clone());
         }
         clone.setCurrentPiece(currentPiece == null ? null : currentPiece.clone());
         return clone;

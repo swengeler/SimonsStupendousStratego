@@ -2,7 +2,7 @@ package project.stratego.ai.search;
 
 import project.stratego.ai.utils.AIMove;
 import project.stratego.control.managers.ModelComManager;
-import project.stratego.game.entities.*;
+import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
 
 import java.util.ArrayList;
@@ -35,6 +35,8 @@ public class RandomAI extends AbstractAI {
     @Override
     public void copyOpponentSetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
+        System.out.println("GameState in ExpectiNegamaxAI");
+        gameState.printBoard();
     }
 
 }

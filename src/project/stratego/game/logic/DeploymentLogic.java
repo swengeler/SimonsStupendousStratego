@@ -33,7 +33,7 @@ public class DeploymentLogic extends GameLogic {
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 10; col++) {
                 temp = pieceFactory.makeRandomPiece(tempPlayer.getType());
-                tempPlayer.addPiece(temp);
+                tempPlayer.getActivePieces().add(temp);
                 parent.getBoard()[tempPlayer.getType() == PlayerType.NORTH ? row : 9 - row][col].setOccupyingPiece(temp);
                 ModelComManager.getInstance().sendPiecePlaced(parent.getGameID(), playerIndex, temp.getType().ordinal(), temp.getRowPos(), temp.getColPos());
             }
@@ -58,11 +58,14 @@ public class DeploymentLogic extends GameLogic {
             return;
         }
         Piece temp;
-        if ((temp = pieceFactory.makePiece(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex])) != null) {
+        if (findPlayer(playerIndex).getCurrentPiece() == null && pieceFactory.pieceInStock(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex])) {
             //System.out.println("Can place piece of type " + temp.getType());
-            findPlayer(playerIndex).addPiece(temp);
+            temp = pieceFactory.makePiece(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex]);
+            findPlayer(playerIndex).getActivePieces().add(temp);
             findPlayer(playerIndex).setCurrentPiece(temp);
             ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
+        } else if (findPlayer(playerIndex).getCurrentPiece() != null) {
+
         }
     }
 
@@ -116,7 +119,7 @@ public class DeploymentLogic extends GameLogic {
             // controller.sendWaitForOtherPlayer();
             firstPlayerReady = playerIndex;
             System.out.println("Player " + playerIndex + " is ready.");
-            AIComManager.getInstance().tryBoardSetup(parent.getGameState());
+            //AIComManager.getInstance().tryBoardSetup(parent.getGameState());
         } else if (findPlayer(playerIndex).getActivePieces().size() == 40) {
             // both players are ready
             System.out.println("Both players are ready.");

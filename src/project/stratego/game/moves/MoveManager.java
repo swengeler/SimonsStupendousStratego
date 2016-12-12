@@ -55,20 +55,20 @@ public abstract class MoveManager {
                 destTile.getOccupyingPiece().reveal();
                 lastRemovedPiece = destTile.getOccupyingPiece();
                 destTile.setOccupyingPiece(null);
-                movingPlayer.removePiece(movingPiece);
-                staticPlayer.removePiece(lastRemovedPiece);
+                movingPlayer.getActivePieces().remove(movingPiece);
+                staticPlayer.getActivePieces().remove(lastRemovedPiece);
             } else if (checkIfAttackWins(movingPiece, destTile.getOccupyingPiece())) {
                 lastMoveResult = MoveResult.ATTACKWON;
                 lastRemovedPiece = destTile.getOccupyingPiece();
                 movingPiece.reveal();
                 destTile.getOccupyingPiece().reveal();
                 destTile.setOccupyingPiece(movingPiece);
-                staticPlayer.removePiece(lastRemovedPiece);
+                staticPlayer.getActivePieces().remove(lastRemovedPiece);
             } else {
                 lastMoveResult = MoveResult.ATTACKLOST;
                 lastRemovedPiece = movingPiece;
                 destTile.getOccupyingPiece().reveal();
-                movingPlayer.removePiece(movingPiece);
+                movingPlayer.getActivePieces().remove(movingPiece);
             }
         } else {
             //System.out.println("(" + destRow + "|" + destCol + ") is set to occupied: " + movingPiece);

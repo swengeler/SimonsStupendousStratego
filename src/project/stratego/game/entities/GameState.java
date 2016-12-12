@@ -3,6 +3,8 @@ package project.stratego.game.entities;
 import project.stratego.game.moves.*;
 import project.stratego.game.utils.*;
 
+import java.util.LinkedList;
+
 public class GameState {
 
     public static final int BOARD_SIZE = 10;
@@ -10,11 +12,14 @@ public class GameState {
     protected BoardTile[][] board;
     protected Player playerNorth, playerSouth;
 
+    protected LinkedList<Move> moveHistory;
+
     public GameState() {
         boardSetup();
+        moveHistory = new LinkedList<>();
     }
 
-    protected GameState(BoardTile[][] board, Player playerNorth, Player playerSouth) {
+    protected GameState(BoardTile[][] board, Player playerNorth, Player playerSouth, LinkedList<Move> moveHistory) {
         this.playerNorth = new Player(playerNorth.getType());
         this.playerSouth = new Player(playerSouth.getType());
 
@@ -23,15 +28,20 @@ public class GameState {
             for (int col = 0; col < board.length; col++) {
                 this.board[row][col] = board[row][col].clone();
                 if (this.board[row][col].getOccupyingPiece() != null && this.board[row][col].getOccupyingPiece().getPlayerType() == PlayerType.NORTH) {
-                    this.playerNorth.addPiece(this.board[row][col].getOccupyingPiece());
+                    this.playerNorth.getActivePieces().add(this.board[row][col].getOccupyingPiece());
                 } else if (this.board[row][col].getOccupyingPiece() != null) {
-                    this.playerSouth.addPiece(this.board[row][col].getOccupyingPiece());
+                    this.playerSouth.getActivePieces().add(this.board[row][col].getOccupyingPiece());
                 }
             }
         }
+
+        this.moveHistory = new LinkedList<>();
+        for (Move m : moveHistory) {
+            this.moveHistory.add(m.clone());
+        }
     }
 
-    protected GameState(BoardTile[][] board, Player playerNorth, Player playerSouth, int playerIndex) {
+    private GameState(BoardTile[][] board, Player playerNorth, Player playerSouth, int playerIndex) {
         int opponentIndex = playerIndex == 0 ? 1 : 0;
         this.board = new BoardTile[BOARD_SIZE][BOARD_SIZE];
         for (int row = 0; row < board.length; row++) {
@@ -85,6 +95,10 @@ public class GameState {
         return type == playerNorth.getType() ? playerNorth : playerSouth;
     }
 
+    public LinkedList<Move> getMoveHistory() {
+        return moveHistory;
+    }
+
     public void applyMove(Move move) {
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         if (movingPiece == null) {
@@ -100,7 +114,7 @@ public class GameState {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col] = state.getBoardArray()[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].clone();
                 //System.out.println("EnhancedGameState");
-                getPlayer(playerIndex).addPiece(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
+                getPlayer(playerIndex).getActivePieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
             }
         }
     }
@@ -108,7 +122,7 @@ public class GameState {
     /* Clone methods */
 
     public GameState clone() {
-        GameState clone = new GameState(board, playerNorth, playerSouth);
+        GameState clone = new GameState(board, playerNorth, playerSouth, moveHistory);
         return clone;
     }
 

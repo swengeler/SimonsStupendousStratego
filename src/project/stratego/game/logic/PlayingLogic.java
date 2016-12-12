@@ -12,11 +12,9 @@ import java.util.LinkedList;
 
 public class PlayingLogic extends GameLogic {
 
-    boolean testing = false;
-
     private Player currentPlayer, currentOpponent;
 
-    private LinkedList<InGameMove> moveHistory;
+    private LinkedList<Move> moveHistory;
 
     public PlayingLogic(StrategoGame parent, Player firstPlayer, Player secondPlayer) {
         super(parent, firstPlayer, secondPlayer);
@@ -81,10 +79,8 @@ public class PlayingLogic extends GameLogic {
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
             return;
         }
-        if (result != MoveResult.NOMOVE && !testing) {
-            moveHistory.add(new InGameMove(playerIndex, orRow, orCol, row, col, currentPiece, parent.getBoard()[orRow][orCol].getOccupyingPiece()));
-            Move m = moveHistory.getLast();
-            System.out.println("Last move added: FROM (" + m.getOrRow() + "|" + m.getOrCol() + ") TO (" + m.getDestRow() + "|" + m.getDestCol() + ")");
+        if (result != MoveResult.NOMOVE) {
+            parent.getGameState().getMoveHistory().add(new Move(playerIndex, orRow, orCol, row, col));
             processPlayerReady(currentPlayer.getType().ordinal());
         }
     }
@@ -100,7 +96,6 @@ public class PlayingLogic extends GameLogic {
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
-            AIComManager.getInstance().tryNextMove(moveHistory.getLast());
         } else {
             System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());

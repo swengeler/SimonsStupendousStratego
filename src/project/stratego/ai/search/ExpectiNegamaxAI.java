@@ -50,7 +50,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
         gameState.interpretAndCopySetup(example1);
         inGameState.copySetup(gameState, playerIndex);
-        ModelComManager.getInstance().sendDeploymentUpdate(-1, playerIndex);
+        //ModelComManager.getInstance().sendDeploymentUpdate(-1, playerIndex);
         //ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
         //gameState.copySetup(inGameState, playerIndex);
     }
@@ -145,9 +145,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
     }
 
     private double expectimaxSearch(int currentDepth, EnhancedGameState state, AIMove chanceMove) {
-        //System.out.println("PRINTOUT ON LEVEL: 1");
-        //gameState.printProbabilitiesTable();
-        //gameState.printBoard();
+        /*
         if (currentDepth == maxDepth) {
             nodeCounter++;
             int multiplier = currentDepth % 2 == 0 ? -1 : 1;
@@ -166,7 +164,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 }
             }
             return evalSum;
-        }
+        }*/
 
         double sum = 0;
         double prevProbability;
@@ -176,7 +174,6 @@ public class ExpectiNegamaxAI extends AbstractAI {
         // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)
         // sum over all possible scenarios arising from chanceMove
         for (int i = 0; i < PieceType.values().length - 1; i++) {
-            //System.out.println("probability for " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i) + " (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ")");
             if ((prevProbability = state.getProbability(unknownPiece, i)) > EnhancedGameState.PROB_EPSILON) {
                 gameState.assignPieceType(unknownPiece, PieceType.values()[i]);
                 gameState.applyMove(chanceMove);

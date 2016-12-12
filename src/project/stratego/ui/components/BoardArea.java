@@ -60,9 +60,12 @@ public class BoardArea extends Pane {
     }
 
     public void makePiece(int playerIndex, int pieceIndex, int row, int col) {
-        //System.out.println("makePiece in BoardArea called");
+        //System.out.println("check");
         if (board[row][col].getOccupyingPiece() == null) {
+            //System.out.println("check2");
+            System.out.println("Piece at (" + row + "|" + col + "): " + board[row][col].getOccupyingPiece());
             board[row][col].setOccupyingPiece(new Piece(playerIndex, pieceIndex, pieceIcons, backsidePieceIcons));
+            System.out.println("After at (" + row + "|" + col + "): " + board[row][col].getOccupyingPiece() + " (" + playerIndex + ", " + pieceIndex + ")");
         }
     }
 

@@ -33,6 +33,13 @@ public class PieceFactory {
         return null;
     }
 
+    public boolean pieceInStock(PlayerType playerType, PieceType pieceType) {
+        if (pieceCount[playerType.ordinal()][pieceType.ordinal()] > 0) {
+            return true;
+        }
+        return false;
+    }
+
     public Piece makeRandomPiece(PlayerType playerType) {
         for (int i : pieceCount[playerType.ordinal()]) {
             if (i > 0) {

@@ -97,10 +97,10 @@ public class AIComManager implements Runnable {
     public void tryCopySetup(GameState state) {
         // needs to be changed or method may not be necessary at all
         if (gameMode == GameMode.SINGLEPLAYER && primaryAI != null) {
-            primaryAI.makeBoardSetup(state);
+            primaryAI.copyOpponentSetup(state);
         } else if (gameMode == GameMode.AIMATCH) {
             primaryAI.makeBoardSetup(state);
-            secondaryAI.makeBoardSetup(state);
+            secondaryAI.copyOpponentSetup(state);
         }
     }
 

@@ -49,10 +49,8 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
                 "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
         gameState.interpretAndCopySetup(example1);
+        System.out.println("board setup in AI");
         inGameState.copySetup(gameState, playerIndex);
-        //ModelComManager.getInstance().sendDeploymentUpdate(-1, playerIndex);
-        //ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
-        //gameState.copySetup(inGameState, playerIndex);
     }
 
     @Override

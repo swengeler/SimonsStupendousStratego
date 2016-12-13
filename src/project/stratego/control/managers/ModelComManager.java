@@ -5,6 +5,7 @@ import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.logic.DeploymentLogic;
 import project.stratego.game.StrategoGame;
+import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PlayerType;
 
 import java.util.ArrayList;
@@ -213,6 +214,11 @@ public class ModelComManager {
             server.sendCommandToClient(gameID, 1, ("ct " + playerIndex));
         } else if (gameMode == GameMode.SINGLEPLAYER) {
             ViewComManager.getInstance().sendChangeTurn(playerIndex);
+            if (!findGame(-1).getGameState().getMoveHistory().isEmpty()) {
+                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
+            } else {
+                //AIComManager.getInstance().tryNextMove(new Move(playerIndex, -1, -1, -1, -1));
+            }
         } else if (gameMode == GameMode.AISHOWMATCH) {
             ViewComManager.getInstance().sendChangeTurn(playerIndex);
             AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());

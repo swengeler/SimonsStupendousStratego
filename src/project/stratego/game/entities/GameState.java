@@ -109,12 +109,14 @@ public class GameState {
     }
 
     public void copySetup(GameState state, int playerIndex) {
-        System.out.println("Setup should be copied to gamestate");
+        //System.out.println("Setup should be copied to gamestate from this board:");
+        //state.printBoard();
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col] = state.getBoardArray()[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].clone();
-                //System.out.println("EnhancedGameState");
-                getPlayer(playerIndex).getActivePieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
+                if (board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece() != null) {
+                    getPlayer(playerIndex).getActivePieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
+                }
             }
         }
     }

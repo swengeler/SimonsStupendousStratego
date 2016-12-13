@@ -52,7 +52,7 @@ public class EnhancedGameState extends GameState {
             return;
         }
 
-        //System.out.println("Move FROM (" + move.getOrRow() + "|" + move.getOrCol() + ") TO (" + move.getDestRow() + "|" + move.getDestCol() + ")");
+        //System.out.println(move);
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         Piece encounteredPiece = board[move.getDestRow()][move.getDestCol()].getOccupyingPiece();
         Piece opponentPiece = movingPiece.getPlayerType().ordinal() == playerIndex ? encounteredPiece : movingPiece;
@@ -66,7 +66,7 @@ public class EnhancedGameState extends GameState {
         // not strictly speaking necessary, could also just adapt the checkIfAttackWins() method in ProbabilisticMoveManager
         // to search for a piece with value 1 somewhere and if there isn't one it must be a move from the actual game
         MoveManager moveManager;
-        if (move instanceof Move) {
+        if (!(move instanceof AIMove)) {
             moveManager = new DiscreteMoveManager(board);
         } else {
             moveManager = new ProbabilisticMoveManager(board, probabilitiesMap);

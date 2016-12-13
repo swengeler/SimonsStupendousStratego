@@ -63,8 +63,8 @@ public class ViewComManager {
             client.stopThread();
             client = null;
         }
-        ModelComManager.getInstance().configureSinglePlayer();
         requestResetGame();
+        ModelComManager.getInstance().configureSinglePlayer();
         sendAssignSide(InGameView.DEFAULT_PLAYER_ID);
     }
 
@@ -74,8 +74,8 @@ public class ViewComManager {
             client.stopThread();
             client = null;
         }
-        ModelComManager.getInstance().configureAIShowMatch();
         requestResetGame();
+        ModelComManager.getInstance().configureAIShowMatch();
         sendAssignSide(-1);
     }
 

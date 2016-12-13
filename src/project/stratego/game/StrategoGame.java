@@ -1,5 +1,6 @@
 package project.stratego.game;
 
+import project.stratego.control.managers.AIComManager;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.*;
 import project.stratego.game.logic.*;
@@ -48,6 +49,7 @@ public class StrategoGame {
         //System.out.println("States switched");
         //System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
         currentRequestProcessor = currentRequestProcessor instanceof DeploymentLogic ? new PlayingLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth()) : new DeploymentLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
+        AIComManager.getInstance().tryCopySetup(gameState);
         ModelComManager.getInstance().sendChangeTurn(gameID, 0);
     }
 

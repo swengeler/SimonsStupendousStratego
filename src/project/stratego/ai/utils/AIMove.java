@@ -5,8 +5,6 @@ import project.stratego.game.utils.PlayerType;
 
 public class AIMove extends Move {
 
-    private int playerIndex, orRow, orCol, destRow, destCol;
-
     private boolean isChanceMove;
 
     public AIMove(int playerIndex, int orRow, int orCol, int destRow, int destCol, boolean isChanceMove) {

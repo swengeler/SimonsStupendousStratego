@@ -1,8 +1,10 @@
 package project.stratego.game.moves;
 
+import project.stratego.game.utils.PlayerType;
+
 public class Move {
 
-    private int playerIndex, orRow, orCol, destRow, destCol;
+    protected int playerIndex, orRow, orCol, destRow, destCol;
 
     public Move(int playerIndex, int orRow, int orCol, int destRow, int destCol) {
         this.playerIndex = playerIndex;
@@ -34,6 +36,11 @@ public class Move {
 
     public int length() {
         return Math.abs(destRow - orRow + destCol - orCol);
+    }
+
+    @Override
+    public String toString() {
+        return "Move FROM (" + orRow + "|" + orCol + ") TO (" + destRow + "|" + destCol + ") by player " + PlayerType.values()[playerIndex];
     }
 
     @Override

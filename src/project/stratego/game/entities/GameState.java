@@ -136,19 +136,19 @@ public class GameState {
     public void printBoard() {
         System.out.println("\nBOARD:");
         for (int row = 0; row < BOARD_SIZE; row++) {
-            System.out.print("---------------------------------------------------\n|");
+            System.out.print("-------------------------------------------------------------------------------------------\n|");
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if (!board[row][col].isAccessible()) {
-                    System.out.print(" ~~ |");
+                    System.out.print("   ~~   |");
                 } else if (board[row][col].getOccupyingPiece() == null) {
-                    System.out.print("    |");
+                    System.out.print("        |");
                 } else {
-                    System.out.print(" " + board[row][col].getOccupyingPiece().getType().toString().substring(0, 2) + " |");
+                    System.out.print(" " + board[row][col].getOccupyingPiece().getType().toString().substring(0, 2) + " (" + board[row][col].getOccupyingPiece().getPlayerType().toString().substring(0, 1) + ") |");
                 }
             }
             System.out.println();
         }
-        System.out.println("---------------------------------------------------\n");
+        System.out.println("-------------------------------------------------------------------------------------------\n");
     }
 
 }

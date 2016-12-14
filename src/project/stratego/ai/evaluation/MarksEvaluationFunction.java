@@ -25,11 +25,11 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
         double ownSum = 0;
 
         // pointers for the Arraylists
-        ArrayList opponantPieces = gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces();
+        ArrayList opponentPieces = gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces();
         ArrayList ownPieces = gameState.getPlayer(gameState.getPlayerIndex()).getActivePieces();
 
         // game state set variables
-        double opponantInfoWeight = 0.1 * opponantPieces.size();
+        double opponentInfoWeight = 0.1 * opponentPieces.size();
         double ownInfoWeight = 0.1 * ownPieces.size();
         double materialWeight = 1.0;
 
@@ -46,26 +46,26 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
                 // Very rough Spy value. No Marshall check
                 opponentSum += 50.0 * materialWeight;
                 if (p.isRevealed()){
-                    ownSum += 50.0 * opponantInfoWeight;
+                    ownSum += 50.0 * opponentInfoWeight;
                 }
             } else if (p.getType() == PieceType.SCOUT) {
                 // Static Scout value as lowest unit
                 opponentSum += 10.0 * materialWeight;
                 if (p.isRevealed()){
-                    ownSum += 10.0 * opponantInfoWeight;
+                    ownSum += 10.0 * opponentInfoWeight;
                 }
             } else if (p.getType() == PieceType.MINER) {
                 // Static miner value between Sergeant and Lieutenant
                 opponentSum += 30.0 * materialWeight;
                 if (p.isRevealed()){
-                    ownSum += 30.0 * opponantInfoWeight;
+                    ownSum += 30.0 * opponentInfoWeight;
                 }
             } else {
                 // Simple function with attack rating squared
                 int tmp = PieceType.pieceLvlMap.get(p.getType());
                 opponentSum += tmp * tmp * materialWeight;
                 if (p.isRevealed()){
-                    ownSum += tmp * tmp * opponantInfoWeight;
+                    ownSum += tmp * tmp * opponentInfoWeight;
                 }
             }
         }

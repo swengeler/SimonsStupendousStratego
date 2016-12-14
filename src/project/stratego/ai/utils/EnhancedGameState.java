@@ -14,7 +14,7 @@ import java.util.*;
  * */
 public class EnhancedGameState extends GameState {
 
-    public static final double PROB_EPSILON = 0.001;
+    public static final double PROB_EPSILON = 0.0005;
 
     private HashMap<Piece, double[]> probabilitiesMap;
 
@@ -60,6 +60,7 @@ public class EnhancedGameState extends GameState {
 
         if (opponentPiece != null && probabilitiesMap.get(opponentPiece) == null) {
             System.out.println("Weird stuff: ");
+            System.out.println(opponentPiece);
             printBoard();
         }
 
@@ -112,7 +113,7 @@ public class EnhancedGameState extends GameState {
         if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() == playerIndex && encounteredPiece.getType() == PieceType.FLAG) {
             // current player lost
             playerWonIndex = 1 - playerIndex;
-        } else if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() != playerIndex && (Math.abs(getProbability(encounteredPiece, PieceType.FLAG) - 1.0) < PROB_EPSILON || encounteredPiece.isRevealed() && encounteredPiece.getType() == PieceType.FLAG)) {
+        } else if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() != playerIndex && (Math.abs(getProbability(encounteredPiece, PieceType.FLAG) - 1.0) < 2 * PROB_EPSILON || encounteredPiece.isRevealed() && encounteredPiece.getType() == PieceType.FLAG)) {
             // current player won
             playerWonIndex = playerIndex;
         }
@@ -125,32 +126,28 @@ public class EnhancedGameState extends GameState {
             // then, regardless of the outcome of that move, the piece should be revealed
             int typeIndex = opponentPiece.getType().ordinal();
             double[] probabilitiesArray = probabilitiesMap.get(opponentPiece);
-            if (Math.abs(probabilitiesArray[typeIndex]) > PROB_EPSILON) {
-                for (int i = 0; i < probabilitiesArray.length; i++) {
-                    if (i != typeIndex) {
-                        probabilitiesArray[i] = 0;
-                    } else {
-                        probabilitiesArray[i] = 1;
-                    }
+            for (int i = 0; i < probabilitiesArray.length; i++) {
+                if (i != typeIndex) {
+                    probabilitiesArray[i] = 0;
+                } else {
+                    probabilitiesArray[i] = 1;
                 }
-                updateProbabilities();
             }
+            updateProbabilities();
             return;
         }
 
         // if it was the opponent's piece that moved and it moved further than 1 step it has to be a SCOUT
         if (move.length() > 1 && move.getPlayerIndex() == opponentPiece.getPlayerType().ordinal()) {
             double[] probabilitiesArray = probabilitiesMap.get(opponentPiece);
-            if (Math.abs(probabilitiesArray[PieceType.SCOUT.ordinal()]) > PROB_EPSILON) {
-                for (int i = 0; i < probabilitiesArray.length; i++) {
-                    if (i != PieceType.SCOUT.ordinal()) {
-                        probabilitiesArray[i] = 0;
-                    } else {
-                        probabilitiesArray[i] = 1;
-                    }
+            for (int i = 0; i < probabilitiesArray.length; i++) {
+                if (i != PieceType.SCOUT.ordinal()) {
+                    probabilitiesArray[i] = 0;
+                } else {
+                    probabilitiesArray[i] = 1;
                 }
-                updateProbabilities();
             }
+            updateProbabilities();
             return;
         }
 
@@ -307,9 +304,9 @@ public class EnhancedGameState extends GameState {
      * */
     public boolean probabilityRevealed(Piece piece) {
         for (double prob : probabilitiesMap.get(piece)) {
-            if (Math.abs(prob - 1.0) < PROB_EPSILON) {
+            if (Math.abs(prob - 1.0) < 2 * PROB_EPSILON) {
                 return true;
-            } else if (prob > PROB_EPSILON) {
+            } else if (prob >= 2 * PROB_EPSILON) {
                 return false;
             }
         }
@@ -345,7 +342,7 @@ public class EnhancedGameState extends GameState {
         long before = System.nanoTime();
         int counter = 0;
         while (!updated) {
-            /*if (counter % 1000 == 0) {
+            /*1if (counter % 1000 == 0) {
                 System.out.println(counter);
             }*/
             counter++;
@@ -356,6 +353,11 @@ public class EnhancedGameState extends GameState {
                 double sum = 0;
 
                 for (Piece p : pieces) {
+                    if (probabilitiesMap.get(p)[i] < 0.01) {
+                        probabilitiesMap.get(p)[i] = 0;
+                    } else if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 0.01) {
+                        probabilitiesMap.get(p)[i] = 1;
+                    }
                     //System.out.println("hashCode: " + p.hashCode() + ", value: " + probabilitiesMap.get(p)[i]);
                     // sum += p.prob(rank associated with i);
                     sum += probabilitiesMap.get(p)[i];
@@ -377,6 +379,11 @@ public class EnhancedGameState extends GameState {
                 double sum = 0;
 
                 for (int i = 0; i < PieceType.values().length - 1; i++) {
+                    if (probabilitiesMap.get(p)[i] < 0.01) {
+                        probabilitiesMap.get(p)[i] = 0;
+                    } else if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 0.01) {
+                        probabilitiesMap.get(p)[i] = 1;
+                    }
                     // sum += p.prob(rank associated with i);
                     sum += currentProbabilities[i];
                 }

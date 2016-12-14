@@ -92,7 +92,7 @@ public class ModelComManager {
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIMatch();
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("random", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         System.out.println("in ModelComManager");
         findGame(-1).getGameState().printBoard();
@@ -217,13 +217,6 @@ public class ModelComManager {
             }
         } else if (gameMode == GameMode.AISHOWMATCH) {
             ViewComManager.getInstance().sendChangeTurn(playerIndex);
-            if (!findGame(-1).getGameState().getMoveHistory().isEmpty()) {
-                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
-            }
-        } else if (gameMode == GameMode.AIMATCH) {
-            if (!findGame(-1).getGameState().getMoveHistory().isEmpty()) {
-                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
-            }
         }
     }
 

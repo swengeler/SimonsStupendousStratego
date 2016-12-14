@@ -25,7 +25,7 @@ public class ProbabilisticMoveManager extends MoveManager {
         PieceType opponentPieceType = PieceType.FLAG;
         boolean found = false;
         for (int i = 0; i < probabilitiesArray.length && !found; i++) {
-            if (Math.abs(probabilitiesArray[i] - 1) < EnhancedGameState.PROB_EPSILON) {
+            if (Math.abs(probabilitiesArray[i] - 1.0) < 2 * EnhancedGameState.PROB_EPSILON) {
                 opponentPieceType = PieceType.values()[i];
                 found = true;
             }
@@ -66,7 +66,7 @@ public class ProbabilisticMoveManager extends MoveManager {
         PieceType opponentPieceType = PieceType.FLAG;
         boolean found = false;
         for (int i = 0; i < probabilitiesArray.length && !found; i++) {
-            if (Math.abs(probabilitiesArray[i] - 1) < EnhancedGameState.PROB_EPSILON) {
+            if (Math.abs(probabilitiesArray[i] - 1.0) < 2 * EnhancedGameState.PROB_EPSILON) {
                 opponentPieceType = PieceType.values()[i];
                 found = true;
             }

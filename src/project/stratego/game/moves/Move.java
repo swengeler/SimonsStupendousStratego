@@ -14,6 +14,14 @@ public class Move {
         this.destCol = destCol;
     }
 
+    public Move(Move move) {
+        playerIndex = move.getPlayerIndex();
+        orRow = move.getOrRow();
+        orCol = move.getOrCol();
+        destRow = move.getDestRow();
+        destCol = move.getDestCol();
+    }
+
     public int getPlayerIndex() {
         return playerIndex;
     }

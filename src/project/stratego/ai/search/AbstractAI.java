@@ -39,10 +39,10 @@ public abstract class AbstractAI {
         for (Piece p : state.getPlayer(playerIndex).getActivePieces()) {
             // check for unmovable pieces
             if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
-                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) > EnhancedGameState.PROB_EPSILON || Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) > EnhancedGameState.PROB_EPSILON))) {
+                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) > 2 * EnhancedGameState.PROB_EPSILON || Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) > 2 * EnhancedGameState.PROB_EPSILON))) {
                 int moveRadius = 1;
                 // scouts can move more squares than the other pieces
-                if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) <= EnhancedGameState.PROB_EPSILON) {
+                if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) < 2 * EnhancedGameState.PROB_EPSILON) {
                     moveRadius = 9;
                 }
                 // loop through the positions around the piece and check whether they can be moved there
@@ -124,7 +124,7 @@ public abstract class AbstractAI {
             return false;
         }
         // check if path to position is blocked by other piece/inaccessible tile
-        if (((p.getPlayerType().ordinal() == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT.ordinal()) - 1.0) <= EnhancedGameState.PROB_EPSILON) && !checkScoutPath(state, p, destRow, destCol)) {
+        if (((p.getPlayerType().ordinal() == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT.ordinal()) - 1.0) < 2* EnhancedGameState.PROB_EPSILON) && !checkScoutPath(state, p, destRow, destCol)) {
             return false;
         }
         return true;

@@ -40,7 +40,7 @@ public class PlayingLogic extends GameLogic {
         //System.out.println(temp);
         if (currentPlayer.getCurrentPiece() == null && (temp == null || temp.getPlayerType() != currentPlayer.getType() || temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {
             // no piece selected but either no piece on selected board tile or opponent's piece or unmovable piece
-            //System.out.println("processBoardSelect: return with code 1");
+            //System.out.println("processBoardSelect: return with code 1 (" + row + "|" + col + ")");
             return;
         }
         if (temp != null && currentPlayer.getCurrentPiece() != null && temp.getPlayerType() == currentPlayer.getType() && (temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {
@@ -95,8 +95,9 @@ public class PlayingLogic extends GameLogic {
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
+            //System.out.println("Game not over");
         } else {
-            System.out.println("Game over:");
+            System.out.println("Game over");
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
             AIComManager.getInstance().gameOver(parent);
         }
@@ -112,6 +113,7 @@ public class PlayingLogic extends GameLogic {
                 for (int row = p.getRowPos() - 1; row <= p.getRowPos() + 1; row += 2) {
                     for (int col = p.getColPos() - 1; col <= p.getColPos() + 1; col += 2) {
                         if (row >= 0 && row < 10 && col >= 0 && col < 10 && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                            //System.out.println(p + " can move");
                             return true;
                         }
                     }

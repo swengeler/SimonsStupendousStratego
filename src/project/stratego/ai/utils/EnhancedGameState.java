@@ -106,31 +106,36 @@ public class EnhancedGameState extends GameState {
 
         moveInformation.setPreviousProbabilities(probabilitiesMap);
 
-        if (probabilitiesMap.get(opponentPiece) == null) {
-            System.out.println("Moving: " + movingPiece + "\nEncountered: " + encounteredPiece + "\nOpponent: " + opponentPiece);
-            System.exit(1);
+        // if the flag (or the piece which was assumed to be the flag) was captured, set playerWonIndex to the player's
+        // index who made the capturing move (note: might be easier to have a new MoveResult GAMEWON in the MoveManager)
+        moveInformation.setPlayerWonIndex(playerWonIndex);
+        if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() == playerIndex && encounteredPiece.getType() == PieceType.FLAG) {
+            // current player lost
+            playerWonIndex = 1 - playerIndex;
+        } else if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() != playerIndex && (Math.abs(getProbability(encounteredPiece, PieceType.FLAG) - 1.0) < PROB_EPSILON || encounteredPiece.isRevealed() && encounteredPiece.getType() == PieceType.FLAG)) {
+            // current player won
+            playerWonIndex = playerIndex;
         }
+
 
         // only if the move was performed in the actual game should the probabilities of the piece be updated
         // according to the outcome of the encounter, otherwise the piece was already assigned a probability
-        if (move instanceof Move && encounteredPiece != null && movingPiece != encounteredPiece) {
+        if (!(move instanceof AIMove) && encounteredPiece != null && movingPiece != encounteredPiece) {
             // check whether opponent's piece was encountered with our move or the other way around
             // then, regardless of the outcome of that move, the piece should be revealed
-            //if (moveManager.lastMoveResult() != MoveResult.MOVE) {
-                int typeIndex = opponentPiece.getType().ordinal();
-                double[] probabilitiesArray = probabilitiesMap.get(opponentPiece);
-                if (Math.abs(probabilitiesArray[typeIndex]) > PROB_EPSILON) {
-                    for (int i = 0; i < probabilitiesArray.length; i++) {
-                        if (i != typeIndex) {
-                            probabilitiesArray[i] = 0;
-                        } else {
-                            probabilitiesArray[i] = 1;
-                        }
+            int typeIndex = opponentPiece.getType().ordinal();
+            double[] probabilitiesArray = probabilitiesMap.get(opponentPiece);
+            if (Math.abs(probabilitiesArray[typeIndex]) > PROB_EPSILON) {
+                for (int i = 0; i < probabilitiesArray.length; i++) {
+                    if (i != typeIndex) {
+                        probabilitiesArray[i] = 0;
+                    } else {
+                        probabilitiesArray[i] = 1;
                     }
-                    updateProbabilities();
                 }
-                return;
-            //}
+                updateProbabilities();
+            }
+            return;
         }
 
         // if it was the opponent's piece that moved and it moved further than 1 step it has to be a SCOUT
@@ -143,19 +148,9 @@ public class EnhancedGameState extends GameState {
                     } else {
                         probabilitiesArray[i] = 1;
                     }
-                }/*
-                System.out.println("Probabilities array (1) for move from (" + move.getOrRow() + "|" + move.getOrCol() + ") to (" + move.getDestRow() + "|" + move.getDestCol() + ")");
-                for (int i = 0; i < probabilitiesArray.length; i++) {
-                    System.out.print(probabilitiesArray[i] + " ");
                 }
-                System.out.println();*/
                 updateProbabilities();
-            }/*
-            System.out.println("Probabilities array (2) for move from (" + move.getOrRow() + "|" + move.getOrCol() + ") to (" + move.getDestRow() + "|" + move.getDestCol() + ")");
-            for (int i = 0; i < probabilitiesArray.length; i++) {
-                System.out.print(probabilitiesArray[i] + " ");
             }
-            System.out.println();*/
             return;
         }
 
@@ -175,9 +170,7 @@ public class EnhancedGameState extends GameState {
     /* new methods for the "enhanced" implementation */
 
     public void undoLastMove() {
-        //printBoard();
         MoveInformation lastMoveInfo = moveInformationStack.pop();
-        //System.out.println("Undo move FROM (" + lastMoveInfo.getOrRow() + "|" + lastMoveInfo.getOrCol() + ") TO (" + lastMoveInfo.getDestRow() + "|" + lastMoveInfo.getDestCol() + ")");
         if (lastMoveInfo.getMoveResult() == MoveResult.MOVE && lastMoveInfo.getMovingPieceReference().getPlayerType().ordinal() != playerIndex) {
             // in this case the move was performed by the opponent, possibly revealing that it is a SCOUT or NOT a BOMB or FLAG
             getPlayer(lastMoveInfo.getMovingPieceClone().getPlayerType()).getActivePieces().remove(lastMoveInfo.getMovingPieceReference());
@@ -186,7 +179,6 @@ public class EnhancedGameState extends GameState {
             board[lastMoveInfo.getMovingPieceClone().getRowPos()][lastMoveInfo.getMovingPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getMovingPieceReference());
             board[lastMoveInfo.getMovingPieceClone().getRowPos()][lastMoveInfo.getMovingPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getMovingPieceClone());
 
-            //probabilitiesMap.replace(lastMoveInfo.getMovingPieceClone(), lastMoveInfo.getPreviousProbabilities());
             lastMoveInfo.replaceProbabilities(probabilitiesMap);
         } else if (lastMoveInfo.getMoveResult() == MoveResult.MOVE) {
             // in this case our own piece moved and has to be set to the last position
@@ -195,8 +187,6 @@ public class EnhancedGameState extends GameState {
             board[lastMoveInfo.getMovingPieceReference().getRowPos()][lastMoveInfo.getMovingPieceReference().getColPos()].setOccupyingPiece(null);
             board[lastMoveInfo.getMovingPieceClone().getRowPos()][lastMoveInfo.getMovingPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getMovingPieceReference());
             board[lastMoveInfo.getMovingPieceClone().getRowPos()][lastMoveInfo.getMovingPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getMovingPieceClone());
-            //System.out.println("(" + lastMoveInfo.getMovingPieceReference().getRowPos() + "|" + lastMoveInfo.getMovingPieceReference().getColPos() + ") set to " + board[lastMoveInfo.getMovingPieceReference().getRowPos()][lastMoveInfo.getMovingPieceReference().getColPos()].getOccupyingPiece());
-            //System.out.println("(" + lastMoveInfo.getMovingPieceClone().getRowPos() + "|" + lastMoveInfo.getMovingPieceClone().getColPos() + ") set to " + board[lastMoveInfo.getMovingPieceClone().getRowPos()][lastMoveInfo.getMovingPieceClone().getColPos()].getOccupyingPiece());
         } else if (lastMoveInfo.getMoveResult() == MoveResult.ATTACKTIE) {
             // in this case both pieces have to be added to the respective players' active pieces lists again
             board[lastMoveInfo.getMovingPieceClone().getRowPos()][lastMoveInfo.getMovingPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getMovingPieceReference());
@@ -206,8 +196,8 @@ public class EnhancedGameState extends GameState {
             board[lastMoveInfo.getEncounteredPieceClone().getRowPos()][lastMoveInfo.getEncounteredPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getEncounteredPieceClone());
             getPlayer(lastMoveInfo.getEncounteredPieceClone().getPlayerType()).getActivePieces().add(lastMoveInfo.getEncounteredPieceClone());
 
-            //probabilitiesMap.replace(lastMoveInfo.getMovingPieceClone().getPlayerType().ordinal() == playerIndex ? lastMoveInfo.getEncounteredPieceClone() : lastMoveInfo.getMovingPieceClone(), lastMoveInfo.getPreviousProbabilities());
             lastMoveInfo.replaceProbabilities(probabilitiesMap);
+            playerWonIndex = lastMoveInfo.getPlayerWonIndex();
         } else if (lastMoveInfo.getMoveResult() == MoveResult.ATTACKWON) {
             // in that case the piece that moved and won should be set to the original position again and the original piece should be removed from the player; the defeated piece has to be re-added
             getPlayer(lastMoveInfo.getMovingPieceClone().getPlayerType()).getActivePieces().remove(lastMoveInfo.getMovingPieceReference());
@@ -218,8 +208,8 @@ public class EnhancedGameState extends GameState {
             board[lastMoveInfo.getEncounteredPieceClone().getRowPos()][lastMoveInfo.getEncounteredPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getEncounteredPieceClone());
             getPlayer(lastMoveInfo.getEncounteredPieceClone().getPlayerType()).getActivePieces().add(lastMoveInfo.getEncounteredPieceClone());
 
-            //probabilitiesMap.replace(lastMoveInfo.getMovingPieceClone().getPlayerType().ordinal() == playerIndex ? lastMoveInfo.getEncounteredPieceClone() : lastMoveInfo.getMovingPieceClone(), lastMoveInfo.getPreviousProbabilities());
             lastMoveInfo.replaceProbabilities(probabilitiesMap);
+            playerWonIndex = lastMoveInfo.getPlayerWonIndex();
         } else if (lastMoveInfo.getMoveResult() == MoveResult.ATTACKLOST) {
             // in that case the moving piece has to be re-added and set to the original position
             board[lastMoveInfo.getMovingPieceClone().getRowPos()][lastMoveInfo.getMovingPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getMovingPieceReference());
@@ -231,12 +221,10 @@ public class EnhancedGameState extends GameState {
             board[lastMoveInfo.getEncounteredPieceClone().getRowPos()][lastMoveInfo.getEncounteredPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getEncounteredPieceReference());
             board[lastMoveInfo.getEncounteredPieceClone().getRowPos()][lastMoveInfo.getEncounteredPieceClone().getColPos()].setOccupyingPiece(lastMoveInfo.getEncounteredPieceClone());
 
-            //probabilitiesMap.replace(lastMoveInfo.getMovingPieceClone().getPlayerType().ordinal() == playerIndex ? lastMoveInfo.getEncounteredPieceClone() : lastMoveInfo.getMovingPieceClone(), lastMoveInfo.getPreviousProbabilities());
             lastMoveInfo.replaceProbabilities(probabilitiesMap);
+            playerWonIndex = lastMoveInfo.getPlayerWonIndex();
         }
         updateProbabilities();
-        //System.out.println("undo move: FROM (" + lastMoveInfo.getm);
-        //printBoard();
     }
 
     /**
@@ -247,7 +235,7 @@ public class EnhancedGameState extends GameState {
      * */
     public void copySetup(GameState state, int playerIndex) {
         super.copySetup(state, playerIndex);
-        if (this.playerIndex != playerIndex) {
+        if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
             probabilitiesMap = new HashMap<>(40);
             double[] initProbabilities = new double[PieceType.values().length - 1];
             for (int i = 0; i < initProbabilities.length; i++) {
@@ -255,7 +243,14 @@ public class EnhancedGameState extends GameState {
             }
             for (Piece p : getPlayer(playerIndex).getActivePieces()) {
                 probabilitiesMap.put(p, initProbabilities.clone());
+                if (playerIndex == PlayerType.NORTH.ordinal() && p.getRowPos() > 1) {
+                    probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
+                } else if (playerIndex == PlayerType.SOUTH.ordinal() && p.getRowPos() < 8) {
+                    probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
+                }
             }
+            updateProbabilities();
+            printProbabilitiesTable();
         }
     }
 

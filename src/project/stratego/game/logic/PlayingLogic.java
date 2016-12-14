@@ -21,7 +21,6 @@ public class PlayingLogic extends GameLogic {
         currentPlayer = firstPlayer;
         currentOpponent = secondPlayer;
         moveHistory = new LinkedList<>();
-        //revealPieces();
     }
 
     @Override
@@ -98,44 +97,25 @@ public class PlayingLogic extends GameLogic {
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
         } else {
             System.out.println("Game over:");
-            System.out.println("stuff: " + currentOpponent.getActivePieces().size());
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
             AIComManager.getInstance().gameOver(parent);
         }
     }
 
     private boolean checkGameOver() {
-        boolean playerLost;
-        boolean opponentLost = !checkPlayerCanMove(currentOpponent);
-        //System.out.println(opponentLost);
-        if (!checkPlayerHasFlag(currentOpponent)) {
-            // player won
-            //System.out.println(0);
-            return true;
-        }
-        if ((playerLost = !checkPlayerCanMove(currentPlayer)) && opponentLost) {
-            // tie
-            //System.out.println(1);
-            return true;
-        }
-        if (playerLost) {
-            // player lost
-            //System.out.println(2);
-            return true;
-        }
-        if (opponentLost){
-            // player won
-            //System.out.println(3);
-            return true;
-        }
-        return false;
+        return !checkPlayerHasFlag(currentOpponent) || !checkPlayerHasFlag(currentPlayer) || !checkPlayerCanMove(currentOpponent) || !checkPlayerCanMove(currentPlayer);
     }
 
     private boolean checkPlayerCanMove(Player player) {
         for (Piece p : player.getActivePieces()) {
             if (p.getType() != PieceType.FLAG && p.getType() != PieceType.BOMB) {
-                //System.out.println("Player can move");
-                return true;
+                for (int row = p.getRowPos() - 1; row <= p.getRowPos() + 1; row += 2) {
+                    for (int col = p.getColPos() - 1; col <= p.getColPos() + 1; col += 2) {
+                        if (row >= 0 && row < 10 && col >= 0 && col < 10 && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                            return true;
+                        }
+                    }
+                }
             }
         }
         return false;
@@ -144,7 +124,6 @@ public class PlayingLogic extends GameLogic {
     private boolean checkPlayerHasFlag(Player player) {
         for (Piece p : player.getActivePieces()) {
             if (p.getType() == PieceType.FLAG) {
-                //System.out.println("Player has flag");
                 return true;
             }
         }

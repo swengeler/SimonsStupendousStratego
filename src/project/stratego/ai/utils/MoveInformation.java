@@ -14,9 +14,9 @@ public class MoveInformation {
 
     private MoveResult moveResult;
 
-    private int orRow, orCol, destRow, destCol;
+    private int orRow, orCol, destRow, destCol, playerWonIndex;
 
-    public MoveInformation(Move move, Piece movingPiece, Piece encounteredPiece) {
+    MoveInformation(Move move, Piece movingPiece, Piece encounteredPiece) {
         orRow = move.getOrRow();
         orCol = move.getOrCol();
         destRow = move.getDestRow();
@@ -29,11 +29,15 @@ public class MoveInformation {
         }
     }
 
-    public void setMoveResult(MoveResult moveResult) {
+    public void setPlayerWonIndex(int playerWonIndex) {
+        this.playerWonIndex = playerWonIndex;
+    }
+
+    void setMoveResult(MoveResult moveResult) {
         this.moveResult = moveResult;
     }
 
-    public void setPreviousProbabilities(HashMap<Piece, double[]> probabilitiesMap) {
+    void setPreviousProbabilities(HashMap<Piece, double[]> probabilitiesMap) {
         previousProbabilities = new double[40][0];
         int counter = 0;
         for (Piece p : probabilitiesMap.keySet()) {
@@ -41,27 +45,31 @@ public class MoveInformation {
         }
     }
 
-    public MoveResult getMoveResult() {
+    int getPlayerWonIndex() {
+        return playerWonIndex;
+    }
+
+    MoveResult getMoveResult() {
         return moveResult;
     }
 
-    public Piece getMovingPieceReference() {
+    Piece getMovingPieceReference() {
         return movingPieceReference;
     }
 
-    public Piece getMovingPieceClone() {
+    Piece getMovingPieceClone() {
         return movingPieceClone;
     }
 
-    public Piece getEncounteredPieceClone() {
+    Piece getEncounteredPieceClone() {
         return encounteredPieceClone;
     }
 
-    public Piece getEncounteredPieceReference() {
+    Piece getEncounteredPieceReference() {
         return encounteredPieceReference;
     }
 
-    public void replaceProbabilities(HashMap<Piece, double[]> probabilitiesMap) {
+    void replaceProbabilities(HashMap<Piece, double[]> probabilitiesMap) {
         int counter = 0;
         for (Piece p : probabilitiesMap.keySet()) {
             probabilitiesMap.replace(p, previousProbabilities[counter++]);
@@ -82,10 +90,6 @@ public class MoveInformation {
 
     public int getDestCol() {
         return destCol;
-    }
-
-    public int length() {
-        return Math.abs(destRow - orRow + destCol - orCol);
     }
 
     public int getPlayerIndex() {

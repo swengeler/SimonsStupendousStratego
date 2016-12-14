@@ -92,7 +92,7 @@ public class ModelComManager {
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIMatch();
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("random", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());

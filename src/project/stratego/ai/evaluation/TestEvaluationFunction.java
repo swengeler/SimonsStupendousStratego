@@ -14,11 +14,11 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
 
     @Override
     public double evaluate(EnhancedGameState gameState, int playerType) {
-        if (gameState.isGameOver() && gameState.playerWon()) {
-            return 1000.0;
+        /*if (gameState.isGameOver() && gameState.playerWon()) {
+            return 3.0;
         } else if (gameState.isGameOver()) {
             return 0.0;
-        }
+        }*/
 
         double opponentSum = 0;
         for (Piece p : gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces()) {

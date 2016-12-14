@@ -4,6 +4,6 @@ import project.stratego.game.entities.GameState;
 
 public interface SetupMaker {
 
-    void makeBoardSetup(GameState state);
+    void makeBoardSetup(GameState state, int playerIndex);
 
 }

@@ -17,7 +17,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
     private int nodeCounter = 0;
 
     private AbstractEvaluationFunction evaluationFunction;
-    private int maxDepth = 3;
+    private int maxDepth = 2;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);
@@ -40,7 +40,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
     public void makeBoardSetup(GameState inGameState) {
         SetupMaker setupMaker = new SetupMaker() {
             @Override
-            public void makeBoardSetup(GameState state) {
+            public void makeBoardSetup(GameState state, int playerIndex) {
                 // something something
             }
         };

@@ -231,7 +231,7 @@ public class ViewComManager {
         }
     }
 
-    public void sendRevealAll() {
+    public void revealAll() {
         frame.getInGameView().revealAll();
     }
 

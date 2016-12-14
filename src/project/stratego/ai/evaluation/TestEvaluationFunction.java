@@ -25,7 +25,7 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
             if (p.getType() == PieceType.BOMB) {
                 opponentSum += 4.5;
             } else if (p.getType() == PieceType.FLAG) {
-                opponentSum += 20.0;
+                opponentSum += 100.0;
             } else {
                 opponentSum += PieceType.pieceLvlMap.get(p.getType());
             }
@@ -35,7 +35,7 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
             if (p.getType() == PieceType.BOMB) {
                 ownSum += 4.5;
             } else if (p.getType() == PieceType.FLAG) {
-                ownSum += 20.0;
+                ownSum += 100.0;
             } else {
                 ownSum += PieceType.pieceLvlMap.get(p.getType());
             }

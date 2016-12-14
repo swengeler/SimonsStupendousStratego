@@ -51,6 +51,8 @@ public class AIComManager implements Runnable {
 
     private GameMode gameMode;
 
+    private boolean aiMatchRunning;
+
     @Override
     public void run() {
         while(true) {
@@ -68,14 +70,17 @@ public class AIComManager implements Runnable {
 
     void configureMultiPlayer() {
         gameMode = GameMode.MULTIPLAYER;
+        aiMatchRunning = false;
     }
 
     void configureSinglePlayer() {
         gameMode = GameMode.SINGLEPLAYER;
+        aiMatchRunning = false;
     }
 
     void configureAIMatch() {
         gameMode = GameMode.AIMATCH;
+        aiMatchRunning = true;
     }
 
     void setPrimaryAI(String aiType, int playerIndex) {
@@ -118,29 +123,40 @@ public class AIComManager implements Runnable {
 
     public void tryNextMove(Move move) {
         if (gameMode != GameMode.MULTIPLAYER && primaryAI != null && move.getPlayerIndex() != primaryAI.getPlayerIndex()) {
+            if (gameMode == GameMode.AIMATCH && aiMatchRunning && secondaryAI != null) {
+                secondaryAI.applyMove(move);
+            }
             Move nextMove = primaryAI.getNextMove(move);
+            //System.out.println("AI (" + PlayerType.values()[primaryAI.getPlayerIndex()] + ") does " + nextMove);
             ModelComManager.getInstance().requestBoardTileSelected(-1, primaryAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, primaryAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
         } else if (gameMode != GameMode.MULTIPLAYER && primaryAI != null) {
             primaryAI.applyMove(move);
         }
-        if (gameMode == GameMode.AIMATCH && secondaryAI != null && move.getPlayerIndex() != secondaryAI.getPlayerIndex()) {
+        if (gameMode == GameMode.AIMATCH && aiMatchRunning && secondaryAI != null && move.getPlayerIndex() != secondaryAI.getPlayerIndex()) {
             Move nextMove = secondaryAI.getNextMove(move);
+            //System.out.println("AI (" + PlayerType.values()[secondaryAI.getPlayerIndex()] + ") does " + nextMove);
             ModelComManager.getInstance().requestBoardTileSelected(-1, secondaryAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, secondaryAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
-        } else if (gameMode == GameMode.AIMATCH && secondaryAI != null) {
-            secondaryAI.applyMove(move);
         }
     }
 
     public void gameOver(StrategoGame game) {
         // if AI matches and shit are running, then document the one that just ended and start a new one
+        aiMatchRunning = false;
+        System.out.println("We done here");
+        game.getGameState().printBoard();
     }
 
     public void start() {
+        System.out.println("Attempt to start game");
         if (gameMode == GameMode.AIMATCH) {
+            System.out.println("Attempt to start game");
             // start game by feeding starting move to North AI
-            findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(-1, -1, -1, -1, -1, false));
+            Move firstMove = findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(-1, -1, -1, -1, -1, false));
+            System.out.println("AI (NORTH) does first " + firstMove);
+            ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), firstMove.getOrRow(), firstMove.getOrCol());
+            ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), firstMove.getDestRow(), firstMove.getDestCol());
         }
     }
 

@@ -4,6 +4,7 @@ import project.stratego.ai.utils.AIMove;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
+import project.stratego.game.utils.PlayerType;
 
 import java.util.ArrayList;
 
@@ -15,9 +16,14 @@ public class RandomAI extends AbstractAI {
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
+        //System.out.println("\n------------------------------------------------------------------------------------");
+        //System.out.println("RANDOM search for " + PlayerType.values()[playerIndex]);
+        //System.out.println("------------------------------------------------------------------------------------");
         gameState.applyMove(lastOpponentMove);
+        //gameState.printBoard();
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         int randIndex = (int) (Math.random() * legalMoves.size());
+        //System.out.println("------------------------------------------------------------------------------------\n");
         return legalMoves.get(randIndex);
     }
 
@@ -35,7 +41,6 @@ public class RandomAI extends AbstractAI {
     @Override
     public void copyOpponentSetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
-        System.out.println("GameState in ExpectiNegamaxAI");
         gameState.printBoard();
     }
 

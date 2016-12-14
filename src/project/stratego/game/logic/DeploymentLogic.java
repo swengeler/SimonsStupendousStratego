@@ -75,6 +75,7 @@ public class DeploymentLogic extends GameLogic {
             // maybe call some method to notify user
             return;
         }
+
         tempPlayer = findPlayer(playerIndex);
         if (tempPlayer.getCurrentPiece() != null) {
             if (parent.getBoard()[row][col].getOccupyingPiece() != null && tempPlayer.getCurrentPiece().getRowPos() < 0) {

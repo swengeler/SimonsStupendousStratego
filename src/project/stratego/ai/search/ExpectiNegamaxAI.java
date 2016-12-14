@@ -9,6 +9,7 @@ import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.*;
 import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PieceType;
+import project.stratego.game.utils.PlayerType;
 
 import java.util.ArrayList;
 
@@ -59,6 +60,9 @@ public class ExpectiNegamaxAI extends AbstractAI {
     }
 
     private Move expectiNegamaxSearch() {
+        System.out.println("\n------------------------------------------------------------------------------------");
+        System.out.println("EXPECTIMAX search for " + (playerIndex == PlayerType.NORTH.ordinal() ? "NORTH:" : "SOUTH:"));
+        System.out.println("------------------------------------------------------------------------------------\n");
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         System.out.println("Number of legal moves: " + legalMoves.size());
         int sum = 0;
@@ -68,10 +72,8 @@ public class ExpectiNegamaxAI extends AbstractAI {
             if (m.isChanceMove())
                 sum++;
         }
-        System.out.println("Number of chance moves: " + sum);
+        System.out.println("\nNumber of chance moves: " + sum);
 
-        //System.out.println("PRINTOUT ON LEVEL: 0");
-        //gameState.printProbabilitiesTable();
         gameState.printBoard();
 
         AIMove bestMove = legalMoves.get(0);
@@ -104,7 +106,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
         System.out.println(bestMove);
         System.out.println("Max value: " + maxValue);
         System.out.println("Searched " + nodeCounter + " nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
-        System.out.println("------------------------------------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------\n");
 
         return bestMove;
     }

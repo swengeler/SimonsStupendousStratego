@@ -80,7 +80,7 @@ public class ModelComManager {
         AIComManager.getInstance().configureSinglePlayer();
         AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
-        findGame(-1).getGameState().printBoard();
+        //findGame(-1).getGameState().printBoard();
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
         System.out.println("TEST");
@@ -94,6 +94,8 @@ public class ModelComManager {
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("random", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
+        System.out.println("in ModelComManager");
+        findGame(-1).getGameState().printBoard();
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
     }
@@ -146,9 +148,6 @@ public class ModelComManager {
     }
 
     public void requestPlayerReady(int gameID, int playerIndex) {
-        if (gameMode == GameMode.AIMATCH || gameMode == GameMode.AISHOWMATCH) {
-            return;
-        }
         if (findGame(gameID) != null) {
             findGame(gameID).getCurrentRequestProcessor().processPlayerReady(playerIndex);
         }
@@ -166,9 +165,6 @@ public class ModelComManager {
     }
 
     public void requestBoardTileSelected(int gameID, int playerIndex, int row, int col) {
-        if (gameMode == GameMode.AIMATCH || gameMode == GameMode.AISHOWMATCH) {
-            return;
-        }
         if (gameMode == GameMode.MULTIPLAYER && !server.gameStarted(gameID)) {
             return;
         }
@@ -221,9 +217,13 @@ public class ModelComManager {
             }
         } else if (gameMode == GameMode.AISHOWMATCH) {
             ViewComManager.getInstance().sendChangeTurn(playerIndex);
-            AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
+            if (!findGame(-1).getGameState().getMoveHistory().isEmpty()) {
+                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
+            }
         } else if (gameMode == GameMode.AIMATCH) {
-            AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
+            if (!findGame(-1).getGameState().getMoveHistory().isEmpty()) {
+                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
+            }
         }
     }
 
@@ -363,7 +363,7 @@ public class ModelComManager {
             server.sendCommandToClient(gameID, 1, ("go " + winnerPlayerIndex));
             server.remove(gameID);
             activeGames.remove(findGame(gameID));
-        } else {
+        } else if (gameMode != GameMode.AIMATCH) {
             activeGames.remove(findGame(-1));
             //configureMultiPlayer();
             configureSinglePlayer();

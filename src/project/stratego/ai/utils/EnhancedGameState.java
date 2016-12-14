@@ -250,7 +250,6 @@ public class EnhancedGameState extends GameState {
                 }
             }
             updateProbabilities();
-            printProbabilitiesTable();
         }
     }
 

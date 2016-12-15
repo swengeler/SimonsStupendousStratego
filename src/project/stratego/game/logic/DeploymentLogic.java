@@ -27,6 +27,7 @@ public class DeploymentLogic extends GameLogic {
         pieceFactory.reset();
         tempPlayer = findPlayer(playerIndex);
         tempPlayer.getActivePieces().clear();
+        tempPlayer.getDeadPieces().clear();
         // also needs to reset board
         ModelComManager.getInstance().sendResetDeployment(parent.getGameID(), playerIndex);
         Piece temp;
@@ -44,6 +45,7 @@ public class DeploymentLogic extends GameLogic {
         pieceFactory.reset();
         tempPlayer = findPlayer(playerIndex);
         tempPlayer.getActivePieces().clear();
+        tempPlayer.getDeadPieces().clear();
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 10; col++) {
                 parent.getBoard()[tempPlayer.getType() == PlayerType.NORTH ? row : 9 - row][col].setOccupyingPiece(null);

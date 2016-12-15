@@ -13,11 +13,13 @@ public class Player {
      * been placed and not been eliminated yet).
      */
     private ArrayList<Piece> activePieces;
+    private ArrayList<Piece> deadPieces;
     private Piece currentPiece;
 
     public Player(PlayerType type) {
         this.type = type;
         this.activePieces = new ArrayList<>();
+        this.deadPieces = new ArrayList<>();
     }
 
     /* Getter methods */
@@ -32,6 +34,10 @@ public class Player {
 
     public ArrayList<Piece> getActivePieces() {
         return activePieces;
+    }
+
+    public ArrayList<Piece> getDeadPieces() {
+        return deadPieces;
     }
 
     /* Setter methods */

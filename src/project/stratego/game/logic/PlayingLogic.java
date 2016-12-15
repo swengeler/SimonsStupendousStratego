@@ -1,5 +1,6 @@
 package project.stratego.game.logic;
 
+import project.stratego.ai.tests.AITestsMain;
 import project.stratego.control.managers.AIComManager;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.StrategoGame;
@@ -97,7 +98,8 @@ public class PlayingLogic extends GameLogic {
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
             //System.out.println("Game not over");
         } else {
-            System.out.println("Game over");
+            System.out.println("Game over by " + (checkPlayerHasFlag(currentOpponent) ? "piece capture" : "flag capture"));
+            AITestsMain.addWin(currentPlayer.getType().ordinal(), checkPlayerHasFlag(currentOpponent) ? 1 : 0);
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
             AIComManager.getInstance().gameOver(parent);
         }

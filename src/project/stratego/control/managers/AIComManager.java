@@ -197,7 +197,7 @@ public class AIComManager implements Runnable {
         AITestsMain.addPlayTime(System.currentTimeMillis() - beforeOne);
         AITestsMain.addNodesSearched(((ExpectiNegamaxAI) primaryAI).getNodesSearched());
         AITestsMain.addNumberMoves(moveCounter);
-        AITestsMain.addWin(primaryAI.getPlayerWonIndex());
+        //AITestsMain.addWin(primaryAI.getPlayerWonIndex());
     }
 
     public void reset() {

@@ -1,5 +1,6 @@
 package project.stratego.ai.utils;
 
+import project.stratego.ai.tests.AITestsMain;
 import project.stratego.game.entities.*;
 import project.stratego.game.moves.*;
 import project.stratego.game.utils.*;
@@ -25,6 +26,7 @@ public class EnhancedGameState extends GameState {
     // the opponent (1 - playerIndex) is associated with the probabilitiesMap
     private int playerIndex;
     private int playerWonIndex;
+    private int winType;
 
     public EnhancedGameState(int playerIndex) {
         super();
@@ -32,6 +34,7 @@ public class EnhancedGameState extends GameState {
         moveInformationStack = new Stack<>();
         assignmentHistory = new Stack<>();
         playerWonIndex = -1;
+        winType = -1;
     }
 
     private EnhancedGameState(int playerIndex, BoardTile[][] board, Player playerNorth, Player playerSouth, LinkedList<Move> moveHistory, HashMap<Piece, double[]> probabilitiesMap) {
@@ -111,7 +114,7 @@ public class EnhancedGameState extends GameState {
         // if the flag (or the piece which was assumed to be the flag) was captured, set playerWonIndex to the player's
         // index who made the capturing move (note: might be easier to have a new MoveResult GAMEWON in the MoveManager)
         moveInformation.setPlayerWonIndex(playerWonIndex);
-        if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() == playerIndex && encounteredPiece.getType() == PieceType.FLAG) {
+        if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() == playerIndex) {
             // current player lost
             playerWonIndex = 1 - playerIndex;
         } else if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() != playerIndex && (Math.abs(getProbability(encounteredPiece, PieceType.FLAG) - 1.0) < 2 * PROB_EPSILON || encounteredPiece.isRevealed() && encounteredPiece.getType() == PieceType.FLAG)) {
@@ -375,7 +378,7 @@ public class EnhancedGameState extends GameState {
                     }
                     System.out.println(PieceType.values()[i] + " -- " + sum);
                 }
-
+                AITestsMain.printStats();
                 System.exit(3578);
             }
 

@@ -148,5 +148,10 @@ public abstract class AbstractAI {
         return true;
     }
 
+    /* stats */
+
+    public int getPlayerWonIndex() {
+        return gameState.getPlayerWonIndex();
+    }
 
 }

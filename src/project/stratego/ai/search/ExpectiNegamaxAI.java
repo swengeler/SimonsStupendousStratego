@@ -166,7 +166,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
             if (DEBUG) {
                 System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
             }
-            if ((prevProbability = state.getProbability(unknownPiece, i)) > 2 * EnhancedGameState.PROB_EPSILON) {
+            if ((prevProbability = state.getProbability(unknownPiece, i)) > 0.01) {
                 state.assignPieceType(unknownPiece, PieceType.values()[i]);
                 if (DEBUG) {
                     System.out.println("Check just in case");
@@ -178,6 +178,12 @@ public class ExpectiNegamaxAI extends AbstractAI {
             }
         }
         return sum;
+    }
+
+    /* stats */
+
+    public int getNodesSearched() {
+        return nodeCounter;
     }
 
 }

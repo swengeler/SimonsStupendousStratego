@@ -48,6 +48,7 @@ public class EnhancedGameState extends GameState {
 
     @Override
     public void applyMove(Move move) {
+        //printProbabilitiesTable();
         if (move.getOrRow() == -1) {
             return;
         }
@@ -118,7 +119,6 @@ public class EnhancedGameState extends GameState {
             playerWonIndex = playerIndex;
         }
 
-
         // only if the move was performed in the actual game should the probabilities of the piece be updated
         // according to the outcome of the encounter, otherwise the piece was already assigned a probability
         if (!(move instanceof AIMove) && encounteredPiece != null && movingPiece != encounteredPiece) {
@@ -133,6 +133,7 @@ public class EnhancedGameState extends GameState {
                     probabilitiesArray[i] = 1;
                 }
             }
+            //System.out.println("CHECK 1: " + move);
             updateProbabilities();
             return;
         }
@@ -279,6 +280,10 @@ public class EnhancedGameState extends GameState {
         return playerIndex;
     }
 
+    public int getPlayerWonIndex() {
+        return playerWonIndex;
+    }
+
     public boolean isGameOver() {
         return playerWonIndex != -1;
     }
@@ -314,6 +319,7 @@ public class EnhancedGameState extends GameState {
     }
 
     public void assignPieceType(Piece piece, PieceType assignedType) {
+        lastStringThing = "Probability for piece at (" + piece.getRowPos() + "|" + piece.getColPos() + ") to be " + assignedType + ": " + getProbability(piece, assignedType.ordinal());
         //System.out.println(assignedType + " assigned to " + piece);
         double[] probabilitiesArray = probabilitiesMap.get(piece);
         assignmentHistory.add(new AssignmentInformation(piece, probabilitiesMap));
@@ -334,6 +340,8 @@ public class EnhancedGameState extends GameState {
         updateProbabilities();
     }
 
+    private String lastStringThing = "";
+
     private void updateProbabilities() {
         //ArrayList<Piece> pieces = getPlayer(1 - playerIndex).getActivePieces();
         Set<Piece> pieces = probabilitiesMap.keySet();
@@ -342,11 +350,34 @@ public class EnhancedGameState extends GameState {
         long before = System.nanoTime();
         int counter = 0;
         while (!updated) {
-            /*1if (counter % 1000 == 0) {
+            counter++;/*
+            if (counter % 1000 == 0) {
                 System.out.println(counter);
             }*/
-            counter++;
             updated = true;
+
+            if (counter > 50000) {
+                printBoard();
+                printProbabilitiesTable();
+
+                for (Piece p : pieces) {
+                    double sum = 0;
+                    for (double val : probabilitiesMap.get(p)) {
+                        sum += val;
+                    }
+                    System.out.println(p + " -- " + sum);
+                }
+
+                for (int i = 0; i < PieceType.values().length - 1; i++) {
+                    double sum = 0;
+                    for (Piece p : pieces) {
+                        sum += probabilitiesMap.get(p)[i];
+                    }
+                    System.out.println(PieceType.values()[i] + " -- " + sum);
+                }
+
+                System.exit(3578);
+            }
 
             // go through each rank
             for (int i = 0; i < PieceType.values().length - 1; i++) {

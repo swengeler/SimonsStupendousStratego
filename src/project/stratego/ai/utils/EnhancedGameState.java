@@ -17,6 +17,8 @@ public class EnhancedGameState extends GameState {
 
     public static final double PROB_EPSILON = 0.0005;
 
+    private double[][] tileEvaluationArray;
+
     private HashMap<Piece, double[]> probabilitiesMap;
 
     private Stack<MoveInformation> moveInformationStack;
@@ -31,6 +33,8 @@ public class EnhancedGameState extends GameState {
     public EnhancedGameState(int playerIndex) {
         super();
         this.playerIndex = playerIndex;
+        tileEvaluationArray = new double[10][10];
+        // initTileEvalArray();
         moveInformationStack = new Stack<>();
         assignmentHistory = new Stack<>();
         playerWonIndex = -1;

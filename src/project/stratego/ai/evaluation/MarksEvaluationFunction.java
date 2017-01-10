@@ -32,17 +32,20 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
         double opponentInfoWeight = 0.1 * opponentPieces.size();
         double ownInfoWeight = 0.1 * ownPieces.size();
         double materialWeight = 1.0;
+        // rank values, flag is 0, spy is 1, scout 2 etc bomb is 11
+        double[] rankValues = {1000.0, 100.0, 10.0, 100.0, 20.0, 50.0, 100.0, 140.0, 175.0, 300.0, 400.0, 75.0  };
 
         // iterate over opponent's pieces
         for (Piece p : gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces()) {
             if (p.getType() == PieceType.BOMB) {
                 // revealed bomb is worth 0
                 if (!p.isRevealed()) {
-                    opponentSum += 75.0 * materialWeight;
+                    opponentSum += rankValue[11] * materialWeight;
                 }
             } else if (p.getType() == PieceType.FLAG) {
                 // Flag stuff goes here. Leave at 0
                 opponentSum += 1000.0 * materialWeight;
+                
             } else if (p.getType() == PieceType.SPY) {
                 // Very rough Spy value. No Marshall check
                 opponentSum += 100.0 * materialWeight;
@@ -103,15 +106,17 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
         for (Piece p : gameState.getPlayer(gameState.getPlayerIndex()).getActivePieces()) {
             if (p.getType() == PieceType.BOMB) {
                 if (!p.isRevealed()){
-                    ownSum +=  50.0 * materialWeight;
+                    ownSum +=  75.0 * materialWeight;
                 }
             } else if (p.getType() == PieceType.FLAG) {
+                
+                ownSum +=  1000.0 * materialWeight;
 
             } else if (p.getType() == PieceType.SPY) {
                 // Very rough Spy value. No Marshall check
-                ownSum += 50.0 * materialWeight;
+                ownSum += 100.0 * materialWeight;
                 if (p.isRevealed()){
-                    opponentSum += 50.0 * ownInfoWeight;
+                    opponentSum += 100.0 * ownInfoWeight;
                 }
             } else if (p.getType() == PieceType.SCOUT) {
                 // Static Scout value as lowest unit
@@ -125,12 +130,59 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
                 if (p.isRevealed()){
                     opponentSum += 30.0 * ownInfoWeight;
                 }
-            } else {
-                int tmp = PieceType.pieceLvlMap.get(p.getType());
-                ownSum += tmp * tmp * materialWeight;
+            } else if (p.getType() == PieceType.SERGEANT) {
+              
+                ownSum += 20.0 * materialWeight;
                 if (p.isRevealed()){
-                    opponentSum += tmp * tmp * ownInfoWeight;
+                    opponentSum += 20.0 * ownInfoWeight;
                 }
+            } 
+             else if (p.getType() == PieceType.LIEUTENANT) {
+              
+                ownSum += 50.0 * materialWeight;
+                if (p.isRevealed()){
+                    opponentSum += 50.0 * ownInfoWeight;
+                }
+                               
+            }   
+            
+             else if (p.getType() == PieceType.CAPTAIN) {
+              
+                ownSum += 100.0 * materialWeight;
+                if (p.isRevealed()){
+                    opponentSum += 100.0 * ownInfoWeight;
+                }
+            } 
+            
+             else if (p.getType() == PieceType.MAJOR) {
+              
+                ownSum += 140.0 * materialWeight;
+                if (p.isRevealed()){
+                    opponentSum += 140.0 * ownInfoWeight;
+                }
+            } 
+             else if (p.getType() == PieceType.COLONEL) {
+              
+                ownSum += 175.0 * materialWeight;
+                if (p.isRevealed()){
+                    opponentSum += 175.0 * ownInfoWeight;
+                }
+            } 
+             else if (p.getType() == PieceType.GENERAL) {
+              
+                ownSum += 300.0 * materialWeight;
+                if (p.isRevealed()){
+                    opponentSum += 300.0 * ownInfoWeight;
+                }
+            } 
+             else if (p.getType() == PieceType.MARSHAL) {
+              
+                ownSum += 400.0 * materialWeight;
+                if (p.isRevealed()){
+                    opponentSum += 400.0 * ownInfoWeight;
+                }
+            } 
+                
             }
         }
 

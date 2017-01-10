@@ -33,6 +33,10 @@ public class PieceFactory {
         return null;
     }
 
+    public void giveBackPiece(Piece piece) {
+        pieceCount[piece.getPlayerType().ordinal()][piece.getType().ordinal()]++;
+    }
+
     public boolean pieceInStock(PlayerType playerType, PieceType pieceType) {
         if (pieceCount[playerType.ordinal()][pieceType.ordinal()] > 0) {
             return true;

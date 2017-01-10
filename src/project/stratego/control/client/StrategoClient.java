@@ -2,7 +2,7 @@ package project.stratego.control.client;
 
 import javafx.application.Platform;
 import project.stratego.control.managers.ViewComManager;
-import project.stratego.ui.Messages;
+import project.stratego.ui.utils.Messages;
 
 import java.io.*;
 import java.net.Socket;

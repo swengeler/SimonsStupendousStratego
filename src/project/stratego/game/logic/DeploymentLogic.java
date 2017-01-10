@@ -59,15 +59,21 @@ public class DeploymentLogic extends GameLogic {
         if (playerIndex == firstPlayerReady) {
             return;
         }
-        Piece temp;
-        if (findPlayer(playerIndex).getCurrentPiece() == null && pieceFactory.pieceInStock(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex])) {
+        Piece tempPiece;
+        Player tempPlayer = findPlayer(playerIndex);
+        if (tempPlayer.getCurrentPiece() == null && pieceFactory.pieceInStock(tempPlayer.getType(), PieceType.values()[pieceIndex])) {
             //System.out.println("Can place piece of type " + temp.getType());
-            temp = pieceFactory.makePiece(findPlayer(playerIndex).getType(), PieceType.values()[pieceIndex]);
-            findPlayer(playerIndex).getActivePieces().add(temp);
-            findPlayer(playerIndex).setCurrentPiece(temp);
+            tempPiece = pieceFactory.makePiece(tempPlayer.getType(), PieceType.values()[pieceIndex]);
+            tempPlayer.getActivePieces().add(tempPiece);
+            tempPlayer.setCurrentPiece(tempPiece);
             ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
-        } else if (findPlayer(playerIndex).getCurrentPiece() != null) {
-
+        } else if (tempPlayer.getCurrentPiece() != null) {
+            pieceFactory.giveBackPiece(tempPlayer.getCurrentPiece());
+            tempPlayer.getActivePieces().remove(tempPlayer.getActivePieces());
+            tempPiece = pieceFactory.makePiece(tempPlayer.getType(), PieceType.values()[pieceIndex]);
+            tempPlayer.getActivePieces().add(tempPiece);
+            tempPlayer.setCurrentPiece(tempPiece);
+            ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
         }
     }
 

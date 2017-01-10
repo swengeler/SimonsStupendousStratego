@@ -53,6 +53,7 @@ public class AIComManager implements Runnable {
     private GameMode gameMode;
 
     private boolean aiMatchRunning;
+    private Move lastMove;
 
     @Override
     public void run() {
@@ -81,7 +82,10 @@ public class AIComManager implements Runnable {
 
     void configureAIMatch() {
         gameMode = GameMode.AIMATCH;
-        aiMatchRunning = true;
+    }
+
+    void configureAIShowMatch() {
+        gameMode = GameMode.AISHOWMATCH;
     }
 
     void setPrimaryAI(String aiType, int playerIndex) {
@@ -114,7 +118,7 @@ public class AIComManager implements Runnable {
         if (gameMode == GameMode.SINGLEPLAYER && primaryAI != null) {
             primaryAI.makeBoardSetup(state);
             primaryAI.copyOpponentSetup(state);
-        } else if (gameMode == GameMode.AIMATCH) {
+        } else if (gameMode == GameMode.AIMATCH || gameMode == GameMode.AISHOWMATCH) {
             primaryAI.makeBoardSetup(state);
             secondaryAI.makeBoardSetup(state);
             primaryAI.copyOpponentSetup(state);
@@ -124,36 +128,51 @@ public class AIComManager implements Runnable {
 
     public void tryNextMove(Move move) {
         if (gameMode != GameMode.MULTIPLAYER && primaryAI != null && move.getPlayerIndex() != primaryAI.getPlayerIndex()) {
-            if (gameMode == GameMode.AIMATCH && aiMatchRunning && secondaryAI != null) {
-                secondaryAI.applyMove(move);
-            }
             Move nextMove = primaryAI.getNextMove(move);
-            //System.out.println("AI (" + PlayerType.values()[primaryAI.getPlayerIndex()] + ") does " + nextMove);
             ModelComManager.getInstance().requestBoardTileSelected(-1, primaryAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, primaryAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
         } else if (gameMode != GameMode.MULTIPLAYER && primaryAI != null) {
             primaryAI.applyMove(move);
         }
-        if (gameMode == GameMode.AIMATCH && aiMatchRunning && secondaryAI != null && move.getPlayerIndex() != secondaryAI.getPlayerIndex()) {
-            Move nextMove = secondaryAI.getNextMove(move);
-            //System.out.println("AI (" + PlayerType.values()[secondaryAI.getPlayerIndex()] + ") does " + nextMove);
-            ModelComManager.getInstance().requestBoardTileSelected(-1, secondaryAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
-            ModelComManager.getInstance().requestBoardTileSelected(-1, secondaryAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
+    }
+
+    public void advanceAIMatch() {
+        if (gameMode != GameMode.AISHOWMATCH) {
+            return;
+        }
+
+        if (!aiMatchRunning) {
+            aiMatchRunning = true;
+            lastMove = findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
+            System.out.println("First " + lastMove);
+            ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), lastMove.getOrRow(), lastMove.getOrCol());
+            ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), lastMove.getDestRow(), lastMove.getDestCol());
+            findAI(PlayerType.NORTH.ordinal()).applyMove(new Move(lastMove));
+        } else {
+            AbstractAI currentAI = findAI(1 - lastMove.getPlayerIndex());
+            Move nextMove = currentAI.getNextMove(new Move(lastMove));
+            System.out.println(nextMove);
+
+            ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
+            ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
+
+            currentAI.applyMove(new Move(nextMove));
+            lastMove = nextMove;
         }
     }
 
     public void gameOver(StrategoGame game) {
         aiMatchRunning = false;
-        System.out.println("We done here");
+        System.out.println("AI match finished");
         game.getGameState().printBoard();
     }
 
     public void runAIMatch() {
         if (gameMode != GameMode.AIMATCH) {
-            System.out.println("Pls");
             return;
         }
 
+        aiMatchRunning = true;
         System.out.println("Start of AI match");
         Move firstMove = findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
         System.out.println("AI (NORTH) does first " + firstMove);

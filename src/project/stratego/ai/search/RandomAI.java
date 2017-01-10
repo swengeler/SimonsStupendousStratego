@@ -48,7 +48,13 @@ public class RandomAI extends AbstractAI {
     @Override
     public void copyOpponentSetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
-        //gameState.printBoard();
+        gameState.printBoard();
+    }
+
+    public void applyMove(Move move) {
+        super.applyMove(move);
+        System.out.println("In random AI:");
+        gameState.printBoard();
     }
 
 }

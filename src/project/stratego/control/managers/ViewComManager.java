@@ -1,10 +1,11 @@
 package project.stratego.control.managers;
 
 import project.stratego.control.client.StrategoClient;
-import project.stratego.game.utils.PieceType;
-import project.stratego.ui.Messages;
+import project.stratego.ui.utils.Messages;
 import project.stratego.ui.sections.StrategoFrame;
 import project.stratego.ui.sections.InGameView;
+
+import java.io.File;
 
 public class ViewComManager {
 
@@ -144,6 +145,20 @@ public class ViewComManager {
             client.sendCommandToServer("bts " + row + " " + col);
         } else {
             ModelComManager.getInstance().requestBoardTileSelected(-1, InGameView.DEFAULT_PLAYER_ID, row, col);
+        }
+    }
+
+    public void requestNextMove() {
+        if (gameMode == GameMode.AISHOWMATCH) {
+            ModelComManager.getInstance().requestNextMove();
+        }
+    }
+
+    public void requestLoadSetup(int playerIndex, String setupEncoding) {
+        if (isConnected()) {
+            client.sendCommandToServer("ls " + setupEncoding);
+        } else {
+            ModelComManager.getInstance().requestLoadSetup(-1, playerIndex, setupEncoding);
         }
     }
 

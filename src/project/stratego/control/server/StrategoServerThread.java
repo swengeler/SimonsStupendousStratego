@@ -93,6 +93,9 @@ public class StrategoServerThread implements Runnable {
             int row = Integer.parseInt(parts[1]);
             int col = Integer.parseInt(parts[2]);
             ModelComManager.getInstance().requestBoardTileSelected(gameID, playerIndex, row, col);
+        } else if (command.startsWith("ls")) {
+            String[] parts = command.split(" ");
+            ModelComManager.getInstance().requestLoadSetup(gameID, playerIndex, parts[1]);
         }
     }
 

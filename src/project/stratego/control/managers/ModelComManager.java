@@ -1,17 +1,14 @@
 package project.stratego.control.managers;
 
-import javafx.application.Platform;
 import project.stratego.control.server.StrategoServer;
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.logic.DeploymentLogic;
 import project.stratego.game.StrategoGame;
-import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PlayerType;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 public class ModelComManager {
 
@@ -105,10 +102,11 @@ public class ModelComManager {
         gameMode = GameMode.AISHOWMATCH;
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
-        AIComManager.getInstance().configureAIMatch();
+        AIComManager.getInstance().configureAIShowMatch();
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
+        System.out.println("Check");
         sendDeploymentUpdate(-1, PlayerType.NORTH.ordinal());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
@@ -151,10 +149,11 @@ public class ModelComManager {
     }
 
     public void requestPlayerReady(int gameID, int playerIndex) {
-        if (findGame(gameID) != null) {
-            findGame(gameID).getCurrentRequestProcessor().processPlayerReady(playerIndex);
+        if (gameMode != GameMode.AIMATCH) {
+            if (findGame(gameID) != null) {
+                findGame(gameID).getCurrentRequestProcessor().processPlayerReady(playerIndex);
+            }
         }
-        // needs something proper for AI match
     }
 
     public void requestTrayPieceSelected(int gameID, int playerIndex, int pieceIndex) {
@@ -173,6 +172,27 @@ public class ModelComManager {
         }
         if (findGame(gameID) != null) {
             findGame(gameID).getCurrentRequestProcessor().processBoardSelect(playerIndex, row, col);
+        }
+    }
+
+    public void requestNextMove() {
+        if (gameMode == GameMode.AISHOWMATCH) {
+            AIComManager.getInstance().advanceAIMatch();
+        }
+    }
+
+    public void requestLoadSetup(int gameID, int playerIndex, String setupEncoding) {
+        requestResetDeployment(gameID, playerIndex);
+        String[] pieceIndexStrings = setupEncoding.split("-");
+        if (pieceIndexStrings.length != 40) {
+            System.out.println("Something wrong with the loaded setup");
+            System.exit(1);
+        }
+        int[] pieceIndexIntegers = new int[40];
+        for (int i = 0; i < pieceIndexStrings.length; i++) {
+            pieceIndexIntegers[i] = Integer.parseInt(pieceIndexStrings[i]);
+            requestTrayPieceSelected(gameID, playerIndex, pieceIndexIntegers[i]);
+            requestBoardTileSelected(gameID, playerIndex, playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10, playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10);
         }
     }
 
@@ -220,12 +240,6 @@ public class ModelComManager {
             }
         } else if (gameMode == GameMode.AISHOWMATCH) {
             ViewComManager.getInstance().sendChangeTurn(playerIndex);
-            System.out.println("Check in changeturn");
-            /*try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
         }
     }
 
@@ -270,13 +284,6 @@ public class ModelComManager {
         } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
             System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
             ViewComManager.getInstance().sendPieceMoved(orRow, orCol, destRow, destCol);
-            System.out.println("BREAK START");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("BREAK END\n");
         }
     }
 

@@ -1,7 +1,6 @@
 package project.stratego.ui.sections;
 
-import project.stratego.game.utils.PieceType;
-import project.stratego.ui.Messages;
+import project.stratego.ui.utils.Messages;
 import project.stratego.ui.components.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;

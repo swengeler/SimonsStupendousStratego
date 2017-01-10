@@ -1,4 +1,4 @@
-package project.stratego.ui;
+package project.stratego.ui.utils;
 
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.control.managers.ViewComManager;

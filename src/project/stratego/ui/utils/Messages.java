@@ -1,4 +1,4 @@
-package project.stratego.ui;
+package project.stratego.ui.utils;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;

@@ -76,7 +76,7 @@ public class BoardArea extends Pane {
 
             System.out.println("In BoardArea: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
 
-            System.out.println();
+            /*System.out.println();
             for (int row = 0; row < 10; row++) {
                 for (int col = 0; col < 10; col++) {
                     if (board[row][col].getOccupyingPiece() != null) {
@@ -91,7 +91,7 @@ public class BoardArea extends Pane {
                 }
                 System.out.println();
             }
-            System.out.println();
+            System.out.println();*/
         }
     }
 

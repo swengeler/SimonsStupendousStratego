@@ -5,7 +5,11 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import project.stratego.control.managers.ViewComManager;
+import project.stratego.ui.utils.SetupLoader;
+
+import java.io.File;
 
 public class SideMenu extends Pane {
 
@@ -15,9 +19,24 @@ public class SideMenu extends Pane {
 
     private TitledPane singlePlayerMenu, multiPlayerMenu, showMatchMenu, loadAndReplayMenu, helpMenu;
 
+    private FileChooser gameStateChooser, setupChooser;
+
     public SideMenu(StrategoFrame parent) {
         this.parent = parent;
         menu = new Accordion();
+
+        gameStateChooser = new FileChooser();
+        gameStateChooser.setTitle("Load Game State");
+        gameStateChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        //gameStateChooser.setInitialFileName(new SimpleDateFormat("StrategoGameState_HH:mm:ss_dd-MM").format(new Date()));
+        gameStateChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Stratego Game State", "*.gamestate"));
+
+        setupChooser = new FileChooser();
+        setupChooser.setTitle("Load Setup");
+        setupChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        //setupChooser.setInitialFileName(new SimpleDateFormat("StrategoSetup_HH:mm:ss_dd-MM").format(new Date()));
+        setupChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Stratego Setup", "*.setup"));
+
         makeSinglePlayerMenu();
         makeShowMatchMenu();
         makeLoadAndReplayMenu();
@@ -37,9 +56,10 @@ public class SideMenu extends Pane {
 
         Button loadSetupButton = new Button("Load setup");
         loadSetupButton.setOnAction((ActionEvent e) -> {
-
+            String setupEncoding = SetupLoader.load(setupChooser.showOpenDialog(parent));
+            ViewComManager.getInstance().requestLoadSetup(parent.getInGameView().getPlayerIndex(), setupEncoding);
         });
-        loadSetupButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        loadSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         loadSetupButton.setTextFill(Color.BLACK);
         loadSetupButton.setOnMouseEntered(e -> {
             loadSetupButton.setTextFill(Color.WHITE);
@@ -50,7 +70,7 @@ public class SideMenu extends Pane {
 
         Button autoDeployButton = new Button("Auto deploy");
         autoDeployButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestAutoDeploy());
-        autoDeployButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        autoDeployButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         autoDeployButton.setTextFill(Color.BLACK);
         autoDeployButton.setOnMouseEntered(e -> {
             autoDeployButton.setTextFill(Color.WHITE);
@@ -61,7 +81,7 @@ public class SideMenu extends Pane {
 
         Button resetDeploymentButton = new Button("Reset deployment");
         resetDeploymentButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
-        resetDeploymentButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        resetDeploymentButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         resetDeploymentButton.setTextFill(Color.BLACK);
         resetDeploymentButton.setOnMouseEntered(e -> {
             resetDeploymentButton.setTextFill(Color.WHITE);
@@ -72,7 +92,7 @@ public class SideMenu extends Pane {
 
         Button configureButton = new Button("Configure AI");
         configureButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
-        configureButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        configureButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         configureButton.setTextFill(Color.BLACK);
         configureButton.setOnMouseEntered(e -> {
             configureButton.setTextFill(Color.WHITE);
@@ -83,7 +103,7 @@ public class SideMenu extends Pane {
 
         Button startButton = new Button("Start game");
         startButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
-        startButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        startButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         startButton.setTextFill(Color.BLACK);
         startButton.setOnMouseEntered(e -> {
             startButton.setTextFill(Color.WHITE);
@@ -92,14 +112,22 @@ public class SideMenu extends Pane {
             startButton.setTextFill(Color.BLACK);
         });
 
-        // Pane pane = new Pane();
-        // pane.getChildren().addAll(b1, b2, startButton);
+        Button saveButton = new Button("Save game");
+        //saveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
+        saveButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        saveButton.setTextFill(Color.BLACK);
+        saveButton.setOnMouseEntered(e -> {
+            saveButton.setTextFill(Color.WHITE);
+        });
+        saveButton.setOnMouseExited(e -> {
+            saveButton.setTextFill(Color.BLACK);
+        });
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
-        pane.setSpacing(5);
+        pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(loadSetupButton, autoDeployButton, resetDeploymentButton, configureButton, startButton);
+        pane.getChildren().addAll(loadSetupButton, autoDeployButton, resetDeploymentButton, configureButton, startButton, saveButton);
 
         singlePlayerMenu.setContent(pane);
 
@@ -113,7 +141,7 @@ public class SideMenu extends Pane {
 
         Button readyButton = new Button("Ready");
         readyButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestPlayerReady());
-        readyButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        readyButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         readyButton.setTextFill(Color.BLACK);
         readyButton.setOnMouseEntered(e -> {
             readyButton.setTextFill(Color.WHITE);
@@ -124,7 +152,7 @@ public class SideMenu extends Pane {
 
         Button startButton = new Button("Start game");
         startButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
-        startButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        startButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         startButton.setTextFill(Color.BLACK);
         startButton.setOnMouseEntered(e -> {
             startButton.setTextFill(Color.WHITE);
@@ -135,9 +163,12 @@ public class SideMenu extends Pane {
 
         Button loadSetupButton = new Button("Load setup");
         loadSetupButton.setOnAction((ActionEvent e) -> {
-
+            File setup = setupChooser.showOpenDialog(parent);
+            if (setup != null) {
+                System.out.println(setup.getAbsolutePath());
+            }
         });
-        loadSetupButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        loadSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         loadSetupButton.setTextFill(Color.BLACK);
         loadSetupButton.setOnMouseEntered(e -> {
             loadSetupButton.setTextFill(Color.WHITE);
@@ -152,7 +183,7 @@ public class SideMenu extends Pane {
                 ViewComManager.getInstance().requestAutoDeploy();
             }
         });
-        autoDeployButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        autoDeployButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         autoDeployButton.setTextFill(Color.BLACK);
         autoDeployButton.setOnMouseEntered(e -> {
             autoDeployButton.setTextFill(Color.WHITE);
@@ -163,7 +194,7 @@ public class SideMenu extends Pane {
 
         Button resetDeploymentButton = new Button("Reset deployment");
         resetDeploymentButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
-        resetDeploymentButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        resetDeploymentButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         resetDeploymentButton.setTextFill(Color.BLACK);
         resetDeploymentButton.setOnMouseEntered(e -> {
             resetDeploymentButton.setTextFill(Color.WHITE);
@@ -174,10 +205,10 @@ public class SideMenu extends Pane {
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
-        pane.setSpacing(5);
+        pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
         pane.getChildren().addAll(loadSetupButton, autoDeployButton, resetDeploymentButton, readyButton, startButton);
-        autoDeployButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        autoDeployButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
 
         multiPlayerMenu.setContent(pane);
 
@@ -189,8 +220,8 @@ public class SideMenu extends Pane {
         showMatchMenu.setText("AI Show Match");
 
         Button nextMoveButton = new Button("Next move");
-        nextMoveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestAutoDeploy());
-        nextMoveButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        nextMoveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestNextMove());
+        nextMoveButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         nextMoveButton.setTextFill(Color.BLACK);
         nextMoveButton.setOnMouseEntered(e -> {
             nextMoveButton.setTextFill(Color.WHITE);
@@ -201,7 +232,7 @@ public class SideMenu extends Pane {
 
         Button configureButton = new Button("Configure");
         configureButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
-        configureButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        configureButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         configureButton.setTextFill(Color.BLACK);
         configureButton.setOnMouseEntered(e -> {
             configureButton.setTextFill(Color.WHITE);
@@ -212,7 +243,7 @@ public class SideMenu extends Pane {
 
         Button resetButton = new Button("Reset");
         resetButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
-        resetButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        resetButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         resetButton.setTextFill(Color.BLACK);
         resetButton.setOnMouseEntered(e -> {
             resetButton.setTextFill(Color.WHITE);
@@ -221,14 +252,22 @@ public class SideMenu extends Pane {
             resetButton.setTextFill(Color.BLACK);
         });
 
-        // Pane pane = new Pane();
-        // pane.getChildren().addAll(b1, b2, startButton);
+        Button saveButton = new Button("Save game");
+        //saveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
+        saveButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        saveButton.setTextFill(Color.BLACK);
+        saveButton.setOnMouseEntered(e -> {
+            saveButton.setTextFill(Color.WHITE);
+        });
+        saveButton.setOnMouseExited(e -> {
+            saveButton.setTextFill(Color.BLACK);
+        });
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
-        pane.setSpacing(5);
+        pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(nextMoveButton, configureButton, resetButton);
+        pane.getChildren().addAll(nextMoveButton, configureButton, resetButton, saveButton);
 
         showMatchMenu.setContent(pane);
 
@@ -240,8 +279,13 @@ public class SideMenu extends Pane {
         loadAndReplayMenu.setText("Load and Replay");
 
         Button loadReplayButton = new Button("Load Replay");
-        loadReplayButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestAutoDeploy());
-        loadReplayButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        loadReplayButton.setOnAction((ActionEvent e) -> {
+            File replay = gameStateChooser.showOpenDialog(parent);
+            if (replay != null) {
+                System.out.println(replay.getAbsolutePath());
+            }
+        });
+        loadReplayButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         loadReplayButton.setTextFill(Color.BLACK);
         loadReplayButton.setOnMouseEntered(e -> {
             loadReplayButton.setTextFill(Color.WHITE);
@@ -251,8 +295,10 @@ public class SideMenu extends Pane {
         });
 
         Button continueSinglePlayerButton = new Button("Continue as \nSingleplayer");
-        continueSinglePlayerButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
-        continueSinglePlayerButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        continueSinglePlayerButton.setOnAction((ActionEvent e) -> {
+            File state = gameStateChooser.showOpenDialog(parent);
+        });
+        continueSinglePlayerButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         continueSinglePlayerButton.setTextFill(Color.BLACK);
         continueSinglePlayerButton.setOnMouseEntered(e -> {
             continueSinglePlayerButton.setTextFill(Color.WHITE);
@@ -262,8 +308,10 @@ public class SideMenu extends Pane {
         });
 
         Button continueAIMatchButton = new Button("Continue as \nAI Show Match");
-        continueAIMatchButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
-        continueAIMatchButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        continueAIMatchButton.setOnAction((ActionEvent e) -> {
+            File state = gameStateChooser.showOpenDialog(parent);
+        });
+        continueAIMatchButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         continueAIMatchButton.setTextFill(Color.BLACK);
         continueAIMatchButton.setOnMouseEntered(e -> {
             continueAIMatchButton.setTextFill(Color.WHITE);
@@ -272,12 +320,9 @@ public class SideMenu extends Pane {
             continueAIMatchButton.setTextFill(Color.BLACK);
         });
 
-        // Pane pane = new Pane();
-        // pane.getChildren().addAll(b1, b2, startButton);
-
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
-        pane.setSpacing(5);
+        pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
         pane.getChildren().addAll(loadReplayButton, continueSinglePlayerButton, continueAIMatchButton);
 
@@ -319,6 +364,9 @@ public class SideMenu extends Pane {
             } else if (newValue == multiPlayerMenu) {
                 ViewComManager.getInstance().requestResetGame();
                 ViewComManager.getInstance().configureMultiPlayer();
+            } else if (newValue == loadAndReplayMenu) {
+                ViewComManager.getInstance().requestResetGame();
+                ViewComManager.getInstance().sendAssignSide(-1);
             }
         }));
     }

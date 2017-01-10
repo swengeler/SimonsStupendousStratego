@@ -40,7 +40,7 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
             if (p.getType() == PieceType.BOMB) {
                 // revealed bomb is worth 0
                 if (!p.isRevealed()) {
-                    opponentSum += rankValue[11] * materialWeight;
+                    opponentSum += rankValues[11] * materialWeight;
                 }
             } else if (p.getType() == PieceType.FLAG) {
                 // Flag stuff goes here. Leave at 0
@@ -181,8 +181,6 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
                 if (p.isRevealed()){
                     opponentSum += 400.0 * ownInfoWeight;
                 }
-            } 
-                
             }
         }
 

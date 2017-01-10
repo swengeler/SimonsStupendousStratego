@@ -192,6 +192,7 @@ public class ViewComManager {
     }
 
     public void sendPieceMoved(int orRow, int orCol, int destRow, int destCol) {
+        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processPieceMoved(orRow, orCol, destRow, destCol);
     }
 
@@ -210,19 +211,22 @@ public class ViewComManager {
     // NOTE: the attack methods still have to be fixed (is the processing done on the client or server side?)
 
     public void sendAttackLost(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processAttackLost(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void sendAttackTied(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processAttackTied(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void sendAttackWon(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processAttackWon(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void sendGameOver(int winnerPlayerIndex) {
-        if (gameMode == GameMode.SINGLEPLAYER) {
+        if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
             frame.getInGameView().processGameOver(winnerPlayerIndex);
         }
         frame.getSideMenu().reset();

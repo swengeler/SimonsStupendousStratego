@@ -1,5 +1,6 @@
 package project.stratego.control.managers;
 
+import javafx.application.Platform;
 import project.stratego.control.server.StrategoServer;
 import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.GameState;
@@ -9,6 +10,8 @@ import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PlayerType;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 public class ModelComManager {
 
@@ -83,7 +86,6 @@ public class ModelComManager {
         //findGame(-1).getGameState().printBoard();
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
-        System.out.println("TEST");
     }
 
     public void configureAIMatch() {
@@ -94,7 +96,6 @@ public class ModelComManager {
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
-        System.out.println("in ModelComManager");
         findGame(-1).getGameState().printBoard();
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
@@ -108,6 +109,8 @@ public class ModelComManager {
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
+        sendDeploymentUpdate(-1, PlayerType.NORTH.ordinal());
+        sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
     }
@@ -115,7 +118,7 @@ public class ModelComManager {
     /* View to model methods */
 
     public void requestResetGame(int gameID) {
-        if (gameMode == GameMode.AIMATCH || gameMode == GameMode.AISHOWMATCH) {
+        if (gameMode == GameMode.AIMATCH) {
             return;
         }
         if (findGame(gameID) != null) {
@@ -187,11 +190,11 @@ public class ModelComManager {
 
     public void sendDeploymentUpdate(int gameID, int playerIndex) {
         if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-            BoardTile[][] board = findGame(-1).getBoard();
+            BoardTile[][] board = findGame(gameID).getBoard();
             for (int row = 0; row < GameState.BOARD_SIZE; row++) {
                 for (int col = 0; col < GameState.BOARD_SIZE; col++) {
                     if (board[row][col].getOccupyingPiece() != null && board[row][col].getOccupyingPiece().getPlayerType().ordinal() == playerIndex) {
-                        sendPiecePlaced(-1, playerIndex, board[row][col].getOccupyingPiece().getType().ordinal(), row, col);
+                        sendPiecePlaced(gameID, playerIndex, board[row][col].getOccupyingPiece().getType().ordinal(), row, col);
                     }
                 }
             }
@@ -217,6 +220,12 @@ public class ModelComManager {
             }
         } else if (gameMode == GameMode.AISHOWMATCH) {
             ViewComManager.getInstance().sendChangeTurn(playerIndex);
+            System.out.println("Check in changeturn");
+            /*try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
         }
     }
 
@@ -259,7 +268,15 @@ public class ModelComManager {
             server.sendCommandToClient(gameID, 0, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
             server.sendCommandToClient(gameID, 1, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
         } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+            System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
             ViewComManager.getInstance().sendPieceMoved(orRow, orCol, destRow, destCol);
+            System.out.println("BREAK START");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("BREAK END\n");
         }
     }
 
@@ -291,6 +308,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackLost(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
             }
         } else {
@@ -299,6 +317,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackLost(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
             }
         }
@@ -314,6 +333,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackTied(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
             }
         } else {
@@ -322,6 +342,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackTied(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
             }
         }
@@ -337,6 +358,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackWon(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
             }
         } else {
@@ -345,6 +367,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackWon(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
             }
         }
@@ -360,9 +383,7 @@ public class ModelComManager {
             activeGames.remove(findGame(-1));
             //configureMultiPlayer();
             configureSinglePlayer();
-            if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-                ViewComManager.getInstance().sendGameOver(winnerPlayerIndex);
-            }
+            ViewComManager.getInstance().sendGameOver(winnerPlayerIndex);
         }
     }
 

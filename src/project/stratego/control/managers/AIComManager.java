@@ -104,10 +104,10 @@ public class AIComManager implements Runnable {
         // needs to be changed or method may not be necessary at all
         if (gameMode == GameMode.SINGLEPLAYER && primaryAI != null) {
             primaryAI.copyOpponentSetup(state);
-        } else if (gameMode == GameMode.AIMATCH) {
+        } /*else if (gameMode == GameMode.AIMATCH) {
             primaryAI.makeBoardSetup(state);
             secondaryAI.copyOpponentSetup(state);
-        }
+        }*/
     }
 
     public void tryBoardSetup(GameState state) {
@@ -143,7 +143,6 @@ public class AIComManager implements Runnable {
     }
 
     public void gameOver(StrategoGame game) {
-        // if AI matches and shit are running, then document the one that just ended and runAIMatch a new one
         aiMatchRunning = false;
         System.out.println("We done here");
         game.getGameState().printBoard();
@@ -182,6 +181,8 @@ public class AIComManager implements Runnable {
             nextMove = currentAI.getNextMove(new Move(lastMove));
 
             AITestsMain.addMoveSearchTime(currentAI.getPlayerIndex(), System.nanoTime() - beforeTwo);
+
+            System.out.println("In AIComManager: " + nextMove);
 
             // update the actual game board by applying the previously generated move
             ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());

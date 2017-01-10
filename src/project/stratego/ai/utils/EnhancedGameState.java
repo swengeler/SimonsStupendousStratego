@@ -62,6 +62,9 @@ public class EnhancedGameState extends GameState {
 
         //System.out.println(move);
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
+        if (movingPiece == null) {
+            printBoard();
+        }
         Piece encounteredPiece = board[move.getDestRow()][move.getDestCol()].getOccupyingPiece();
         Piece opponentPiece = movingPiece.getPlayerType().ordinal() == playerIndex ? encounteredPiece : movingPiece;
         MoveInformation moveInformation = new MoveInformation(move, movingPiece, encounteredPiece);

@@ -5,7 +5,7 @@ import project.stratego.control.managers.ModelComManager;
 
 public class AITestsMain {
 
-    private static final int numberGames = 200;
+    private static final int numberGames = 1;
 
     private static int numberMovesMin = Integer.MAX_VALUE;
     private static int numberMovesAvg = 0;
@@ -42,6 +42,7 @@ public class AITestsMain {
             ModelComManager.getInstance().configureAIMatch();
             AIComManager.getInstance().runAIMatch();
         }
+
         System.out.println("\n-----------------------------------------------------------");
         System.out.println("RESULTS:");
         System.out.println("-----------------------------------------------------------");

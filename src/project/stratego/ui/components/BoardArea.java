@@ -5,6 +5,7 @@ import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class BoardArea extends Pane {
@@ -72,6 +73,25 @@ public class BoardArea extends Pane {
             Piece movingPiece = board[orRow][orCol].getOccupyingPiece();
             board[destRow][destCol].setOccupyingPiece(movingPiece);
             board[orRow][orCol].setOccupyingPiece(null);
+
+            System.out.println("In BoardArea: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+
+            System.out.println();
+            for (int row = 0; row < 10; row++) {
+                for (int col = 0; col < 10; col++) {
+                    if (board[row][col].getOccupyingPiece() != null) {
+                        if (board[row][col].getOccupyingPiece().pieceIndex > 9) {
+                            System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex);
+                        } else {
+                            System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex + " ");
+                        }
+                    } else {
+                        System.out.print("   ");
+                    }
+                }
+                System.out.println();
+            }
+            System.out.println();
         }
     }
 

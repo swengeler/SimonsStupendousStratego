@@ -21,8 +21,11 @@ public class Piece extends Group {
     private Rectangle2D revealedViewPort;
     private Rectangle2D hiddenViewPort;
 
+    public int pieceIndex;
+
     public Piece(int playerIndex, int pieceIndex, Image pieceIcons, Image backsidePieceIcons) {
         super();
+        this.pieceIndex = pieceIndex;
         icon = new ImageView();
         background = new Rectangle(PIECE_SIZE, PIECE_SIZE, (playerIndex == 0 ? Color.web("#48a4f9") : Color.web("#bf1c1c")));
         getChildren().addAll(background, icon);

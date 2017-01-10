@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import project.stratego.control.managers.ViewComManager;
+import project.stratego.control.managers.*;
 
 import javax.swing.*;
 
@@ -32,8 +32,20 @@ public class DebugHelper extends Stage {
         Button dummyButton2 = new Button("Dummy 1 with more text because reasons");
         buttons.getChildren().add(dummyButton2);
 
-        Button dummyButton3 = new Button("Dummy 2");
-        buttons.getChildren().add(dummyButton3);
+        Button showMatchButton = new Button("AI Show Match");
+        showMatchButton.setOnAction((ActionEvent e) -> {
+            ModelComManager.getInstance().configureAIShowMatch();
+            ViewComManager.getInstance().configureAIShowMatch();
+            AIComManager.getInstance().runAIMatch();
+        });
+        buttons.getChildren().add(showMatchButton);
+
+        Button testMoveUIUpdateButton = new Button("Test UI Update");
+        testMoveUIUpdateButton.setOnAction((ActionEvent e) -> {
+            ViewComManager.getInstance().configureSinglePlayer();
+            ViewComManager.getInstance().sendPieceMoved(6, 0, 5, 0);
+        });
+        buttons.getChildren().add(testMoveUIUpdateButton);
 
         Scene scene = new Scene(buttons);
         scene.getStylesheets().add("/menustyle.css");

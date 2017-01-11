@@ -162,6 +162,12 @@ public class ViewComManager {
         }
     }
 
+    public void requestSaveSetup(int playerIndex, String filePath) {
+        if (gameMode != GameMode.MULTIPLAYER) {
+            ModelComManager.getInstance().requestSaveSetup(-1, playerIndex, filePath);
+        }
+    }
+
     /* Commands from model to view */
 
     public void sendTrayActiveUpdate(int pieceIndex) {

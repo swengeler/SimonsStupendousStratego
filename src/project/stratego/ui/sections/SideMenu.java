@@ -68,6 +68,19 @@ public class SideMenu extends Pane {
             loadSetupButton.setTextFill(Color.BLACK);
         });
 
+        Button saveSetupButton = new Button("Save setup");
+        saveSetupButton.setOnAction((ActionEvent e) -> {
+            ViewComManager.getInstance().requestSaveSetup(parent.getInGameView().getPlayerIndex(), setupChooser.showSaveDialog(parent).getPath());
+        });
+        saveSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        saveSetupButton.setTextFill(Color.BLACK);
+        saveSetupButton.setOnMouseEntered(e -> {
+            saveSetupButton.setTextFill(Color.WHITE);
+        });
+        saveSetupButton.setOnMouseExited(e -> {
+            saveSetupButton.setTextFill(Color.BLACK);
+        });
+
         Button autoDeployButton = new Button("Auto deploy");
         autoDeployButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestAutoDeploy());
         autoDeployButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
@@ -127,7 +140,7 @@ public class SideMenu extends Pane {
         pane.setPadding(new Insets(5));
         pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(loadSetupButton, autoDeployButton, resetDeploymentButton, configureButton, startButton, saveButton);
+        pane.getChildren().addAll(loadSetupButton, saveSetupButton, autoDeployButton, resetDeploymentButton, configureButton, startButton, saveButton);
 
         singlePlayerMenu.setContent(pane);
 
@@ -163,10 +176,8 @@ public class SideMenu extends Pane {
 
         Button loadSetupButton = new Button("Load setup");
         loadSetupButton.setOnAction((ActionEvent e) -> {
-            File setup = setupChooser.showOpenDialog(parent);
-            if (setup != null) {
-                System.out.println(setup.getAbsolutePath());
-            }
+            String setupEncoding = SetupLoader.load(setupChooser.showOpenDialog(parent));
+            ViewComManager.getInstance().requestLoadSetup(parent.getInGameView().getPlayerIndex(), setupEncoding);
         });
         loadSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         loadSetupButton.setTextFill(Color.BLACK);

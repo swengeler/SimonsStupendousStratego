@@ -7,7 +7,7 @@ import project.stratego.game.logic.DeploymentLogic;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.utils.PlayerType;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ModelComManager {
@@ -131,7 +131,7 @@ public class ModelComManager {
 
     public void requestAutoDeploy(int gameID, int playerIndex) {
         // need proper method for this
-        if (findGame(gameID) != null && findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+        if (findGame(gameID) != null && !findGame(gameID).gameRunning()) {
             if (gameMode == GameMode.MULTIPLAYER && !server.gameStarted(gameID)) {
                 return;
             }
@@ -140,7 +140,7 @@ public class ModelComManager {
     }
 
     public void requestResetDeployment(int gameID, int playerIndex) {
-        if (findGame(gameID) != null && findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+        if (findGame(gameID) != null && !findGame(gameID).gameRunning()) {
             if (gameMode == GameMode.MULTIPLAYER && !server.gameStarted(gameID)) {
                 return;
             }
@@ -157,7 +157,7 @@ public class ModelComManager {
     }
 
     public void requestTrayPieceSelected(int gameID, int playerIndex, int pieceIndex) {
-        if (findGame(gameID) != null && findGame(gameID).getCurrentRequestProcessor() instanceof DeploymentLogic) {
+        if (findGame(gameID) != null && !findGame(gameID).gameRunning()) {
             if (gameMode == GameMode.MULTIPLAYER && !server.gameStarted(gameID)) {
                 return;
             }
@@ -182,6 +182,10 @@ public class ModelComManager {
     }
 
     public void requestLoadSetup(int gameID, int playerIndex, String setupEncoding) {
+        if (findGame(gameID).gameRunning()) {
+            return;
+        }
+
         requestResetDeployment(gameID, playerIndex);
         String[] pieceIndexStrings = setupEncoding.split("-");
         if (pieceIndexStrings.length != 40) {
@@ -193,6 +197,20 @@ public class ModelComManager {
             pieceIndexIntegers[i] = Integer.parseInt(pieceIndexStrings[i]);
             requestTrayPieceSelected(gameID, playerIndex, pieceIndexIntegers[i]);
             requestBoardTileSelected(gameID, playerIndex, playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10, playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10);
+        }
+    }
+
+    public void requestSaveSetup(int gameID, int playerIndex, String filePath) {
+        if (findGame(gameID).getGameState().getPlayer(playerIndex).getActivePieces().size() != 40 || findGame(gameID).gameRunning()) {
+            return;
+        }
+        try (PrintWriter printWriter = new PrintWriter(filePath, "UTF-8")) {
+            printWriter.print(playerIndex == PlayerType.NORTH.ordinal() ? findGame(gameID).getBoard()[3][9].getOccupyingPiece().getType().ordinal() : findGame(gameID).getBoard()[6][0].getOccupyingPiece().getType().ordinal());
+            for (int i = 1; i < 40; i++) {
+                printWriter.print("-" + findGame(gameID).getBoard()[playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10][playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10].getOccupyingPiece().getType().ordinal());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

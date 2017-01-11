@@ -69,4 +69,8 @@ public class StrategoGame {
         return gameState;
     }
 
+    public boolean gameRunning() {
+        return currentRequestProcessor instanceof PlayingLogic;
+    }
+
 }

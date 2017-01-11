@@ -38,7 +38,8 @@ public class PlayingLogic extends GameLogic {
         //System.out.println(temp);
         if (currentPlayer.getCurrentPiece() == null && (temp == null || temp.getPlayerType() != currentPlayer.getType() || temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {
             // no piece selected but either no piece on selected board tile or opponent's piece or unmovable piece
-            //System.out.println("processBoardSelect: return with code 1 (" + row + "|" + col + ")");
+            //System.out.println("processBoardSelect: return with code 1 (" + row + "|" + col + ") (currentPiece: " + currentPlayer.getCurrentPiece() + ", temp: " + temp + ")");
+            parent.getGameState().printBoard();
             return;
         }
         if (temp != null && currentPlayer.getCurrentPiece() != null && temp.getPlayerType() == currentPlayer.getType() && (temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {
@@ -46,10 +47,10 @@ public class PlayingLogic extends GameLogic {
             //System.out.println("processBoardSelect: return with code 2");
             return;
         }
-        if (currentPlayer.getCurrentPiece() == null) {
+        if (temp != null && temp.getPlayerType() == currentPlayer.getType()) {
             // select piece at board position
             currentPlayer.setCurrentPiece(parent.getBoard()[row][col].getOccupyingPiece());
-            //System.out.println("processBoardSelect: return with code 3");
+            //System.out.println("processBoardSelect: return with code 3: " + currentPlayer.getCurrentPiece().getType());
             return;
         }
 
@@ -78,6 +79,11 @@ public class PlayingLogic extends GameLogic {
         }
         if (result != MoveResult.NOMOVE) {
             parent.getGameState().getMoveHistory().add(new Move(playerIndex, orRow, orCol, row, col));
+            System.out.println("Current move history:");
+            for (Move m : parent.getGameState().getMoveHistory()) {
+                System.out.println(m);
+            }
+            System.out.println();
             processPlayerReady(currentPlayer.getType().ordinal());
         }
     }

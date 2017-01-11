@@ -14,6 +14,7 @@ public class FileLoader {
             while ((temp = bufferedReader.readLine()) != null) {
                 encoding += temp + "\n";
             }
+            encoding = encoding.substring(0, encoding.length() - 1);
             System.out.println("encoding:\n" + encoding);
         } catch (IOException e) {
             e.printStackTrace();

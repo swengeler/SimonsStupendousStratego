@@ -60,7 +60,6 @@ public class EnhancedGameState extends GameState {
             return;
         }
 
-        //System.out.println(move);
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         if (movingPiece == null) {
             printBoard();
@@ -69,6 +68,12 @@ public class EnhancedGameState extends GameState {
         Piece opponentPiece = movingPiece.getPlayerType().ordinal() == playerIndex ? encounteredPiece : movingPiece;
         MoveInformation moveInformation = new MoveInformation(move, movingPiece, encounteredPiece);
 
+        if (probabilitiesMap == null) {
+            System.out.println(move);
+            printBoard();
+            System.out.println("Hwhat");
+            System.exit(1);
+        }
         if (opponentPiece != null && probabilitiesMap.get(opponentPiece) == null) {
             System.out.println("Weird stuff: ");
             System.out.println(opponentPiece);

@@ -17,7 +17,7 @@ public class SideMenu extends Pane {
 
     private Accordion menu;
 
-    private TitledPane singlePlayerMenu, multiPlayerMenu, showMatchMenu, loadAndReplayMenu, helpMenu;
+    private TitledPane singlePlayerMenu, multiPlayerMenu, showMatchMenu, specialFeaturesMenu, helpMenu;
 
     private FileChooser gameStateChooser, setupChooser;
 
@@ -39,15 +39,16 @@ public class SideMenu extends Pane {
 
         makeSinglePlayerMenu();
         makeShowMatchMenu();
-        makeLoadAndReplayMenu();
         makeMultiPlayerMenu();
+        makeSpecialFeaturesMenu();
         makeHelpMenu();
         configureChangeListener();
         getChildren().add(menu);
 
         //menu.setStyle("-fx-border-color: black;");
         //setStyle("-fx-background-color: #48a4f9;");
-        setStyle("-fx-background-color: transparent;");}
+        setStyle("-fx-background-color: transparent;");
+    }
 
     private void makeSinglePlayerMenu() {
         singlePlayerMenu = new TitledPane();
@@ -283,31 +284,47 @@ public class SideMenu extends Pane {
             resetButton.setTextFill(Color.BLACK);
         });
 
-        Button saveButton = new Button("Save game");
-        //saveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
-        saveButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
-        saveButton.setTextFill(Color.BLACK);
-        saveButton.setOnMouseEntered(e -> {
-            saveButton.setTextFill(Color.WHITE);
+        Button saveGameButton = new Button("Save game");
+        //saveGameButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
+        saveGameButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        saveGameButton.setTextFill(Color.BLACK);
+        saveGameButton.setOnMouseEntered(e -> {
+            saveGameButton.setTextFill(Color.WHITE);
         });
-        saveButton.setOnMouseExited(e -> {
-            saveButton.setTextFill(Color.BLACK);
+        saveGameButton.setOnMouseExited(e -> {
+            saveGameButton.setTextFill(Color.BLACK);
+        });
+
+        Button loadGameButton = new Button("Load game");
+        loadGameButton.setOnAction((ActionEvent e) -> {
+            String gameEncoding = FileLoader.load(gameStateChooser.showOpenDialog(parent));
+            if (gameEncoding != null) {
+                ViewComManager.getInstance().requestLoadGame(gameEncoding);
+            }
+        });
+        loadGameButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        loadGameButton.setTextFill(Color.BLACK);
+        loadGameButton.setOnMouseEntered(e -> {
+            loadGameButton.setTextFill(Color.WHITE);
+        });
+        loadGameButton.setOnMouseExited(e -> {
+            loadGameButton.setTextFill(Color.BLACK);
         });
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
         pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(nextMoveButton, configureButton, resetButton, saveButton);
+        pane.getChildren().addAll(nextMoveButton, configureButton, resetButton, saveGameButton, loadGameButton);
 
         showMatchMenu.setContent(pane);
 
         menu.getPanes().add(showMatchMenu);
     }
 
-    private void makeLoadAndReplayMenu() {
-        loadAndReplayMenu = new TitledPane();
-        loadAndReplayMenu.setText("Load and Replay");
+    private void makeSpecialFeaturesMenu() {
+        specialFeaturesMenu = new TitledPane();
+        specialFeaturesMenu.setText("Special Features");
 
         Button loadReplayButton = new Button("Load Replay");
         loadReplayButton.setOnAction((ActionEvent e) -> {
@@ -325,44 +342,28 @@ public class SideMenu extends Pane {
             loadReplayButton.setTextFill(Color.BLACK);
         });
 
-        Button continueSinglePlayerButton = new Button("Continue as \nSingleplayer");
-        continueSinglePlayerButton.setOnAction((ActionEvent e) -> {
-            String gameEncoding = FileLoader.load(gameStateChooser.showOpenDialog(parent));
-            if (gameEncoding != null) {
-                ViewComManager.getInstance().requestLoadGame(gameEncoding);
-            }
+        Button runAIMatchesButton = new Button("Run AI-matches \nautomatically");
+        runAIMatchesButton.setOnAction((ActionEvent e) -> {
+            // open dialog to configure which AIs to pit against each other, how many rounds to play, which stats to keep, where to store the results
         });
-        continueSinglePlayerButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
-        continueSinglePlayerButton.setTextFill(Color.BLACK);
-        continueSinglePlayerButton.setOnMouseEntered(e -> {
-            continueSinglePlayerButton.setTextFill(Color.WHITE);
+        runAIMatchesButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        runAIMatchesButton.setTextFill(Color.BLACK);
+        runAIMatchesButton.setOnMouseEntered(e -> {
+            runAIMatchesButton.setTextFill(Color.WHITE);
         });
-        continueSinglePlayerButton.setOnMouseExited(e -> {
-            continueSinglePlayerButton.setTextFill(Color.BLACK);
-        });
-
-        Button continueAIMatchButton = new Button("Continue as \nAI Show Match");
-        continueAIMatchButton.setOnAction((ActionEvent e) -> {
-            File state = gameStateChooser.showOpenDialog(parent);
-        });
-        continueAIMatchButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
-        continueAIMatchButton.setTextFill(Color.BLACK);
-        continueAIMatchButton.setOnMouseEntered(e -> {
-            continueAIMatchButton.setTextFill(Color.WHITE);
-        });
-        continueAIMatchButton.setOnMouseExited(e -> {
-            continueAIMatchButton.setTextFill(Color.BLACK);
+        runAIMatchesButton.setOnMouseExited(e -> {
+            runAIMatchesButton.setTextFill(Color.BLACK);
         });
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
         pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(loadReplayButton, continueSinglePlayerButton, continueAIMatchButton);
+        pane.getChildren().addAll(loadReplayButton, runAIMatchesButton);
 
-        loadAndReplayMenu.setContent(pane);
+        specialFeaturesMenu.setContent(pane);
 
-        menu.getPanes().add(loadAndReplayMenu);
+        menu.getPanes().add(specialFeaturesMenu);
     }
 
     private void makeHelpMenu() {
@@ -398,7 +399,7 @@ public class SideMenu extends Pane {
             } else if (newValue == multiPlayerMenu) {
                 ViewComManager.getInstance().requestResetGame();
                 ViewComManager.getInstance().configureMultiPlayer();
-            } else if (newValue == loadAndReplayMenu) {
+            } else if (newValue == specialFeaturesMenu) {
                 ViewComManager.getInstance().requestResetGame();
                 ViewComManager.getInstance().sendAssignSide(-1);
             }

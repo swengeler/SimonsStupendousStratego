@@ -75,7 +75,6 @@ public class Piece extends Group {
 
     private void makeActions() {
         setOnMouseClicked((MouseEvent e) -> {
-            System.out.println("Piece at (" + rowPos + "|" + colPos + ") clicked");
             ViewComManager.getInstance().requestBoardTileSelected(rowPos, colPos);
         });
         setOnMouseEntered((MouseEvent e) -> setBorderVisible(true));

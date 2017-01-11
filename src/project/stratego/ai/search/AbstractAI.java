@@ -27,6 +27,10 @@ public abstract class AbstractAI {
 
     public abstract void copyOpponentSetup(GameState inGameState);
 
+    public void setGameState(EnhancedGameState gameState) {
+        this.gameState = gameState;
+    }
+
     public void loadGame(String gameEncoding) {
         String[] encodings = gameEncoding.split("\n");
         gameState.interpretEncodedBoard(encodings[0]);

@@ -64,7 +64,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
     public void applyMove(Move move) {
         super.applyMove(move);
         System.out.println("In expectimax AI:");
-        //gameState.printBoard();
+        gameState.printBoard();
     }
 
     private Move expectiNegamaxSearch() {

@@ -123,9 +123,15 @@ public class GameState {
         }
         MoveManager moveManager = new DiscreteMoveManager(board);
         moveManager.processMove(movingPiece.getPlayerType() == PlayerType.NORTH ? playerNorth : playerSouth, movingPiece.getPlayerType() == PlayerType.NORTH ? playerSouth : playerNorth, movingPiece, move.getDestRow(), move.getDestCol());
+        if (moveManager.lastMoveResult() != MoveResult.NOMOVE) {
+            moveHistory.add(move);
+        }
     }
 
     public void saveInitBoard() {
+        if (initBoardEncoding != null) {
+            return;
+        }
         initBoardEncoding = "";
         // setup north
         initBoardEncoding += board[3][9].getOccupyingPiece().getType().ordinal();
@@ -160,10 +166,9 @@ public class GameState {
      * @param encodedBoard A String consisting of the encoded setups for each player.
      */
     public void interpretEncodedBoard(String encodedBoard) {
-        playerNorth.getActivePieces().clear();
-        playerNorth.getDeadPieces().clear();
-        playerSouth.getActivePieces().clear();
-        playerSouth.getDeadPieces().clear();
+        initBoardEncoding = encodedBoard;
+
+        boardSetup();
 
         String[] setups = encodedBoard.split("_");
         String[] pieceIndexStrings = setups[0].split("-");

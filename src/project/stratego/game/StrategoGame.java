@@ -24,7 +24,6 @@ public class StrategoGame {
     private void componentSetup() {
         gameState = new GameState();
         currentRequestProcessor = new DeploymentLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
-        moveManager = new DiscreteMoveManager(gameState.getBoardArray());
     }
 
     /* Getter methods */
@@ -48,6 +47,7 @@ public class StrategoGame {
     public void switchStates() {
         // save the initial setup
         gameState.saveInitBoard();
+        moveManager = new DiscreteMoveManager(gameState.getBoardArray());
         currentRequestProcessor = new PlayingLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
         AIComManager.getInstance().tryCopySetup(gameState);
         ModelComManager.getInstance().sendChangeTurn(gameID, 0);
@@ -55,14 +55,6 @@ public class StrategoGame {
 
     public void resetGame() {
         componentSetup();
-    }
-
-    public Player getPlayerNorth() {
-        return gameState.getPlayerNorth();
-    }
-
-    public Player getPlayerSouth() {
-        return gameState.getPlayerSouth();
     }
 
     public GameState getGameState() {

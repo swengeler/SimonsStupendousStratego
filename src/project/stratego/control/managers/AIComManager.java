@@ -51,6 +51,7 @@ public class AIComManager implements Runnable {
     private AbstractAI primaryAI, secondaryAI;
 
     private GameMode gameMode;
+    private boolean gameLoaded;
 
     private boolean aiMatchRunning;
     private Move lastMove;
@@ -88,6 +89,10 @@ public class AIComManager implements Runnable {
         gameMode = GameMode.AISHOWMATCH;
     }
 
+    void setGameLoaded(boolean gameLoaded) {
+        this.gameLoaded = gameLoaded;
+    }
+
     void setPrimaryAI(String aiType, int playerIndex) {
         if (aiType.equals("random")) {
             primaryAI = new RandomAI(playerIndex);
@@ -105,6 +110,9 @@ public class AIComManager implements Runnable {
     }
 
     public void tryCopySetup(GameState state) {
+        if (gameLoaded) {
+            return;
+        }
         // needs to be changed or method may not be necessary at all
         if (gameMode == GameMode.SINGLEPLAYER && primaryAI != null) {
             primaryAI.copyOpponentSetup(state);
@@ -115,6 +123,9 @@ public class AIComManager implements Runnable {
     }
 
     public void tryBoardSetup(GameState state) {
+        if (gameLoaded) {
+            return;
+        }
         if (gameMode == GameMode.SINGLEPLAYER && primaryAI != null) {
             primaryAI.makeBoardSetup(state);
             primaryAI.copyOpponentSetup(state);
@@ -127,6 +138,9 @@ public class AIComManager implements Runnable {
     }
 
     public void tryNextMove(Move move) {
+        if (gameLoaded) {
+            return;
+        }
         if (gameMode != GameMode.MULTIPLAYER && primaryAI != null && move.getPlayerIndex() != primaryAI.getPlayerIndex()) {
             Move nextMove = primaryAI.getNextMove(move);
             ModelComManager.getInstance().requestBoardTileSelected(-1, primaryAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
@@ -141,6 +155,7 @@ public class AIComManager implements Runnable {
             return;
         }
         primaryAI.loadGame(gameEncoding);
+        System.out.println("GAME LOADED");
         if (gameMode != GameMode.SINGLEPLAYER) {
             secondaryAI.loadGame(gameEncoding);
         }

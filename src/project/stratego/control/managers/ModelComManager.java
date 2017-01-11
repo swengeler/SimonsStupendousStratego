@@ -203,15 +203,18 @@ public class ModelComManager {
         if (gameMode == GameMode.MULTIPLAYER) {
             return;
         }
-        System.out.println(gameEncoding);
+
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         String[] encodings = gameEncoding.split("\n");
+        AIComManager.getInstance().setGameLoaded(true);
         findGame(-1).getGameState().interpretEncodedBoard(encodings[0]);
         findGame(-1).getGameState().interpretEncodedMoves(encodings[1]);
         ViewComManager.getInstance().sendResetGame();
         sendBoardUpdate(gameID);
+        findGame(-1).switchStates();
 
+        System.out.println("Gamemode: " + gameMode);
         if (gameMode == GameMode.SINGLEPLAYER) {
             AIComManager.getInstance().configureSinglePlayer();
             AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
@@ -225,6 +228,7 @@ public class ModelComManager {
             AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         }
         AIComManager.getInstance().tryLoadGame(gameEncoding);
+        AIComManager.getInstance().setGameLoaded(false);
     }
 
     public void requestSaveSetup(int gameID, int playerIndex, String filePath) {

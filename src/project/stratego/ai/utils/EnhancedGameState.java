@@ -286,6 +286,25 @@ public class EnhancedGameState extends GameState {
         }
     }
 
+    public void interpretEncodedBoard(String encodedBoard) {
+        super.interpretEncodedBoard(encodedBoard);
+        // make probability table for opponent
+        probabilitiesMap = new HashMap<>(40);
+        double[] initProbabilities = new double[PieceType.values().length - 1];
+        for (int i = 0; i < initProbabilities.length; i++) {
+            initProbabilities[i] = ((double) PieceType.pieceQuantity[i]) / getPlayer(1 - playerIndex).getActivePieces().size();
+        }
+        for (Piece p : getPlayer(1 - playerIndex).getActivePieces()) {
+            probabilitiesMap.put(p, initProbabilities.clone());
+            if (1 - playerIndex == PlayerType.NORTH.ordinal() && p.getRowPos() > 1) {
+                probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
+            } else if (1 - playerIndex == PlayerType.SOUTH.ordinal() && p.getRowPos() < 8) {
+                probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
+            }
+        }
+        updateProbabilities();
+    }
+
     public int getPlayerIndex() {
         return playerIndex;
     }
@@ -329,7 +348,7 @@ public class EnhancedGameState extends GameState {
     }
 
     public void assignPieceType(Piece piece, PieceType assignedType) {
-        lastStringThing = "Probability for piece at (" + piece.getRowPos() + "|" + piece.getColPos() + ") to be " + assignedType + ": " + getProbability(piece, assignedType.ordinal());
+        String lastStringThing = "Probability for piece at (" + piece.getRowPos() + "|" + piece.getColPos() + ") to be " + assignedType + ": " + getProbability(piece, assignedType.ordinal());
         //System.out.println(assignedType + " assigned to " + piece);
         double[] probabilitiesArray = probabilitiesMap.get(piece);
         assignmentHistory.add(new AssignmentInformation(piece, probabilitiesMap));
@@ -349,8 +368,6 @@ public class EnhancedGameState extends GameState {
         assignmentInfo.replaceProbabilities(probabilitiesMap);
         updateProbabilities();
     }
-
-    private String lastStringThing = "";
 
     private void updateProbabilities() {
         //ArrayList<Piece> pieces = getPlayer(1 - playerIndex).getActivePieces();

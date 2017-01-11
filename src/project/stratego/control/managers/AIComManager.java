@@ -136,6 +136,17 @@ public class AIComManager implements Runnable {
         }
     }
 
+    public void tryLoadGame(String gameEncoding) {
+        if (gameMode == GameMode.MULTIPLAYER) {
+            return;
+        }
+        primaryAI.loadGame(gameEncoding);
+        if (gameMode != GameMode.SINGLEPLAYER) {
+            secondaryAI.loadGame(gameEncoding);
+        }
+
+    }
+
     public void advanceAIMatch() {
         if (gameMode != GameMode.AISHOWMATCH) {
             return;
@@ -167,7 +178,7 @@ public class AIComManager implements Runnable {
         game.getGameState().printBoard();
     }
 
-    public void runAIMatch() {
+    public void runAutomaticAIMatch() {
         if (gameMode != GameMode.AIMATCH) {
             return;
         }

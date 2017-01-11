@@ -46,9 +46,9 @@ public class StrategoGame {
     }
 
     public void switchStates() {
-        //System.out.println("States switched");
-        //System.out.println("playerNorth has " + playerNorth.getActivePieces().size() + " pieces");
-        currentRequestProcessor = currentRequestProcessor instanceof DeploymentLogic ? new PlayingLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth()) : new DeploymentLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
+        // save the initial setup
+        gameState.saveInitBoard();
+        currentRequestProcessor = new PlayingLogic(this, gameState.getPlayerNorth(), gameState.getPlayerSouth());
         AIComManager.getInstance().tryCopySetup(gameState);
         ModelComManager.getInstance().sendChangeTurn(gameID, 0);
     }

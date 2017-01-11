@@ -10,8 +10,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import project.stratego.control.managers.*;
 
-import javax.swing.*;
-
 public class DebugHelper extends Stage {
 
     public DebugHelper() {
@@ -36,7 +34,7 @@ public class DebugHelper extends Stage {
         showMatchButton.setOnAction((ActionEvent e) -> {
             ModelComManager.getInstance().configureAIShowMatch();
             ViewComManager.getInstance().configureAIShowMatch();
-            AIComManager.getInstance().runAIMatch();
+            AIComManager.getInstance().runAutomaticAIMatch();
         });
         buttons.getChildren().add(showMatchButton);
 

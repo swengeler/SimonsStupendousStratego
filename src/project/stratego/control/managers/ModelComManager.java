@@ -80,7 +80,6 @@ public class ModelComManager {
         AIComManager.getInstance().configureSinglePlayer();
         AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
-        //findGame(-1).getGameState().printBoard();
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
     }
@@ -189,7 +188,7 @@ public class ModelComManager {
         requestResetDeployment(gameID, playerIndex);
         String[] pieceIndexStrings = setupEncoding.split("-");
         if (pieceIndexStrings.length != 40) {
-            System.out.println("Something wrong with the loaded setup");
+            System.out.println("Something wrong with the loaded setup.");
             System.exit(1);
         }
         int[] pieceIndexIntegers = new int[40];
@@ -198,6 +197,36 @@ public class ModelComManager {
             requestTrayPieceSelected(gameID, playerIndex, pieceIndexIntegers[i]);
             requestBoardTileSelected(gameID, playerIndex, playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10, playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10);
         }
+    }
+
+    public void requestLoadGame(int gameID, String gameEncoding) {
+        if (gameMode == GameMode.MULTIPLAYER) {
+            return;
+        }
+        System.out.println(gameEncoding);
+        activeGames.clear();
+        activeGames.add(new StrategoGame(-1));
+        String[] encodings = gameEncoding.split("\n");
+        findGame(-1).getGameState().interpretEncodedBoard(encodings[0]);
+        findGame(-1).getGameState().interpretEncodedMoves(encodings[1]);
+        ViewComManager.getInstance().sendResetGame();
+        sendBoardUpdate(gameID);
+
+        /*
+
+        if (gameMode == GameMode.SINGLEPLAYER) {
+            AIComManager.getInstance().configureSinglePlayer();
+            AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
+        } else {
+            if (gameMode == GameMode.AISHOWMATCH) {
+                AIComManager.getInstance().configureAIShowMatch();
+            } else if (gameMode == GameMode.AIMATCH) {
+                AIComManager.getInstance().configureAIMatch();
+            }
+            AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
+            AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
+        }
+        AIComManager.getInstance().tryLoadGame(gameEncoding);*/
     }
 
     public void requestSaveSetup(int gameID, int playerIndex, String filePath) {
@@ -209,6 +238,20 @@ public class ModelComManager {
             for (int i = 1; i < 40; i++) {
                 printWriter.print("-" + findGame(gameID).getBoard()[playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10][playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10].getOccupyingPiece().getType().ordinal());
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void requestSaveGame(int gameID, String filePath) {
+        if (!findGame(gameID).gameRunning()) {
+            return;
+        }
+        try (PrintWriter printWriter = new PrintWriter(filePath, "UTF-8")) {
+            // print encoding of initial board setup to file
+            printWriter.println(findGame(gameID).getGameState().getInitBoardEncoding());
+            // print encoding of moves to file
+            printWriter.println(findGame(gameID).getGameState().getMoveEncoding());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -233,6 +276,24 @@ public class ModelComManager {
                 for (int col = 0; col < GameState.BOARD_SIZE; col++) {
                     if (board[row][col].getOccupyingPiece() != null && board[row][col].getOccupyingPiece().getPlayerType().ordinal() == playerIndex) {
                         sendPiecePlaced(gameID, playerIndex, board[row][col].getOccupyingPiece().getType().ordinal(), row, col);
+                    }
+                }
+            }
+        }
+    }
+
+    public void sendBoardUpdate(int gameID) {
+        System.out.println("sendBoardUpdate");
+        findGame(gameID).getGameState().printBoard();
+        if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+            BoardTile[][] board = findGame(gameID).getBoard();
+            for (int row = 0; row < GameState.BOARD_SIZE; row++) {
+                for (int col = 0; col < GameState.BOARD_SIZE; col++) {
+                    if (board[row][col].getOccupyingPiece() != null) {
+                        sendPiecePlaced(gameID, board[row][col].getOccupyingPiece().getPlayerType().ordinal(), board[row][col].getOccupyingPiece().getType().ordinal(), row, col);
+                        if (board[row][col].getOccupyingPiece().isRevealed()) {
+                            sendRevealPiece(gameID, board[row][col].getOccupyingPiece().getPlayerType().ordinal(), row, col);
+                        }
                     }
                 }
             }
@@ -407,7 +468,7 @@ public class ModelComManager {
         } else if (gameMode != GameMode.AIMATCH) {
             activeGames.remove(findGame(-1));
             //configureMultiPlayer();
-            configureSinglePlayer();
+            //configureSinglePlayer();
             ViewComManager.getInstance().sendGameOver(winnerPlayerIndex);
         }
     }

@@ -64,8 +64,15 @@ public class InGameView extends Pane {
 
     public void processGameOver(int winnerPlayerIndex) {
         boardArea.revealAll();
+        boardArea.print();
         playerNames.resetHighlight();
-        if (winnerPlayerIndex == playerIndex) {
+        if (playerIndex == -1) {
+            if (winnerPlayerIndex == 0) {
+                Messages.showNorthWon();
+            } else if (winnerPlayerIndex == 1) {
+                Messages.showSouthWon();
+            }
+        } else if (winnerPlayerIndex == playerIndex) {
             Messages.showPlayerWon();
         } else {
             Messages.showOpponentWon();

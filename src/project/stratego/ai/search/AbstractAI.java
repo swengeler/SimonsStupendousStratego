@@ -27,6 +27,12 @@ public abstract class AbstractAI {
 
     public abstract void copyOpponentSetup(GameState inGameState);
 
+    public void loadGame(String gameEncoding) {
+        String[] encodings = gameEncoding.split("\n");
+        gameState.interpretEncodedBoard(encodings[0]);
+        gameState.interpretEncodedMoves(encodings[1]);
+    }
+
     public void applyMove(Move move) {
         gameState.applyMove(move);
     }

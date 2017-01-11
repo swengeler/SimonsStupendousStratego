@@ -15,13 +15,10 @@ public class PlayingLogic extends GameLogic {
 
     private Player currentPlayer, currentOpponent;
 
-    private LinkedList<Move> moveHistory;
-
     public PlayingLogic(StrategoGame parent, Player firstPlayer, Player secondPlayer) {
         super(parent, firstPlayer, secondPlayer);
         currentPlayer = firstPlayer;
         currentOpponent = secondPlayer;
-        moveHistory = new LinkedList<>();
     }
 
     @Override

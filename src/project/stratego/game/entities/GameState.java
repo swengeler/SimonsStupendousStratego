@@ -12,6 +12,7 @@ public class GameState {
     protected BoardTile[][] board;
     protected Player playerNorth, playerSouth;
 
+    protected String initBoardEncoding;
     protected LinkedList<Move> moveHistory;
 
     public GameState() {
@@ -99,6 +100,22 @@ public class GameState {
         return moveHistory;
     }
 
+    public String getInitBoardEncoding() {
+        return initBoardEncoding;
+    }
+
+    public String getMoveEncoding() {
+        if (moveHistory.isEmpty()) {
+            return "";
+        }
+        String moveEncoding = "";
+        for (Move m : moveHistory) {
+            moveEncoding += "_" + m.getPlayerIndex() + "-" + m.getOrRow() + "-" + m.getOrCol() + "-" + m.getDestRow() + "-" + m.getDestCol();
+        }
+        moveEncoding = moveEncoding.substring(1, moveEncoding.length());
+        return moveEncoding;
+    }
+
     public void applyMove(Move move) {
         Piece movingPiece = board[move.getOrRow()][move.getOrCol()].getOccupyingPiece();
         if (movingPiece == null) {
@@ -106,6 +123,20 @@ public class GameState {
         }
         MoveManager moveManager = new DiscreteMoveManager(board);
         moveManager.processMove(movingPiece.getPlayerType() == PlayerType.NORTH ? playerNorth : playerSouth, movingPiece.getPlayerType() == PlayerType.NORTH ? playerSouth : playerNorth, movingPiece, move.getDestRow(), move.getDestCol());
+    }
+
+    public void saveInitBoard() {
+        initBoardEncoding = "";
+        // setup north
+        initBoardEncoding += board[3][9].getOccupyingPiece().getType().ordinal();
+        for (int i = 1; i < 40; i++) {
+            initBoardEncoding += "-" + board[3 - i / 10][9 - i % 10].getOccupyingPiece().getType().ordinal();
+        }
+        // setup south
+        initBoardEncoding += "_" + board[6][0].getOccupyingPiece().getType().ordinal();
+        for (int i = 1; i < 40; i++) {
+            initBoardEncoding += "-" + board[6 + i / 10][i % 10].getOccupyingPiece().getType().ordinal();
+        }
     }
 
     public void copySetup(GameState state, int playerIndex) {
@@ -118,6 +149,67 @@ public class GameState {
                     getPlayer(playerIndex).getActivePieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
                 }
             }
+        }
+    }
+
+    /**
+     * A method that can be used to load an initial gamestate stored as the players' setups in the form of Strings.
+     * The resulting GameState object can then be used for starting a game with those setups, using the move history,
+     * which can also be stored with the initial game state, to advance the game to a certain point and continue playing
+     * or to go through the moves as a replay of the stored game.
+     * @param encodedBoard A String consisting of the encoded setups for each player.
+     */
+    public void interpretEncodedBoard(String encodedBoard) {
+        playerNorth.getActivePieces().clear();
+        playerNorth.getDeadPieces().clear();
+        playerSouth.getActivePieces().clear();
+        playerSouth.getDeadPieces().clear();
+
+        String[] setups = encodedBoard.split("_");
+        String[] pieceIndexStrings = setups[0].split("-");
+        if (pieceIndexStrings.length != 40) {
+            System.out.println("Something wrong with the loaded board.");
+            System.exit(1);
+        }
+
+        Piece temp;
+        int tempPieceIndex;
+        for (int i = 0; i < pieceIndexStrings.length; i++) {
+            tempPieceIndex = Integer.parseInt(pieceIndexStrings[i]);
+            temp = new Piece(PieceType.values()[tempPieceIndex], PlayerType.NORTH);
+            playerNorth.getActivePieces().add(temp);
+            board[3 - i / 10][9 - i % 10].setOccupyingPiece(temp);
+        }
+        pieceIndexStrings = setups[1].split("-");
+        for (int i = 0; i < pieceIndexStrings.length; i++) {
+            tempPieceIndex = Integer.parseInt(pieceIndexStrings[i]);
+            temp = new Piece(PieceType.values()[tempPieceIndex], PlayerType.SOUTH);
+            playerSouth.getActivePieces().add(temp);
+            board[6 + i / 10][i % 10].setOccupyingPiece(temp);
+        }
+    }
+
+    /**
+     * A method that can be used after loading an initial setup for the game state to advance the game to a certain point
+     * (defined by the moves made in said game). Using this method, all moves are applied immediately, meaning that this
+     * method cannot be used for the replay functionality in the program. Instead it can serve as a way to load a certain
+     * game state that is of some interest. By using an initial game state and then applying moves afterwards it is also
+     * ensured that any additional information relevant for AIs is also updated properly.
+     * @param encodedMoves A String consisting of encoded moves made in a game.
+     */
+    public void interpretEncodedMoves(String encodedMoves) {
+        // moves encoded as: playerIndex1-orRow1-orCol1-destRow1-destCol1_playerIndex2-orRow2-orCol2-destRow2-destCol2_ ...
+        String[] moves = encodedMoves.split("_");
+        String[] moveCoords;
+        int playerIndex, orRow, orCol, destRow, destCol;
+        for (String move : moves) {
+            moveCoords = move.split("-");
+            playerIndex = Integer.parseInt(moveCoords[0]);
+            orRow = Integer.parseInt(moveCoords[1]);
+            orCol = Integer.parseInt(moveCoords[2]);
+            destRow = Integer.parseInt(moveCoords[3]);
+            destCol = Integer.parseInt(moveCoords[4]);
+            applyMove(new Move(playerIndex, orRow, orCol, destRow, destCol));
         }
     }
 

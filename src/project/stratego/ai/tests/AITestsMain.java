@@ -40,7 +40,7 @@ public class AITestsMain {
             System.out.println("RUN NUMBER " + (i + 1));
             System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
             ModelComManager.getInstance().configureAIMatch();
-            AIComManager.getInstance().runAIMatch();
+            AIComManager.getInstance().runAutomaticAIMatch();
         }
 
         System.out.println("\n-----------------------------------------------------------");

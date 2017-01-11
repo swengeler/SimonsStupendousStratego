@@ -7,7 +7,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import project.stratego.control.managers.ViewComManager;
-import project.stratego.ui.utils.SetupLoader;
+import project.stratego.ui.utils.FileLoader;
 
 import java.io.File;
 
@@ -56,8 +56,10 @@ public class SideMenu extends Pane {
 
         Button loadSetupButton = new Button("Load setup");
         loadSetupButton.setOnAction((ActionEvent e) -> {
-            String setupEncoding = SetupLoader.load(setupChooser.showOpenDialog(parent));
-            ViewComManager.getInstance().requestLoadSetup(parent.getInGameView().getPlayerIndex(), setupEncoding);
+            String setupEncoding = FileLoader.load(setupChooser.showOpenDialog(parent));
+            if (setupEncoding != null) {
+                ViewComManager.getInstance().requestLoadSetup(parent.getInGameView().getPlayerIndex(), setupEncoding);
+            }
         });
         loadSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         loadSetupButton.setTextFill(Color.BLACK);
@@ -125,22 +127,40 @@ public class SideMenu extends Pane {
             startButton.setTextFill(Color.BLACK);
         });
 
-        Button saveButton = new Button("Save game");
-        //saveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
-        saveButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
-        saveButton.setTextFill(Color.BLACK);
-        saveButton.setOnMouseEntered(e -> {
-            saveButton.setTextFill(Color.WHITE);
+        Button saveGameButton = new Button("Save game");
+        saveGameButton.setOnAction((ActionEvent e) -> {
+            ViewComManager.getInstance().requestSaveGame(gameStateChooser.showSaveDialog(parent).getPath());
         });
-        saveButton.setOnMouseExited(e -> {
-            saveButton.setTextFill(Color.BLACK);
+        saveGameButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        saveGameButton.setTextFill(Color.BLACK);
+        saveGameButton.setOnMouseEntered(e -> {
+            saveGameButton.setTextFill(Color.WHITE);
+        });
+        saveGameButton.setOnMouseExited(e -> {
+            saveGameButton.setTextFill(Color.BLACK);
+        });
+
+        Button loadGameButton = new Button("Load game");
+        loadGameButton.setOnAction((ActionEvent e) -> {
+            String gameEncoding = FileLoader.load(gameStateChooser.showOpenDialog(parent));
+            if (gameEncoding != null) {
+                ViewComManager.getInstance().requestLoadGame(gameEncoding);
+            }
+        });
+        loadGameButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        loadGameButton.setTextFill(Color.BLACK);
+        loadGameButton.setOnMouseEntered(e -> {
+            loadGameButton.setTextFill(Color.WHITE);
+        });
+        loadGameButton.setOnMouseExited(e -> {
+            loadGameButton.setTextFill(Color.BLACK);
         });
 
         VBox pane = new VBox();
         pane.setPadding(new Insets(5));
         pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(loadSetupButton, saveSetupButton, autoDeployButton, resetDeploymentButton, configureButton, startButton, saveButton);
+        pane.getChildren().addAll(loadSetupButton, saveSetupButton, autoDeployButton, resetDeploymentButton, configureButton, startButton, saveGameButton, loadGameButton);
 
         singlePlayerMenu.setContent(pane);
 
@@ -176,7 +196,7 @@ public class SideMenu extends Pane {
 
         Button loadSetupButton = new Button("Load setup");
         loadSetupButton.setOnAction((ActionEvent e) -> {
-            String setupEncoding = SetupLoader.load(setupChooser.showOpenDialog(parent));
+            String setupEncoding = FileLoader.load(setupChooser.showOpenDialog(parent));
             ViewComManager.getInstance().requestLoadSetup(parent.getInGameView().getPlayerIndex(), setupEncoding);
         });
         loadSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
@@ -307,7 +327,10 @@ public class SideMenu extends Pane {
 
         Button continueSinglePlayerButton = new Button("Continue as \nSingleplayer");
         continueSinglePlayerButton.setOnAction((ActionEvent e) -> {
-            File state = gameStateChooser.showOpenDialog(parent);
+            String gameEncoding = FileLoader.load(gameStateChooser.showOpenDialog(parent));
+            if (gameEncoding != null) {
+                ViewComManager.getInstance().requestLoadGame(gameEncoding);
+            }
         });
         continueSinglePlayerButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         continueSinglePlayerButton.setTextFill(Color.BLACK);

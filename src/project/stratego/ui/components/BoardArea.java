@@ -1,5 +1,6 @@
 package project.stratego.ui.components;
 
+import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
@@ -7,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class BoardArea extends Pane {
 
@@ -71,12 +73,20 @@ public class BoardArea extends Pane {
     public void movePiece(int orRow, int orCol, int destRow, int destCol) {
         if (orRow != destRow || orCol != destCol) {
             Piece movingPiece = board[orRow][orCol].getOccupyingPiece();
+
+            RotateTransition rt = new RotateTransition(Duration.millis(1000), movingPiece);
+            rt.setByAngle(360);
+            rt.setCycleCount(1);
+            rt.setAutoReverse(false);
+            SequentialTransition sq = new SequentialTransition(rt);
+            sq.play();
+
             board[destRow][destCol].setOccupyingPiece(movingPiece);
             board[orRow][orCol].setOccupyingPiece(null);
 
             System.out.println("In BoardArea: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
 
-            /*System.out.println();
+            System.out.println();
             for (int row = 0; row < 10; row++) {
                 for (int col = 0; col < 10; col++) {
                     if (board[row][col].getOccupyingPiece() != null) {
@@ -91,7 +101,7 @@ public class BoardArea extends Pane {
                 }
                 System.out.println();
             }
-            System.out.println();*/
+            System.out.println();
         }
     }
 
@@ -163,6 +173,27 @@ public class BoardArea extends Pane {
 
     public double getSize() {
         return 10 * (BoardTile.TILE_SIZE + 2 * TILE_SPACING);
+    }
+
+
+
+    public void print() {
+        System.out.println();
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                if (board[row][col].getOccupyingPiece() != null) {
+                    if (board[row][col].getOccupyingPiece().pieceIndex > 9) {
+                        System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex);
+                    } else {
+                        System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex + " ");
+                    }
+                } else {
+                    System.out.print("   ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
 }

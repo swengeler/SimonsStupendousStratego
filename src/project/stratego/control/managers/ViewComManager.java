@@ -162,9 +162,22 @@ public class ViewComManager {
         }
     }
 
+    public void requestLoadGame(String gameEncoding) {
+        if (gameMode == GameMode.MULTIPLAYER) {
+            return;
+        }
+        ModelComManager.getInstance().requestLoadGame(-1, gameEncoding);
+    }
+
     public void requestSaveSetup(int playerIndex, String filePath) {
         if (gameMode != GameMode.MULTIPLAYER) {
             ModelComManager.getInstance().requestSaveSetup(-1, playerIndex, filePath);
+        }
+    }
+
+    public void requestSaveGame(String filePath) {
+        if (gameMode != GameMode.MULTIPLAYER) {
+            ModelComManager.getInstance().requestSaveGame(-1, filePath);
         }
     }
 

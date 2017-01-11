@@ -212,8 +212,6 @@ public class ModelComManager {
         ViewComManager.getInstance().sendResetGame();
         sendBoardUpdate(gameID);
 
-        /*
-
         if (gameMode == GameMode.SINGLEPLAYER) {
             AIComManager.getInstance().configureSinglePlayer();
             AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
@@ -226,7 +224,7 @@ public class ModelComManager {
             AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
             AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         }
-        AIComManager.getInstance().tryLoadGame(gameEncoding);*/
+        AIComManager.getInstance().tryLoadGame(gameEncoding);
     }
 
     public void requestSaveSetup(int gameID, int playerIndex, String filePath) {
@@ -283,8 +281,6 @@ public class ModelComManager {
     }
 
     public void sendBoardUpdate(int gameID) {
-        System.out.println("sendBoardUpdate");
-        findGame(gameID).getGameState().printBoard();
         if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
             BoardTile[][] board = findGame(gameID).getBoard();
             for (int row = 0; row < GameState.BOARD_SIZE; row++) {

@@ -6,18 +6,17 @@ import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class BoardArea extends Pane {
 
-    private static final double TILE_SPACING = 1;
+    public static final double TILE_SPACING = 1;
 
     private Group northDeploymentArea;
     private Group southDeploymentArea;
 
     private BoardTile[][] board;
+    private Piece[][] pieces;
 
     private Image tileBackground;
     private Image pieceIcons;
@@ -32,6 +31,7 @@ public class BoardArea extends Pane {
 
     private void makeGrid() {
         board = new BoardTile[10][10];
+        pieces = new Piece[10][10];
 
         northDeploymentArea = new Group();
         southDeploymentArea = new Group();
@@ -63,37 +63,31 @@ public class BoardArea extends Pane {
     }
 
     public void makePiece(int playerIndex, int pieceIndex, int row, int col) {
-        if (board[row][col].getOccupyingPiece() == null) {
+        if (pieces[row][col] == null) {
             //System.out.println("Piece at (" + row + "|" + col + "): " + board[row][col].getOccupyingPiece());
-            board[row][col].setOccupyingPiece(new Piece(playerIndex, pieceIndex, pieceIcons, backsidePieceIcons));
+            pieces[row][col] = new Piece(playerIndex, pieceIndex, pieceIcons, backsidePieceIcons);
+            pieces[row][col].setPosition(row, col);
+            getChildren().add(pieces[row][col]);
             //System.out.println("After at (" + row + "|" + col + "): " + board[row][col].getOccupyingPiece() + " (" + playerIndex + ", " + pieceIndex + ")");
         }
     }
 
     public void movePiece(int orRow, int orCol, int destRow, int destCol) {
         if (orRow != destRow || orCol != destCol) {
-            Piece movingPiece = board[orRow][orCol].getOccupyingPiece();
-
-            RotateTransition rt = new RotateTransition(Duration.millis(1000), movingPiece);
-            rt.setByAngle(360);
-            rt.setCycleCount(1);
-            rt.setAutoReverse(false);
-            SequentialTransition sq = new SequentialTransition(rt);
-            sq.play();
-
-            board[destRow][destCol].setOccupyingPiece(movingPiece);
-            board[orRow][orCol].setOccupyingPiece(null);
-
-            System.out.println("In BoardArea: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+            Piece movingPiece = pieces[orRow][orCol];
+            pieces[orRow][orCol] = null;
+            pieces[destRow][destCol] = movingPiece;
+            movingPiece.moveTo(destRow, destCol);
+            //System.out.println("In BoardArea: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
 
             System.out.println();
             for (int row = 0; row < 10; row++) {
                 for (int col = 0; col < 10; col++) {
-                    if (board[row][col].getOccupyingPiece() != null) {
-                        if (board[row][col].getOccupyingPiece().pieceIndex > 9) {
-                            System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex);
+                    if (pieces[row][col] != null) {
+                        if (pieces[row][col].pieceIndex > 9) {
+                            System.out.print(" " + pieces[row][col].pieceIndex);
                         } else {
-                            System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex + " ");
+                            System.out.print(" " + pieces[row][col].pieceIndex + " ");
                         }
                     } else {
                         System.out.print("   ");
@@ -109,13 +103,19 @@ public class BoardArea extends Pane {
         if (playerIndex == 0) {
             for (int row = 0; row < 4; row++) {
                 for (int col = 0; col < 10; col++) {
-                    board[row][col].setOccupyingPiece(null);
+                    if (pieces[row][col] != null) {
+                        getChildren().remove(pieces[row][col]);
+                        pieces[row][col] = null;
+                    }
                 }
             }
         } else if (playerIndex == 1) {
             for (int row = 6; row < 10; row++) {
                 for (int col = 0; col < 10; col++) {
-                    board[row][col].setOccupyingPiece(null);
+                    if (pieces[row][col] != null) {
+                        getChildren().remove(pieces[row][col]);
+                        pieces[row][col] = null;
+                    }
                 }
             }
         }
@@ -124,7 +124,10 @@ public class BoardArea extends Pane {
     public void reset() {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
-                board[row][col].setOccupyingPiece(null);
+                if (pieces[row][col] != null) {
+                    getChildren().remove(pieces[row][col]);
+                    pieces[row][col] = null;
+                }
             }
         }
     }
@@ -146,12 +149,14 @@ public class BoardArea extends Pane {
     }
 
     public void hidePiece(int row, int col) {
-        board[row][col].getOccupyingPiece().setToHiddenState();
+        if (pieces[row][col] != null) {
+            pieces[row][col].setToHiddenState();
+        }
     }
 
     public void revealPiece(int row, int col) {
-        if (board[row][col].getOccupyingPiece() != null) {
-            board[row][col].getOccupyingPiece().setToRevealedState();
+        if (pieces[row][col] != null) {
+            pieces[row][col].setToRevealedState();
         }
     }
 
@@ -164,7 +169,10 @@ public class BoardArea extends Pane {
     }
 
     public void removePiece(int row, int col) {
-        board[row][col].setOccupyingPiece(null);
+        if (pieces[row][col] != null) {
+            getChildren().remove(pieces[row][col]);
+            pieces[row][col] = null;
+        }
     }
 
     public void attackAnimation(int rowAttacking, int colAttacking, int rowDefending, int colDefending) {
@@ -181,11 +189,11 @@ public class BoardArea extends Pane {
         System.out.println();
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
-                if (board[row][col].getOccupyingPiece() != null) {
-                    if (board[row][col].getOccupyingPiece().pieceIndex > 9) {
-                        System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex);
+                if (pieces[row][col] != null) {
+                    if (pieces[row][col].pieceIndex > 9) {
+                        System.out.print(" " + pieces[row][col].pieceIndex);
                     } else {
-                        System.out.print(" " + board[row][col].getOccupyingPiece().pieceIndex + " ");
+                        System.out.print(" " + pieces[row][col].pieceIndex + " ");
                     }
                 } else {
                     System.out.print("   ");

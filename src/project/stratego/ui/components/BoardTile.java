@@ -17,7 +17,6 @@ public class BoardTile extends Group {
 
     private ImageView fill;
     private Rectangle border;
-    private Piece occupyingPiece;
 
     public BoardTile(int rowPos, int colPos, Image boardBackground) {
         super();
@@ -61,28 +60,4 @@ public class BoardTile extends Group {
         border.setStroke(color);
     }
 
-    void setOccupyingPiece(Piece newPiece) {
-        //System.out.println("setOccupyingPiece in BoardTile at (" + rowPos + "|" + colPos + ") called");
-        if (newPiece == null) {
-            getChildren().remove(occupyingPiece);
-            occupyingPiece = newPiece;
-            return;
-        }
-        occupyingPiece = newPiece;
-        getChildren().add(occupyingPiece);
-        occupyingPiece.setLayoutX(/*getLayoutX() + */0.1 * TILE_SIZE);
-        occupyingPiece.setLayoutY(/*getLayoutY() + */0.1 * TILE_SIZE);
-    }
-
-    public Piece getOccupyingPiece() {
-        return occupyingPiece;
-    }
-
-    public int getRowPos() {
-        return rowPos;
-    }
-
-    public int getColPos() {
-        return colPos;
-    }
 }

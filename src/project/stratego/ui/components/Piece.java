@@ -5,9 +5,13 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import project.stratego.control.managers.ViewComManager;
+
+import static project.stratego.ui.components.BoardArea.TILE_SPACING;
 
 public class Piece extends Group {
 
@@ -20,8 +24,11 @@ public class Piece extends Group {
 
     private Rectangle2D revealedViewPort;
     private Rectangle2D hiddenViewPort;
+    private Rectangle border;
 
     public int pieceIndex;
+
+    private int rowPos, colPos;
 
     public Piece(int playerIndex, int pieceIndex, Image pieceIcons, Image backsidePieceIcons) {
         super();
@@ -34,6 +41,8 @@ public class Piece extends Group {
         revealedImage = pieceIcons;
         hiddenImage = backsidePieceIcons;
         setToRevealedState();
+        makeBorder();
+        makeActions();
     }
 
     public void setToRevealedState() {
@@ -47,10 +56,45 @@ public class Piece extends Group {
         icon.setViewport(hiddenViewPort);
     }
 
-    public void moveTo(BoardTile destTile) {
-        TranslateTransition tt = new TranslateTransition(Duration.millis(1000), this);
-        tt.setToX(destTile.getLayoutX());
-        tt.setToY(destTile.getLayoutY());
+    public void setPosition(int rowPos, int colPos) {
+        this.rowPos = rowPos;
+        this.colPos = colPos;
+        setLayoutX(colPos * (BoardTile.TILE_SIZE + 2 * TILE_SPACING) + TILE_SPACING + 0.1 * BoardTile.TILE_SIZE);
+        setLayoutY(rowPos * (BoardTile.TILE_SIZE + 2 * TILE_SPACING) + TILE_SPACING + 0.1 * BoardTile.TILE_SIZE);
+    }
+
+    private void makeBorder() {
+        border = new Rectangle(BoardTile.TILE_SIZE, BoardTile.TILE_SIZE, Color.TRANSPARENT);
+        border.setLayoutX(-0.1 * BoardTile.TILE_SIZE);
+        border.setLayoutY(-0.1 * BoardTile.TILE_SIZE);
+        border.setStroke(Color.WHITE);
+        border.setStrokeWidth(2);
+        border.setVisible(false);
+        getChildren().add(border);
+    }
+
+    private void makeActions() {
+        setOnMouseClicked((MouseEvent e) -> {
+            System.out.println("Piece at (" + rowPos + "|" + colPos + ") clicked");
+            ViewComManager.getInstance().requestBoardTileSelected(rowPos, colPos);
+        });
+        setOnMouseEntered((MouseEvent e) -> setBorderVisible(true));
+        setOnMouseExited((MouseEvent e) -> setBorderVisible(false));
+    }
+
+    private void setBorderVisible(boolean visible) {
+        border.setVisible(visible);
+    }
+
+    public void moveTo(int destRow, int destCol) {
+        int rowDiff = destRow - rowPos;
+        int colDiff = destCol - colPos;
+        rowPos = destRow;
+        colPos = destCol;
+        TranslateTransition tt = new TranslateTransition(Duration.millis(200), this);
+        tt.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        tt.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        tt.play();
     }
 
 }

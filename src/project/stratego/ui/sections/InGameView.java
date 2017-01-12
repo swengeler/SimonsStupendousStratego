@@ -89,7 +89,7 @@ public class InGameView extends Pane {
     }
 
     public void processPieceMoved(int orRow, int orCol, int destRow, int destCol) {
-        boardArea.movePiece(orRow, orCol, destRow, destCol);
+        boardArea.move(orRow, orCol, destRow, destCol);
     }
 
     public void processResetDeployment(int playerIndex) {
@@ -119,29 +119,32 @@ public class InGameView extends Pane {
     }
 
     public void processAttackLost(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        boardArea.revealPiece(orRow, orCol);
+        /*boardArea.revealPiece(orRow, orCol);
         boardArea.revealPiece(destRow, destCol);
-        boardArea.movePiece(orRow, orCol, stopRow, stopCol);
+        boardArea.move(orRow, orCol, stopRow, stopCol);
         boardArea.attackAnimation(stopRow, stopCol, destRow, destCol);
-        boardArea.removePiece(stopRow, stopCol);
+        boardArea.removePiece(stopRow, stopCol);*/
+        boardArea.attackAndLose(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void processAttackTied(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        boardArea.revealPiece(orRow, orCol);
+        /*boardArea.revealPiece(orRow, orCol);
         boardArea.revealPiece(destRow, destCol);
-        boardArea.movePiece(orRow, orCol, stopRow, stopCol);
+        boardArea.move(orRow, orCol, stopRow, stopCol);
         boardArea.attackAnimation(stopRow, stopCol, destRow, destCol);
         boardArea.removePiece(stopRow, stopCol);
-        boardArea.removePiece(destRow, destCol);
+        boardArea.removePiece(destRow, destCol);*/
+        boardArea.attackAndTie(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void processAttackWon(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        boardArea.revealPiece(orRow, orCol);
+        /*boardArea.revealPiece(orRow, orCol);
         boardArea.revealPiece(destRow, destCol);
-        boardArea.movePiece(orRow, orCol, stopRow, stopCol);
+        boardArea.move(orRow, orCol, stopRow, stopCol);
         boardArea.attackAnimation(stopRow, stopCol, destRow, destCol);
         boardArea.removePiece(destRow, destCol);
-        boardArea.movePiece(stopRow, stopCol, destRow, destCol);
+        boardArea.move(stopRow, stopCol, destRow, destCol);*/
+        boardArea.attackAndWin(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void revealAll() {

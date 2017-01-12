@@ -1,5 +1,6 @@
 package project.stratego.ui.components;
 
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -61,6 +62,11 @@ public class Piece extends Group {
         this.colPos = colPos;
         setLayoutX(colPos * (BoardTile.TILE_SIZE + 2 * TILE_SPACING) + TILE_SPACING + 0.1 * BoardTile.TILE_SIZE);
         setLayoutY(rowPos * (BoardTile.TILE_SIZE + 2 * TILE_SPACING) + TILE_SPACING + 0.1 * BoardTile.TILE_SIZE);
+    }
+
+    public void setBoardPosition(int rowPos, int colPos) {
+        this.rowPos = rowPos;
+        this.colPos = colPos;
     }
 
     private void makeBorder() {

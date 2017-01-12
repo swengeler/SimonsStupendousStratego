@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import project.stratego.control.managers.ViewComManager;
 
 public class BoardArea extends Pane {
 
@@ -72,12 +73,24 @@ public class BoardArea extends Pane {
         }
     }
 
-    public void movePiece(int orRow, int orCol, int destRow, int destCol) {
+    public void move(int orRow, int orCol, int destRow, int destCol) {
         if (orRow != destRow || orCol != destCol) {
             Piece movingPiece = pieces[orRow][orCol];
             pieces[orRow][orCol] = null;
             pieces[destRow][destCol] = movingPiece;
-            movingPiece.moveTo(destRow, destCol);
+            movingPiece.setBoardPosition(destRow, destCol);
+
+            int rowDiff = destRow - orRow;
+            int colDiff = destCol - orCol;
+            TranslateTransition move = new TranslateTransition(Duration.millis(50), movingPiece);
+            move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+            move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+            move.setOnFinished(e -> {
+                // call method for AI to make move
+                ViewComManager.getInstance().requestNextMove();
+            });
+            move.play();
+
             //System.out.println("In BoardArea: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
 
             System.out.println();
@@ -97,6 +110,75 @@ public class BoardArea extends Pane {
             }
             System.out.println();
         }
+    }
+
+    public void attackAndLose(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        int rowDiff = stopRow - orRow;
+        int colDiff = stopCol - orCol;
+
+        TranslateTransition move = new TranslateTransition(Duration.millis(50), pieces[orRow][orCol]);
+        move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        RotateTransition attack = new RotateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        attack.setByAngle(360);
+
+        SequentialTransition transitions = new SequentialTransition(move, attack);
+        transitions.setOnFinished(e -> {
+            // call method to advance game/let AI make next move
+            removePiece(orRow, orCol);
+            ViewComManager.getInstance().requestNextMove();
+        });
+        transitions.play();
+    }
+
+    public void attackAndTie(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        int rowDiff = stopRow - orRow;
+        int colDiff = stopCol - orCol;
+
+        TranslateTransition move = new TranslateTransition(Duration.millis(50), pieces[orRow][orCol]);
+        move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        RotateTransition attack = new RotateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        attack.setByAngle(360);
+
+        SequentialTransition transitions = new SequentialTransition(move, attack);
+        transitions.setOnFinished(e -> {
+            // call method to advance game/let AI make next move
+            removePiece(orRow, orCol);
+            removePiece(destRow, destCol);
+            ViewComManager.getInstance().requestNextMove();
+        });
+        transitions.play();
+    }
+
+    public void attackAndWin(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        int rowDiff = stopRow - orRow;
+        int colDiff = stopCol - orCol;
+        TranslateTransition move = new TranslateTransition(Duration.millis(50), pieces[orRow][orCol]);
+        move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        RotateTransition attack = new RotateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        attack.setByAngle(360);
+        attack.setOnFinished(e -> removePiece(destRow, destCol));
+
+        rowDiff = destRow - stopRow;
+        colDiff = destCol - stopCol;
+        TranslateTransition finish = new TranslateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        finish.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        finish.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        SequentialTransition transitions = new SequentialTransition(move, attack, finish);
+        transitions.setOnFinished(e -> {
+            // call method to advance game/let AI make next move
+            pieces[destRow][destCol] = pieces[orRow][orCol];
+            pieces[destRow][destCol].setBoardPosition(destRow, destCol);
+            pieces[orRow][orCol] = null;
+            ViewComManager.getInstance().requestNextMove();
+        });
+        transitions.play();
     }
 
     public void resetDeployment(int playerIndex) {
@@ -175,15 +257,13 @@ public class BoardArea extends Pane {
         }
     }
 
-    public void attackAnimation(int rowAttacking, int colAttacking, int rowDefending, int colDefending) {
-
-    }
-
     public double getSize() {
         return 10 * (BoardTile.TILE_SIZE + 2 * TILE_SPACING);
     }
 
-
+    public Piece[][] getPieces() {
+        return pieces;
+    }
 
     public void print() {
         System.out.println();

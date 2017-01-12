@@ -115,6 +115,10 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
 
         // iterate over own
         for (Piece p : gameState.getPlayer(gameState.getPlayerIndex()).getActivePieces()) {
+            
+            
+            ownSum += rowValues[p.getRowPos()] * colValues[p.getColPos()];
+            
             if (p.getType() == PieceType.BOMB) {
                 if (!p.isRevealed()){
                     ownSum +=  75.0 * materialWeight;

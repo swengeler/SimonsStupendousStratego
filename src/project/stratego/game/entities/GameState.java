@@ -100,6 +100,18 @@ public class GameState {
         return moveHistory;
     }
 
+    public String getSetupEncoding(int playerIndex) {
+        if (initBoardEncoding != null && !initBoardEncoding.equals("")) {
+            return initBoardEncoding.split("_")[playerIndex];
+        }
+        String setup = "";
+        setup += playerIndex == PlayerType.NORTH.ordinal() ? board[3][9].getOccupyingPiece().getType().ordinal() : board[6][0].getOccupyingPiece().getType().ordinal();
+        for (int i = 1; i < 40; i++) {
+            setup += "-" + board[playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10][playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10].getOccupyingPiece().getType().ordinal();
+        }
+        return setup;
+    }
+
     public String getInitBoardEncoding() {
         return initBoardEncoding;
     }

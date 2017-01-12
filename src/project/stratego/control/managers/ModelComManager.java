@@ -175,7 +175,11 @@ public class ModelComManager {
     }
 
     public void requestNextMove() {
-        if (gameMode == GameMode.AISHOWMATCH) {
+        if (gameMode == GameMode.SINGLEPLAYER) {
+            if (findGame(-1) != null) {
+                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
+            }
+        } else if (gameMode == GameMode.AISHOWMATCH) {
             AIComManager.getInstance().advanceAIMatch();
         }
     }
@@ -235,27 +239,23 @@ public class ModelComManager {
         if (findGame(gameID).getGameState().getPlayer(playerIndex).getActivePieces().size() != 40 || findGame(gameID).gameRunning()) {
             return;
         }
-        try (PrintWriter printWriter = new PrintWriter(filePath, "UTF-8")) {
-            printWriter.print(playerIndex == PlayerType.NORTH.ordinal() ? findGame(gameID).getBoard()[3][9].getOccupyingPiece().getType().ordinal() : findGame(gameID).getBoard()[6][0].getOccupyingPiece().getType().ordinal());
-            for (int i = 1; i < 40; i++) {
-                printWriter.print("-" + findGame(gameID).getBoard()[playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10][playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10].getOccupyingPiece().getType().ordinal());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        String setupEncoding = findGame(gameID).getGameState().getSetupEncoding(playerIndex);
+        if (gameMode == GameMode.MULTIPLAYER) {
+            server.sendCommandToClient(gameID, playerIndex, "ss " + filePath + " " + setupEncoding);
+        } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+            ViewComManager.getInstance().sendSaveSetup(filePath, setupEncoding);
         }
     }
 
-    public void requestSaveGame(int gameID, String filePath) {
+    public void requestSaveGame(int gameID, int playerIndex, String filePath) {
         if (!findGame(gameID).gameRunning()) {
             return;
         }
-        try (PrintWriter printWriter = new PrintWriter(filePath, "UTF-8")) {
-            // print encoding of initial board setup to file
-            printWriter.println(findGame(gameID).getGameState().getInitBoardEncoding());
-            // print encoding of moves to file
-            printWriter.println(findGame(gameID).getGameState().getMoveEncoding());
-        } catch (IOException e) {
-            e.printStackTrace();
+        String setupEncoding = findGame(gameID).getGameState().getInitBoardEncoding() + "\n" + findGame(gameID).getGameState().getMoveEncoding();
+        if (gameMode == GameMode.MULTIPLAYER) {
+            server.sendCommandToClient(gameID, playerIndex, "ss " + filePath + " " + setupEncoding);
+        } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
+            ViewComManager.getInstance().sendSaveSetup(filePath, setupEncoding);
         }
     }
 
@@ -313,7 +313,7 @@ public class ModelComManager {
         } else if (gameMode == GameMode.SINGLEPLAYER) {
             ViewComManager.getInstance().sendChangeTurn(playerIndex);
             if (!findGame(-1).getGameState().getMoveHistory().isEmpty()) {
-                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
+                //AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
             } else {
                 //AIComManager.getInstance().tryNextMove(new Move(playerIndex, -1, -1, -1, -1));
             }
@@ -361,7 +361,7 @@ public class ModelComManager {
             server.sendCommandToClient(gameID, 0, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
             server.sendCommandToClient(gameID, 1, ("pm " + orRow + " " + orCol + " " + destRow + " " + destCol));
         } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-            System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+            //System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
             ViewComManager.getInstance().sendPieceMoved(orRow, orCol, destRow, destCol);
         }
     }
@@ -394,7 +394,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+                //System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackLost(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
             }
         } else {
@@ -403,7 +403,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("al " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+                //System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackLost(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
             }
         }
@@ -419,7 +419,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+                //System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackTied(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
             }
         } else {
@@ -428,7 +428,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("at " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+                //System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackTied(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
             }
         }
@@ -444,7 +444,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + (rowDiff < 0 ? destRow + 1 : destRow - 1) + " " + destCol + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+                //System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackWon(orRow, orCol, (rowDiff < 0 ? destRow + 1 : destRow - 1), destCol, destRow, destCol);
             }
         } else {
@@ -453,7 +453,7 @@ public class ModelComManager {
                 server.sendCommandToClient(gameID, 0, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
                 server.sendCommandToClient(gameID, 1, ("aw " + orRow + " " + orCol + " " + destRow + " " + (colDiff < 0 ? destCol + 1 : destCol - 1) + " " + destRow + " " + destCol));
             } else if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
-                System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+                //System.out.println("In ModelComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
                 ViewComManager.getInstance().sendAttackWon(orRow, orCol, destRow, (colDiff < 0 ? destCol + 1 : destCol - 1), destRow, destCol);
             }
         }

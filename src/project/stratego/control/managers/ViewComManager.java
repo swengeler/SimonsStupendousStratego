@@ -5,7 +5,7 @@ import project.stratego.ui.utils.Messages;
 import project.stratego.ui.sections.StrategoFrame;
 import project.stratego.ui.sections.InGameView;
 
-import java.io.File;
+import java.io.*;
 
 public class ViewComManager {
 
@@ -149,7 +149,7 @@ public class ViewComManager {
     }
 
     public void requestNextMove() {
-        if (gameMode == GameMode.AISHOWMATCH) {
+        if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.AISHOWMATCH) {
             ModelComManager.getInstance().requestNextMove();
         }
     }
@@ -170,14 +170,18 @@ public class ViewComManager {
     }
 
     public void requestSaveSetup(int playerIndex, String filePath) {
-        if (gameMode != GameMode.MULTIPLAYER) {
+        if (isConnected()) {
+            client.sendCommandToServer("ss " + filePath);
+        } else {
             ModelComManager.getInstance().requestSaveSetup(-1, playerIndex, filePath);
         }
     }
 
     public void requestSaveGame(String filePath) {
-        if (gameMode != GameMode.MULTIPLAYER) {
-            ModelComManager.getInstance().requestSaveGame(-1, filePath);
+        if (isConnected()) {
+            client.sendCommandToServer("sg " + filePath);
+        } else {
+            ModelComManager.getInstance().requestSaveGame(-1, -1, filePath);
         }
     }
 
@@ -226,7 +230,7 @@ public class ViewComManager {
     }
 
     public void sendPieceMoved(int orRow, int orCol, int destRow, int destCol) {
-        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+        //System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processPieceMoved(orRow, orCol, destRow, destCol);
     }
 
@@ -245,18 +249,36 @@ public class ViewComManager {
     // NOTE: the attack methods still have to be fixed (is the processing done on the client or server side?)
 
     public void sendAttackLost(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+        //System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processAttackLost(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void sendAttackTied(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+        //System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processAttackTied(orRow, orCol, stopRow, stopCol, destRow, destCol);
     }
 
     public void sendAttackWon(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+        //System.out.println("In ViewComManager: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
         frame.getInGameView().processAttackWon(orRow, orCol, stopRow, stopCol, destRow, destCol);
+    }
+
+    public void sendSaveSetup(String filePath, String setupEncoding) {
+        try (PrintWriter printWriter = new PrintWriter(filePath, "UTF-8")) {
+            // print encoding of initial board setup to file
+            printWriter.println(setupEncoding);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendSaveGame(String filePath, String gameEncoding) {
+        try (PrintWriter printWriter = new PrintWriter(filePath, "UTF-8")) {
+            // print encoding of initial board setup to file
+            printWriter.println(gameEncoding);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendGameOver(int winnerPlayerIndex) {

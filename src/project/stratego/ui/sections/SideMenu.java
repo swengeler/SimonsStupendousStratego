@@ -130,7 +130,10 @@ public class SideMenu extends Pane {
 
         Button saveGameButton = new Button("Save game");
         saveGameButton.setOnAction((ActionEvent e) -> {
-            ViewComManager.getInstance().requestSaveGame(gameStateChooser.showSaveDialog(parent).getPath());
+            String filePath = gameStateChooser.showSaveDialog(parent).getPath();
+            if (filePath != null) {
+                ViewComManager.getInstance().requestSaveGame(filePath);
+            }
         });
         saveGameButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         saveGameButton.setTextFill(Color.BLACK);
@@ -198,7 +201,9 @@ public class SideMenu extends Pane {
         Button loadSetupButton = new Button("Load setup");
         loadSetupButton.setOnAction((ActionEvent e) -> {
             String setupEncoding = FileLoader.load(setupChooser.showOpenDialog(parent));
-            ViewComManager.getInstance().requestLoadSetup(parent.getInGameView().getPlayerIndex(), setupEncoding);
+            if (setupEncoding != null) {
+                ViewComManager.getInstance().requestLoadSetup(parent.getInGameView().getPlayerIndex(), setupEncoding);
+            }
         });
         loadSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         loadSetupButton.setTextFill(Color.BLACK);

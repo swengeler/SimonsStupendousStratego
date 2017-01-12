@@ -49,7 +49,6 @@ public class BoardArea extends Pane {
 
                 board[row][col] = temp;
 
-
                 if (row < 4) {
                     northDeploymentArea.getChildren().add(temp);
                 } else if (row > 5) {
@@ -75,6 +74,7 @@ public class BoardArea extends Pane {
 
     public void move(int orRow, int orCol, int destRow, int destCol) {
         if (orRow != destRow || orCol != destCol) {
+            System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
             Piece movingPiece = pieces[orRow][orCol];
             pieces[orRow][orCol] = null;
             pieces[destRow][destCol] = movingPiece;
@@ -82,7 +82,7 @@ public class BoardArea extends Pane {
 
             int rowDiff = destRow - orRow;
             int colDiff = destCol - orCol;
-            TranslateTransition move = new TranslateTransition(Duration.millis(50), movingPiece);
+            TranslateTransition move = new TranslateTransition(Duration.millis(300), movingPiece);
             move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
             move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
             move.setOnFinished(e -> {
@@ -92,7 +92,7 @@ public class BoardArea extends Pane {
             move.play();
 
             //System.out.println("In BoardArea: (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
-
+            /*
             System.out.println();
             for (int row = 0; row < 10; row++) {
                 for (int col = 0; col < 10; col++) {
@@ -108,19 +108,23 @@ public class BoardArea extends Pane {
                 }
                 System.out.println();
             }
-            System.out.println();
+            System.out.println();*/
         }
     }
 
     public void attackAndLose(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") loses");
         int rowDiff = stopRow - orRow;
         int colDiff = stopCol - orCol;
-
-        TranslateTransition move = new TranslateTransition(Duration.millis(50), pieces[orRow][orCol]);
+        TranslateTransition move = new TranslateTransition(Duration.millis(rowDiff + colDiff == 0 ? 0 : 300), pieces[orRow][orCol]);
         move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
         move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        move.setOnFinished(e -> {
+            revealPiece(orRow, orCol);
+            revealPiece(destRow, destCol);
+        });
 
-        RotateTransition attack = new RotateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        RotateTransition attack = new RotateTransition(Duration.millis(150), pieces[orRow][orCol]);
         attack.setByAngle(360);
 
         SequentialTransition transitions = new SequentialTransition(move, attack);
@@ -133,14 +137,18 @@ public class BoardArea extends Pane {
     }
 
     public void attackAndTie(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") ties");
         int rowDiff = stopRow - orRow;
         int colDiff = stopCol - orCol;
-
-        TranslateTransition move = new TranslateTransition(Duration.millis(50), pieces[orRow][orCol]);
+        TranslateTransition move = new TranslateTransition(Duration.millis(rowDiff + colDiff == 0 ? 0 : 300), pieces[orRow][orCol]);
         move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
         move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        move.setOnFinished(e -> {
+            revealPiece(orRow, orCol);
+            revealPiece(destRow, destCol);
+        });
 
-        RotateTransition attack = new RotateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        RotateTransition attack = new RotateTransition(Duration.millis(150), pieces[orRow][orCol]);
         attack.setByAngle(360);
 
         SequentialTransition transitions = new SequentialTransition(move, attack);
@@ -154,19 +162,24 @@ public class BoardArea extends Pane {
     }
 
     public void attackAndWin(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
+        System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") wins");
         int rowDiff = stopRow - orRow;
         int colDiff = stopCol - orCol;
-        TranslateTransition move = new TranslateTransition(Duration.millis(50), pieces[orRow][orCol]);
+        TranslateTransition move = new TranslateTransition(Duration.millis(rowDiff + colDiff == 0 ? 0 : 300), pieces[orRow][orCol]);
         move.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
         move.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        move.setOnFinished(e -> {
+            revealPiece(orRow, orCol);
+            revealPiece(destRow, destCol);
+        });
 
-        RotateTransition attack = new RotateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        RotateTransition attack = new RotateTransition(Duration.millis(150), pieces[orRow][orCol]);
         attack.setByAngle(360);
         attack.setOnFinished(e -> removePiece(destRow, destCol));
 
         rowDiff = destRow - stopRow;
         colDiff = destCol - stopCol;
-        TranslateTransition finish = new TranslateTransition(Duration.millis(20), pieces[orRow][orCol]);
+        TranslateTransition finish = new TranslateTransition(Duration.millis(150), pieces[orRow][orCol]);
         finish.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
         finish.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
 

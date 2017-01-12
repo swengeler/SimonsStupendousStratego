@@ -103,6 +103,12 @@ public class StrategoClient implements Runnable {
             //Platform.runLater(() -> ViewComManager.getInstance().sendHighlightDeployment(Integer.parseInt(parts[1])));
         } else if (parts[0].equals("oq")) {
             Platform.runLater(() -> ViewComManager.getInstance().sendOpponentQuit());
+        } else if (parts[0].equals("ss")) {
+            // save setup
+            Platform.runLater(() -> ViewComManager.getInstance().sendSaveSetup(parts[1], parts[2]));
+        } else if (parts[0].equals("sg")) {
+            // save game
+            Platform.runLater(() -> ViewComManager.getInstance().sendSaveGame(parts[1], parts[2]));
         }
     }
 

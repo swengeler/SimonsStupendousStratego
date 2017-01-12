@@ -96,6 +96,14 @@ public class StrategoServerThread implements Runnable {
         } else if (command.startsWith("ls")) {
             String[] parts = command.split(" ");
             ModelComManager.getInstance().requestLoadSetup(gameID, playerIndex, parts[1]);
+        } else if (command.startsWith("ss")) {
+            // save setup
+            String[] parts = command.split(" ");
+            ModelComManager.getInstance().requestSaveSetup(gameID, playerIndex, parts[1]);
+        } else if (command.startsWith("sg")) {
+            // save game
+            String[] parts = command.split(" ");
+            ModelComManager.getInstance().requestSaveGame(gameID, playerIndex, parts[1]);
         }
     }
 

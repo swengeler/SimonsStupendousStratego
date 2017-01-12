@@ -243,7 +243,7 @@ public class GameState {
     }
 
     public void printBoard() {
-        System.out.println("\nBOARD:");
+        System.out.println("BOARD:");
         for (int row = 0; row < BOARD_SIZE; row++) {
             System.out.print("-------------------------------------------------------------------------------------------\n|");
             for (int col = 0; col < BOARD_SIZE; col++) {

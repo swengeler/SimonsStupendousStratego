@@ -73,7 +73,10 @@ public class SideMenu extends Pane {
 
         Button saveSetupButton = new Button("Save setup");
         saveSetupButton.setOnAction((ActionEvent e) -> {
-            ViewComManager.getInstance().requestSaveSetup(parent.getInGameView().getPlayerIndex(), setupChooser.showSaveDialog(parent).getPath());
+            File file = setupChooser.showSaveDialog(parent);
+            if (file != null) {
+                ViewComManager.getInstance().requestSaveSetup(parent.getInGameView().getPlayerIndex(), file.getPath());
+            }
         });
         saveSetupButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         saveSetupButton.setTextFill(Color.BLACK);

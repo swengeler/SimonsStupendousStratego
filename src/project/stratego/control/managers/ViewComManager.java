@@ -54,11 +54,13 @@ public class ViewComManager {
     }
 
     public void configureMultiPlayer() {
+        System.out.println("Switched to MULTIPLAYER in ViewComManager");
         gameMode = GameMode.MULTIPLAYER;
         frame.getInGameView().processAssignSide(-1);
     }
 
     public void configureSinglePlayer() {
+        System.out.println("Switched to SINGLEPLAYER in ViewComManager");
         gameMode = GameMode.SINGLEPLAYER;
         if (client != null) {
             client.stopThread();
@@ -70,6 +72,7 @@ public class ViewComManager {
     }
 
     public void configureAIShowMatch() {
+        System.out.println("Switched to AISHOWMATCH in ViewComManager");
         gameMode = GameMode.AISHOWMATCH;
         if (client != null) {
             client.stopThread();

@@ -74,7 +74,7 @@ public class BoardArea extends Pane {
 
     public void move(int orRow, int orCol, int destRow, int destCol) {
         if (orRow != destRow || orCol != destCol) {
-            System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
+            //System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")");
             Piece movingPiece = pieces[orRow][orCol];
             pieces[orRow][orCol] = null;
             pieces[destRow][destCol] = movingPiece;
@@ -113,7 +113,9 @@ public class BoardArea extends Pane {
     }
 
     public void attackAndLose(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") loses");
+        //System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") loses");
+        pieces[orRow][orCol].toFront();
+
         int rowDiff = stopRow - orRow;
         int colDiff = stopCol - orCol;
         TranslateTransition move = new TranslateTransition(Duration.millis(rowDiff + colDiff == 0 ? 0 : 300), pieces[orRow][orCol]);
@@ -124,10 +126,36 @@ public class BoardArea extends Pane {
             revealPiece(destRow, destCol);
         });
 
-        RotateTransition attack = new RotateTransition(Duration.millis(150), pieces[orRow][orCol]);
-        attack.setByAngle(360);
+        //RotateTransition attack = new RotateTransition(Duration.millis(150), pieces[orRow][orCol]);
+        //attack.setByAngle(360);
 
-        SequentialTransition transitions = new SequentialTransition(move, attack);
+        ScaleTransition liftPiece = new ScaleTransition(Duration.millis(100), pieces[orRow][orCol]);
+        liftPiece.setFromX(1.0);
+        liftPiece.setFromY(1.0);
+        liftPiece.setToX(1.3);
+        liftPiece.setToY(1.3);
+
+        TranslateTransition attackMove = new TranslateTransition(Duration.millis(100));
+        attackMove.setByX((destCol - stopCol) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        attackMove.setByY((destRow - stopRow) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        ScaleTransition dropPiece = new ScaleTransition(Duration.millis(100));
+        dropPiece.setFromX(1.3);
+        dropPiece.setFromY(1.3);
+        dropPiece.setToX(1.0);
+        dropPiece.setToY(1.0);
+
+        ParallelTransition attack = new ParallelTransition(pieces[orRow][orCol], attackMove, dropPiece);
+
+        TranslateTransition attackPullBack = new TranslateTransition(Duration.millis(300), pieces[orRow][orCol]);
+        attackPullBack.setByX((stopCol - destCol) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        attackPullBack.setByY((stopRow - destRow) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        FadeTransition disappear = new FadeTransition(Duration.millis(300), pieces[orRow][orCol]);
+        disappear.setFromValue(1.0);
+        disappear.setToValue(0.0);
+
+        SequentialTransition transitions = new SequentialTransition(move, new PauseTransition(Duration.millis(300)), liftPiece, new PauseTransition(Duration.millis(300)), attack, new PauseTransition(Duration.millis(100)), attackPullBack, new PauseTransition(Duration.millis(100)), disappear);
         transitions.setOnFinished(e -> {
             // call method to advance game/let AI make next move
             removePiece(orRow, orCol);
@@ -137,7 +165,9 @@ public class BoardArea extends Pane {
     }
 
     public void attackAndTie(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") ties");
+        //System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") ties");
+        pieces[orRow][orCol].toFront();
+
         int rowDiff = stopRow - orRow;
         int colDiff = stopCol - orCol;
         TranslateTransition move = new TranslateTransition(Duration.millis(rowDiff + colDiff == 0 ? 0 : 300), pieces[orRow][orCol]);
@@ -148,10 +178,39 @@ public class BoardArea extends Pane {
             revealPiece(destRow, destCol);
         });
 
-        RotateTransition attack = new RotateTransition(Duration.millis(150), pieces[orRow][orCol]);
-        attack.setByAngle(360);
+        ScaleTransition liftPiece = new ScaleTransition(Duration.millis(100), pieces[orRow][orCol]);
+        liftPiece.setFromX(1.0);
+        liftPiece.setFromY(1.0);
+        liftPiece.setToX(1.3);
+        liftPiece.setToY(1.3);
 
-        SequentialTransition transitions = new SequentialTransition(move, attack);
+        TranslateTransition attackMove = new TranslateTransition(Duration.millis(100));
+        attackMove.setByX((destCol - stopCol) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        attackMove.setByY((destRow - stopRow) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        ScaleTransition dropPiece = new ScaleTransition(Duration.millis(100));
+        dropPiece.setFromX(1.3);
+        dropPiece.setFromY(1.3);
+        dropPiece.setToX(1.0);
+        dropPiece.setToY(1.0);
+
+        ParallelTransition attack = new ParallelTransition(pieces[orRow][orCol], attackMove, dropPiece);
+
+        TranslateTransition attackPullBack = new TranslateTransition(Duration.millis(300), pieces[orRow][orCol]);
+        attackPullBack.setByX((stopCol - destCol) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        attackPullBack.setByY((stopRow - destRow) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        FadeTransition disappearAttacking = new FadeTransition(Duration.millis(300), pieces[orRow][orCol]);
+        disappearAttacking.setFromValue(1.0);
+        disappearAttacking.setToValue(0.0);
+
+        FadeTransition disappearDefending = new FadeTransition(Duration.millis(300), pieces[destRow][destCol]);
+        disappearDefending.setFromValue(1.0);
+        disappearDefending.setToValue(0.0);
+
+        ParallelTransition disappear = new ParallelTransition(disappearAttacking, disappearDefending);
+
+        SequentialTransition transitions = new SequentialTransition(move, new PauseTransition(Duration.millis(300)), liftPiece, new PauseTransition(Duration.millis(300)), attack, new PauseTransition(Duration.millis(100)), attackPullBack, new PauseTransition(Duration.millis(100)), disappear);
         transitions.setOnFinished(e -> {
             // call method to advance game/let AI make next move
             removePiece(orRow, orCol);
@@ -162,7 +221,9 @@ public class BoardArea extends Pane {
     }
 
     public void attackAndWin(int orRow, int orCol, int stopRow, int stopCol, int destRow, int destCol) {
-        System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") wins");
+        //System.out.println("(" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ") wins");
+        pieces[orRow][orCol].toFront();
+
         int rowDiff = stopRow - orRow;
         int colDiff = stopCol - orCol;
         TranslateTransition move = new TranslateTransition(Duration.millis(rowDiff + colDiff == 0 ? 0 : 300), pieces[orRow][orCol]);
@@ -173,9 +234,32 @@ public class BoardArea extends Pane {
             revealPiece(destRow, destCol);
         });
 
-        RotateTransition attack = new RotateTransition(Duration.millis(150), pieces[orRow][orCol]);
-        attack.setByAngle(360);
-        attack.setOnFinished(e -> removePiece(destRow, destCol));
+        ScaleTransition liftPiece = new ScaleTransition(Duration.millis(100), pieces[orRow][orCol]);
+        liftPiece.setFromX(1.0);
+        liftPiece.setFromY(1.0);
+        liftPiece.setToX(1.3);
+        liftPiece.setToY(1.3);
+
+        TranslateTransition attackMove = new TranslateTransition(Duration.millis(100));
+        attackMove.setByX((destCol - stopCol) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        attackMove.setByY((destRow - stopRow) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        ScaleTransition dropPiece = new ScaleTransition(Duration.millis(100));
+        dropPiece.setFromX(1.3);
+        dropPiece.setFromY(1.3);
+        dropPiece.setToX(1.0);
+        dropPiece.setToY(1.0);
+
+        ParallelTransition attack = new ParallelTransition(pieces[orRow][orCol], attackMove, dropPiece);
+
+        TranslateTransition attackPullBack = new TranslateTransition(Duration.millis(300), pieces[orRow][orCol]);
+        attackPullBack.setByX((stopCol - destCol) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+        attackPullBack.setByY((stopRow - destRow) * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
+
+        FadeTransition disappear = new FadeTransition(Duration.millis(300), pieces[destRow][destCol]);
+        disappear.setFromValue(1.0);
+        disappear.setToValue(0.0);
+        disappear.setOnFinished(e -> removePiece(destRow, destCol));
 
         rowDiff = destRow - stopRow;
         colDiff = destCol - stopCol;
@@ -183,7 +267,8 @@ public class BoardArea extends Pane {
         finish.setByX(colDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
         finish.setByY(rowDiff * (BoardTile.TILE_SIZE + 2 * TILE_SPACING));
 
-        SequentialTransition transitions = new SequentialTransition(move, attack, finish);
+        //SequentialTransition transitions = new SequentialTransition(move, attack, finish);
+        SequentialTransition transitions = new SequentialTransition(move, new PauseTransition(Duration.millis(300)), liftPiece, new PauseTransition(Duration.millis(300)), attack, new PauseTransition(Duration.millis(100)), attackPullBack, new PauseTransition(Duration.millis(100)), disappear, new PauseTransition(Duration.millis(100)), finish);
         transitions.setOnFinished(e -> {
             // call method to advance game/let AI make next move
             pieces[destRow][destCol] = pieces[orRow][orCol];

@@ -51,7 +51,6 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
                 "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
         gameState.interpretAndCopySetup(example1);
-        System.out.println("board setup in AI");
         inGameState.copySetup(gameState, playerIndex);
     }
 
@@ -63,8 +62,8 @@ public class ExpectiNegamaxAI extends AbstractAI {
 
     public void applyMove(Move move) {
         super.applyMove(move);
-        System.out.println("In expectimax AI:");
-        gameState.printBoard();
+        //System.out.println("In expectimax AI:");
+        //gameState.printBoard();
     }
 
     private Move expectiNegamaxSearch() {

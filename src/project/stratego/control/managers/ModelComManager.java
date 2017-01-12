@@ -69,11 +69,13 @@ public class ModelComManager {
     /* Methods to configure the game mode */
 
     public void configureMultiPlayer() {
+        System.out.println("Switched to MULTIPLAYER in ViewComManager");
         gameMode = GameMode.MULTIPLAYER;
         AIComManager.getInstance().configureMultiPlayer();
     }
 
     public void configureSinglePlayer() {
+        System.out.println("Switched to SINGLEPLAYER in ViewComManager");
         gameMode = GameMode.SINGLEPLAYER;
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
@@ -85,6 +87,7 @@ public class ModelComManager {
     }
 
     public void configureAIMatch() {
+        System.out.println("Switched to AIMATCH in ViewComManager");
         gameMode = GameMode.AIMATCH;
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
@@ -92,12 +95,13 @@ public class ModelComManager {
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
-        findGame(-1).getGameState().printBoard();
+        //findGame(-1).getGameState().printBoard();
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
     }
 
     public void configureAIShowMatch() {
+        System.out.println("Switched to AISHOWMATCH in ViewComManager");
         gameMode = GameMode.AISHOWMATCH;
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
@@ -105,7 +109,6 @@ public class ModelComManager {
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
-        System.out.println("Check");
         sendDeploymentUpdate(-1, PlayerType.NORTH.ordinal());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());

@@ -85,7 +85,7 @@ public class PlayingLogic extends GameLogic {
 
     @Override
     public void processPlayerReady(int playerIndex) {
-        if (currentPlayer.getType().ordinal() != playerIndex) {
+        if (currentPlayer.getType().ordinal() != playerIndex || parent.getGameState().getMoveHistory().isEmpty() || parent.getGameState().getMoveHistory().getLast().getPlayerIndex() != playerIndex) {
             return;
         }
 

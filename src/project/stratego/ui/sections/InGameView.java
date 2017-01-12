@@ -30,7 +30,7 @@ public class InGameView extends Pane {
 
     private void loadImages() {
         tileBackground = new Image(getClass().getResourceAsStream("/icons/board_background_minimal.png"), 10 * BoardTile.TILE_SIZE, 10 * BoardTile.TILE_SIZE, true, true);
-        pieceIcons = new Image(getClass().getResourceAsStream("/icons/piece_icons_outline.png"), 12 * Piece.PIECE_SIZE, Piece.PIECE_SIZE, true, true);
+        pieceIcons = new Image(getClass().getResourceAsStream("/icons/piece_icons_outline.png"), 24 * Piece.PIECE_SIZE, Piece.PIECE_SIZE, true, true);
         backsidePieceIcons = new Image(getClass().getResourceAsStream("/icons/backside_piece_icons_outline.png"), 2 * Piece.PIECE_SIZE, Piece.PIECE_SIZE, true, true);
     }
 

@@ -170,14 +170,14 @@ public class AIComManager implements Runnable {
         if (!aiMatchRunning) {
             aiMatchRunning = true;
             lastMove = findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
-            System.out.println("First " + lastMove);
+            //System.out.println("First " + lastMove);
             ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), lastMove.getOrRow(), lastMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), lastMove.getDestRow(), lastMove.getDestCol());
             findAI(PlayerType.NORTH.ordinal()).applyMove(new Move(lastMove));
         } else {
             AbstractAI currentAI = findAI(1 - lastMove.getPlayerIndex());
             Move nextMove = currentAI.getNextMove(new Move(lastMove));
-            System.out.println(nextMove);
+            //System.out.println(nextMove);
 
             ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());

@@ -53,7 +53,7 @@ public class RandomAI extends AbstractAI {
 
     public void applyMove(Move move) {
         super.applyMove(move);
-        System.out.println("In random AI:");
+        //System.out.println("In random AI:");
         //gameState.printBoard();
     }
 

@@ -3,6 +3,7 @@ package project.stratego.ai.evaluation;
 import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.utils.PieceType;
+import project.stratego.game.entities.BoardTile;
 
 import java.util.ArrayList;
 
@@ -32,11 +33,21 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
         double opponentInfoWeight = 0.1 * opponentPieces.size();
         double ownInfoWeight = 0.1 * ownPieces.size();
         double materialWeight = 1.0;
-        // rank values, flag is 0, spy is 1, scout 2 etc bomb is 11
+        // rank values, flag is index 0, spy is 1, scout 2 etc bomb is 11
         double[] rankValues = {1000.0, 100.0, 10.0, 100.0, 20.0, 50.0, 100.0, 140.0, 175.0, 300.0, 400.0, 75.0  };
+        // value of board postions
+        double[] rowValues = {1.0, 2.0, 3.0, 4.0, 5.0, 5.0, 4.0, 3.0, 2.0, 1.0};
+        double[] colValues = {6.0, 7.0, 4.0, 4.0, 9.0, 9.0, 4.0, 4.0,  7.0, 6.0};
 
         // iterate over opponent's pieces
         for (Piece p : gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces()) {
+            
+            // score for board position
+            opponentSum += rowValues[p.getRowPos()] * colValues[p.getColPos()];
+            
+            
+            // Score for material and info values
+            
             if (p.getType() == PieceType.BOMB) {
                 // revealed bomb is worth 0
                 if (!p.isRevealed()) {
@@ -184,6 +195,11 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
             }
         }
 
+       // Score empty tiles
+        
+        
+        
+        
         return ownSum - opponentSum;
     }
 

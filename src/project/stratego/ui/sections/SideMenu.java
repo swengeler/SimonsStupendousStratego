@@ -110,7 +110,7 @@ public class SideMenu extends Pane {
         });
 
         Button configureButton = new Button("Configure AI");
-        configureButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
+        configureButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().sendConfigureWindowOpen());
         configureButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         configureButton.setTextFill(Color.BLACK);
         configureButton.setOnMouseEntered(e -> {

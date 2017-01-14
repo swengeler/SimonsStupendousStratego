@@ -1,8 +1,6 @@
 package project.stratego.control.managers;
 
-import project.stratego.ai.search.ExpectiNegamaxAI;
-import project.stratego.ai.search.RandomAI;
-import project.stratego.ai.search.AbstractAI;
+import project.stratego.ai.search.*;
 import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.game.StrategoGame;
@@ -98,6 +96,8 @@ public class AIComManager implements Runnable {
             primaryAI = new RandomAI(playerIndex);
         } else if (aiType.equals("expectinegamax")) {
             primaryAI = new ExpectiNegamaxAI(playerIndex);
+        } else if (aiType.equals("mcts")) {
+            primaryAI = new MonteCarloTreeSearchAI(playerIndex);
         }
     }
 
@@ -106,6 +106,8 @@ public class AIComManager implements Runnable {
             secondaryAI = new RandomAI(playerIndex);
         } else if (aiType.equals("expectinegamax")) {
             secondaryAI = new ExpectiNegamaxAI(playerIndex);
+        } else if (aiType.equals("mcts")) {
+            primaryAI = new MonteCarloTreeSearchAI(playerIndex);
         }
     }
 

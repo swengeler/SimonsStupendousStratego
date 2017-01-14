@@ -1,9 +1,8 @@
 package project.stratego.control.managers;
 
 import project.stratego.control.client.StrategoClient;
+import project.stratego.ui.sections.*;
 import project.stratego.ui.utils.Messages;
-import project.stratego.ui.sections.StrategoFrame;
-import project.stratego.ui.sections.InGameView;
 
 import java.io.*;
 
@@ -292,6 +291,10 @@ public class ViewComManager {
         if (gameMode == GameMode.MULTIPLAYER) {
             closeStrategoClient();
         }
+    }
+
+    public void sendConfigureWindowOpen() {
+        Configurator config = new Configurator(0);
     }
 
     public void revealAll() {

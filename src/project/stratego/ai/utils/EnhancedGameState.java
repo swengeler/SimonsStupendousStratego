@@ -487,6 +487,7 @@ public class EnhancedGameState extends GameState {
                         c++;
                     }
 
+                    AITestsMain.printStats();
 
                     System.exit(1);
                 }

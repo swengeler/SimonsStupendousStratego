@@ -15,8 +15,8 @@ public class AttackSystem {
 			return;
 		}
 		StrategoPiece attackingPiece = aGame.getRuntimeData().getActivePiece();
-		StrategoPiece defendingPiece = aGame.getBoard().getBoardStracture()[attackingPiece.getyPos()][attackingPiece
-				.getxPos()].getOccupyingPiece();
+		StrategoPiece defendingPiece = aGame.getBoard().getBoardStracture()[attackingPiece.getYPos()][attackingPiece
+				.getXPos()].getOccupyingPiece();
 
 		if (attackWins(attackingPiece, defendingPiece)) {
 			System.out
@@ -24,11 +24,11 @@ public class AttackSystem {
 					+ defendingPiece.getPieceType());
 			aGame.getRuntimeData().setGetOutInfo(
 					"Attacker wins   " + attackingPiece.getPieceType() + " vs " + defendingPiece.getPieceType());
-			aGame.getBoard().getBoardStracture()[attackingPiece.getyPos()][attackingPiece.getxPos()]
+			aGame.getBoard().getBoardStracture()[attackingPiece.getYPos()][attackingPiece.getXPos()]
 					.setOccupyingPiece(attackingPiece);
 			
-			defendingPiece.setxPos(-100);
-			defendingPiece.setyPos(-100);
+			defendingPiece.setXPos(-100);
+			defendingPiece.setYPos(-100);
 
 			ArrayList<StrategoPiece> checkList = getActiveOpponent(aGame).getInGamePieces();
 
@@ -37,13 +37,13 @@ public class AttackSystem {
 		} else if (combatIsDraw(attackingPiece, defendingPiece)) {
 
 			System.out.println("draw");
-			aGame.getBoard().getBoardStracture()[attackingPiece.getyPos()][attackingPiece.getyPos()]
+			aGame.getBoard().getBoardStracture()[attackingPiece.getYPos()][attackingPiece.getYPos()]
 					.setOccupyingPiece(null);
 			
-			attackingPiece.setxPos(-100);
-			attackingPiece.setyPos(-100);
-			defendingPiece.setxPos(-100);
-			defendingPiece.setyPos(-100);
+			attackingPiece.setXPos(-100);
+			attackingPiece.setYPos(-100);
+			defendingPiece.setXPos(-100);
+			defendingPiece.setYPos(-100);
 
 			ArrayList<StrategoPiece> checkList = getActiveOpponent(aGame).getInGamePieces();
 			removePieceFromGame(defendingPiece, checkList);
@@ -55,8 +55,8 @@ public class AttackSystem {
 		} else {
 			System.out
 					.println("defender wins" + attackingPiece.getPieceType() + " vs " + defendingPiece.getPieceType());
-		attackingPiece.setxPos(-100);
-		attackingPiece.setyPos(-100);
+		attackingPiece.setXPos(-100);
+		attackingPiece.setYPos(-100);
 		ArrayList<StrategoPiece> checkList = aGame.getRuntimeData().getActivePlayer().getInGamePieces();
 			removePieceFromGame(attackingPiece, checkList);
 			aGame.getRuntimeData().setActivePiece(null);
@@ -102,11 +102,11 @@ public class AttackSystem {
 		if (attackWins(attackingPiece, defendingPiece)) {
 
 
-			aGame.getBoard().getBoardStracture()[attackingPiece.getyPos()][attackingPiece.getxPos()]
+			aGame.getBoard().getBoardStracture()[attackingPiece.getYPos()][attackingPiece.getXPos()]
 					.setOccupyingPiece(attackingPiece);
 
-			defendingPiece.setxPos(-100);
-			defendingPiece.setyPos(-100);
+			defendingPiece.setXPos(-100);
+			defendingPiece.setYPos(-100);
 
 			ArrayList<StrategoPiece> checkList = getActiveOpponent(aGame).getInGamePieces();
 
@@ -115,13 +115,13 @@ public class AttackSystem {
 		} else if (combatIsDraw(attackingPiece, defendingPiece)) {
 
 
-			aGame.getBoard().getBoardStracture()[attackingPiece.getyPos()][attackingPiece.getyPos()]
+			aGame.getBoard().getBoardStracture()[attackingPiece.getYPos()][attackingPiece.getYPos()]
 					.setOccupyingPiece(null);
 
-			attackingPiece.setxPos(-100);
-			attackingPiece.setyPos(-100);
-			defendingPiece.setxPos(-100);
-			defendingPiece.setyPos(-100);
+			attackingPiece.setXPos(-100);
+			attackingPiece.setYPos(-100);
+			defendingPiece.setXPos(-100);
+			defendingPiece.setYPos(-100);
 
 			ArrayList<StrategoPiece> checkList = getActiveOpponent(aGame).getInGamePieces();
 			removePieceFromGame(defendingPiece, checkList);
@@ -129,8 +129,8 @@ public class AttackSystem {
 			removePieceFromGame(attackingPiece, checkList);
 		} else {
 
-			attackingPiece.setxPos(-100);
-			attackingPiece.setyPos(-100);
+			attackingPiece.setXPos(-100);
+			attackingPiece.setYPos(-100);
 			ArrayList<StrategoPiece> checkList = aGame.getRuntimeData().getActivePlayer().getInGamePieces();
 			removePieceFromGame(attackingPiece, checkList);
 

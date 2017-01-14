@@ -2,9 +2,12 @@ package project.stratego.ai.mcts.abstractGameComponents;
 
 
 import project.stratego.ai.mcts.abstractDefinitions.SearchState;
-import project.stratego.ai.mcts.factorys.BoardFactory;
-import project.stratego.ai.mcts.factorys.GamePieceFactory;
+import project.stratego.ai.mcts.factories.BoardFactory;
+import project.stratego.ai.mcts.factories.GamePieceFactory;
 import project.stratego.ai.mcts.gameObjects.*;
+import project.stratego.ai.utils.EnhancedGameState;
+import project.stratego.game.entities.GameState;
+import project.stratego.game.entities.Piece;
 
 import java.util.ArrayList;
 
@@ -21,7 +24,6 @@ public class StrategoGame extends SearchState {
 	// private HashMap<StrategoPiece, Player> inGamePieceOwnershipMap = new HashMap<StrategoPiece, Player>();
 
 	public StrategoGame() {
-		
 		BoardFactory boardFactory = new BoardFactory();
 		this.board = boardFactory.createBoard();
 		GamePieceFactory pieceFactory = new GamePieceFactory();
@@ -32,18 +34,17 @@ public class StrategoGame extends SearchState {
 		runtimeData = new RuntimeData();
 		runtimeData.setActivePlayer(playerNorth);
 		runtimeData.setDeploymentPhase(true);
-
 	}
 
-	public StrategoGame (StrategoGame aGame){
+	public StrategoGame(StrategoGame aGame) {
 		BoardFactory boardFactory = new BoardFactory();
 		this.board = boardFactory.createBoard();
-		Player actPlayer= null;
-		if(aGame.getActivePlayer()==1){
+		Player actPlayer = null;
+		if (aGame.getActivePlayer() == 1){
 			actPlayer = aGame.getPlayerNorth().deepCopyPlayer();
 			this.playerNorth = actPlayer;
 			this.playerSouth = aGame.getPlayerSouth().deepCopyPlayer();
-		}else{
+		} else {
 			actPlayer = aGame.getPlayerSouth().deepCopyPlayer();
 			this.playerNorth = aGame.getPlayerNorth().deepCopyPlayer();
 			this.playerSouth = actPlayer;
@@ -51,7 +52,48 @@ public class StrategoGame extends SearchState {
 		fixPiecePlacement(this);
 		RuntimeData dataCopy = aGame.getRuntimeData().cloneRunData(actPlayer);
 		this.runtimeData = dataCopy;
+	}
 
+	public StrategoGame(EnhancedGameState gameState) {
+		ArrayList<StrategoPiece> piecesPlayerNorth = new ArrayList<>();
+		ArrayList<StrategoPiece> piecesPlayerSouth = new ArrayList<>();
+		ArrayList<StrategoPiece> piecesKnownToPlayerNorth = new ArrayList<>();
+		ArrayList<StrategoPiece> piecesKnownToPlayerSouth = new ArrayList<>();
+
+		// loop through the pieces each player has in gameState, convert them to StrategoPieces, add them to the
+		// respective ArrayList and if they are revealed also to the list of pieces known to the opponent
+		StrategoPiece temp;
+		for (Piece p : gameState.getPlayerNorth().getActivePieces()) {
+			temp = new StrategoPiece(PieceType.valueOf(p.getType().toString()));
+			temp.setXPos(p.getColPos());
+			temp.setYPos(p.getRowPos());
+			piecesPlayerNorth.add(temp);
+			if (p.isRevealed()) {
+				piecesKnownToPlayerSouth.add(temp);
+			}
+		}
+		for (Piece p : gameState.getPlayerSouth().getActivePieces()) {
+			temp = new StrategoPiece(PieceType.valueOf(p.getType().toString()));
+			temp.setXPos(p.getColPos());
+			temp.setYPos(p.getRowPos());
+			piecesPlayerSouth.add(temp);
+			if (p.isRevealed()) {
+				piecesKnownToPlayerNorth.add(temp);
+			}
+		}
+
+		// create Player objects with the respective pieces still in the game
+		// and add those pieces of the opponent which are already revealed
+		playerNorth = new Player(piecesPlayerNorth);
+		playerNorth.setPiecesKnownByOpponent(piecesKnownToPlayerSouth);
+		playerSouth = new Player(piecesPlayerSouth);
+		playerSouth.setPiecesKnownByOpponent(piecesKnownToPlayerNorth);
+
+		// create the RuntimeData object and set the player to be the player to whom the gameState
+		// belongs since this constructor is only used when searching for the next move from that
+		// player's perspective
+		runtimeData = new RuntimeData();
+		runtimeData.setActivePlayer(gameState.getPlayerIndex() == 0 ? playerNorth : playerSouth);
 	}
 
 	public StrategoBoard getBoard() {
@@ -122,11 +164,11 @@ public class StrategoGame extends SearchState {
 		
 		for (int i = 0; i < northPieces.size(); i++) {
 			StrategoPiece northPiece = northPieces.get(i);
-			aGame.getBoard().getBoardStracture()[northPiece.getyPos()][northPiece.getxPos()]
+			aGame.getBoard().getBoardStracture()[northPiece.getYPos()][northPiece.getXPos()]
 					.setOccupyingPiece(northPiece);
 		}
 		for (int i = 0; i < southPieces.size(); i++) {
-			aGame.getBoard().getBoardStracture()[southPieces.get(i).getyPos()][southPieces.get(i).getxPos()]
+			aGame.getBoard().getBoardStracture()[southPieces.get(i).getYPos()][southPieces.get(i).getXPos()]
 					.setOccupyingPiece(southPieces.get(i));
 		}
 	

@@ -14,11 +14,10 @@ public class WrapperHelp {
     private StrategoMoveGenerator generator = new StrategoMoveGenerator(manager);
     private StrategoRules rules = new StrategoRules(manager);
     private StrategoPlaythrough playthrough = new StrategoPlaythrough(generator, rules);
-    private StrategoMctsPerformer performer = new StrategoMctsPerformer(new StrategoRules(manager), generator, playthrough);
+    private StrategoMCTSPerformer performer = new StrategoMCTSPerformer(new StrategoRules(manager), generator, playthrough);
 
     // start
-    StrategoGame gameForMCTS = new StrategoGame(null); // (input game)
-    TreeNode<StrategoGame, StrategoAbstractEvent> node = performer.runMCTS(new StrategoNode(gameForMCTS));
+    TreeNode<StrategoGame, StrategoAbstractEvent> node = performer.runMCTS(new StrategoNode(null));
     StrategoMoveEvent move = (StrategoMoveEvent) node.getAction();
     // end
 

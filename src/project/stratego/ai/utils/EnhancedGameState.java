@@ -15,7 +15,7 @@ import java.util.*;
  * */
 public class EnhancedGameState extends GameState {
 
-    public static final double PROB_EPSILON = 0.0005;
+    public static final double PROB_EPSILON = 0.001;
 
     private double[][] tileEvaluationArray;
 
@@ -558,11 +558,11 @@ public class EnhancedGameState extends GameState {
                 double sum = 0;
 
                 for (Piece p : pieces) {
-                    if (probabilitiesMap.get(p)[i] < 0.01) {
+                    /*if (probabilitiesMap.get(p)[i] < 0.01) {
                         probabilitiesMap.get(p)[i] = 0;
                     } else if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 0.01) {
                         probabilitiesMap.get(p)[i] = 1;
-                    }
+                    }*/
                     //System.out.println("hashCode: " + p.hashCode() + ", value: " + probabilitiesMap.get(p)[i]);
                     // sum += p.prob(rank associated with i);
                     sum += probabilitiesMap.get(p)[i];
@@ -584,11 +584,11 @@ public class EnhancedGameState extends GameState {
                 double sum = 0;
 
                 for (int i = 0; i < PieceType.values().length - 1; i++) {
-                    if (probabilitiesMap.get(p)[i] < 0.01) {
+                    /*if (probabilitiesMap.get(p)[i] < 0.01) {
                         probabilitiesMap.get(p)[i] = 0;
                     } else if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 0.01) {
                         probabilitiesMap.get(p)[i] = 1;
-                    }
+                    }*/
                     // sum += p.prob(rank associated with i);
                     sum += currentProbabilities[i];
                 }
@@ -602,8 +602,31 @@ public class EnhancedGameState extends GameState {
                 }
             }
         }
+        rankProbabilitiesThing();
 
         long difference = System.nanoTime() - before;
+    }
+
+    private void rankProbabilitiesThing() {
+        // for each rank loop through all pieces, if there are PieceType.pieceQuantity[rank] pieces with probability almost 1.0, then set all others to 0.0
+        int oneCount;
+        for (int i = 0; i < PieceType.values().length - 1; i++) {
+            oneCount = 0;
+            for (Piece p : probabilitiesMap.keySet()) {
+                if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 2 * PROB_EPSILON) {
+                    oneCount++;
+                }
+            }
+            if (oneCount == PieceType.pieceQuantity[i]) {
+                for (Piece p : probabilitiesMap.keySet()) {
+                    if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 2 * PROB_EPSILON) {
+                        probabilitiesMap.get(p)[i] = 1.0;
+                    } else {
+                        probabilitiesMap.get(p)[i] = 0.0;
+                    }
+                }
+            }
+        }
     }
 
     public void printProbabilitiesTable() {

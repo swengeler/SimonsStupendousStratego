@@ -30,16 +30,16 @@ public class CheckVictorySystem extends MoveSystem {
 			if (testPiece.getPieceType() != PieceType.BOMB && testPiece.getPieceType() != PieceType.FLAG) {
 
 
-			if (checkIfLegalToMove(aGame, testPiece.getyPos(), testPiece.getxPos() + 1)) {
+			if (checkIfLegalToMove(aGame, testPiece.getYPos(), testPiece.getXPos() + 1)) {
 				return true;
 			}
-			if (checkIfLegalToMove(aGame, testPiece.getyPos(), testPiece.getxPos() - 1)) {
+			if (checkIfLegalToMove(aGame, testPiece.getYPos(), testPiece.getXPos() - 1)) {
 				return true;
 			}
-			if (checkIfLegalToMove(aGame, testPiece.getyPos() - 1, testPiece.getxPos())) {
+			if (checkIfLegalToMove(aGame, testPiece.getYPos() - 1, testPiece.getXPos())) {
 				return true;
 			}
-			if (checkIfLegalToMove(aGame, testPiece.getyPos() + 1, testPiece.getxPos())) {
+			if (checkIfLegalToMove(aGame, testPiece.getYPos() + 1, testPiece.getXPos())) {
 				return true;
 			}
 			}

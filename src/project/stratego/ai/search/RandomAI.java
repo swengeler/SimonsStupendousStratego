@@ -34,11 +34,6 @@ public class RandomAI extends AbstractAI {
     }
 
     @Override
-    public int getPlayerIndex() {
-        return playerIndex;
-    }
-
-    @Override
     public void makeBoardSetup(GameState inGameState) {
         //ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
         String example1 = "SCOUT MINER BOMB SCOUT MINER BOMB FLAG BOMB MINER MINER " +
@@ -47,18 +42,6 @@ public class RandomAI extends AbstractAI {
                 "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
         gameState.interpretAndCopySetup(example1);
         inGameState.copySetup(gameState, playerIndex);
-    }
-
-    @Override
-    public void copyOpponentSetup(GameState inGameState) {
-        gameState.copySetup(inGameState, 1 - playerIndex);
-        //gameState.printBoard();
-    }
-
-    public void applyMove(Move move) {
-        super.applyMove(move);
-        //System.out.println("In random AI:");
-        //gameState.printBoard();
     }
 
 }

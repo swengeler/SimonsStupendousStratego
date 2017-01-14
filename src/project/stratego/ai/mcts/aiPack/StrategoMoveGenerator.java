@@ -25,7 +25,7 @@ public class StrategoMoveGenerator extends MoveGenerator<StrategoGame, StrategoA
 		ArrayList<StrategoPiece> pieceList= state.getActivePlayerObj().getInGamePieces();
 		for (int i=0;i<pieceList.size();i++){
 			StrategoPiece piece = pieceList.get(i);
-			if (state.getBoard().getBoardStracture()[piece.getyPos()][piece.getxPos()] == null) {
+			if (state.getBoard().getBoardStracture()[piece.getYPos()][piece.getXPos()] == null) {
 				System.out.println("VERY BAD!");
 			}
 			ArrayList<StrategoMoveEvent> onePieceList = generateAvailiableMoves(piece, state);
@@ -53,21 +53,21 @@ public class StrategoMoveGenerator extends MoveGenerator<StrategoGame, StrategoA
 		if (aPiece.getPieceType() == PieceType.BOMB || aPiece.getPieceType() == PieceType.FLAG) {
 			return moveList;
 		}
-		int targetX = aPiece.getxPos() + 1;
-		int targetY = aPiece.getyPos();
-		StrategoMoveEvent move1 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
+		int targetX = aPiece.getXPos() + 1;
+		int targetY = aPiece.getYPos();
+		StrategoMoveEvent move1 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move1, aState);
-		targetX = aPiece.getxPos() - 1;
-		targetY = aPiece.getyPos();
-		StrategoMoveEvent move2 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
+		targetX = aPiece.getXPos() - 1;
+		targetY = aPiece.getYPos();
+		StrategoMoveEvent move2 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move2, aState);
-		targetX = aPiece.getxPos();
-		targetY = aPiece.getyPos() + 1;
-		StrategoMoveEvent move3 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
+		targetX = aPiece.getXPos();
+		targetY = aPiece.getYPos() + 1;
+		StrategoMoveEvent move3 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move3, aState);
-		targetX = aPiece.getxPos();
-		targetY = aPiece.getyPos() - 1;
-		StrategoMoveEvent move4 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
+		targetX = aPiece.getXPos();
+		targetY = aPiece.getYPos() - 1;
+		StrategoMoveEvent move4 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move4, aState);
 
 

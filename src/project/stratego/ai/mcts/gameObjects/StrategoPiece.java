@@ -23,33 +23,32 @@ public class StrategoPiece {
 		return pieceType;
 	}
 
-	public int getxPos() {
+	public int getXPos() {
 		return xPos;
 	}
 
-	public void setxPos(int xPos) {
+	public void setXPos(int xPos) {
 		this.xPos = xPos;
 	}
 
-	public int getyPos() {
+	public int getYPos() {
 		return yPos;
 	}
 
-	public void setyPos(int yPos) {
+	public void setYPos(int yPos) {
 		this.yPos = yPos;
 	}
 
 	public StrategoPiece copyPiece() {
 		StrategoPiece copy = new StrategoPiece(pieceType);
-		copy.setxPos(xPos);
-		copy.setyPos(yPos);
+		copy.setXPos(xPos);
+		copy.setYPos(yPos);
 		return copy;
 	}
 
 	@Override
 	public String toString() {
-		return "StrategoPiece [pieceID=" + pieceID + ", pieceType=" + pieceType + ", xPos=" + xPos + ", yPos=" + yPos
-				+ "]";
+		return "StrategoPiece [pieceID=" + pieceID + ", pieceType=" + pieceType + ", xPos=" + xPos + ", yPos=" + yPos + "]";
 	}
 
 }

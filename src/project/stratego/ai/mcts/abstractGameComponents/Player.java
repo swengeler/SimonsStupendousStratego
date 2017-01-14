@@ -5,6 +5,7 @@ import project.stratego.ai.mcts.gameObjects.StrategoPiece;
 import java.util.ArrayList;
 
 public class Player {
+
 	private ArrayList<StrategoPiece> inGamePieces;
 	private ArrayList<StrategoPiece> unDeployedPieces;
 	private ArrayList<StrategoPiece> piecesKnownByOpponent;
@@ -17,7 +18,6 @@ public class Player {
 	}
 
 	public Player deepCopyPlayer() {
-
 		Player copy = new Player(deepCopyPieces(inGamePieces));
 		copy.setPiecesKnownByOpponent(deepCopyPieces(piecesKnownByOpponent));
 		return copy;

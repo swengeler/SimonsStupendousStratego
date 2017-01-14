@@ -1,4 +1,4 @@
-package project.stratego.ai.mcts.factorys;
+package project.stratego.ai.mcts.factories;
 
 import project.stratego.ai.mcts.gameObjects.*;
 

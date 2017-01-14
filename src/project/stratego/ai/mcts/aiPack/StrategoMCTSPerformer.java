@@ -7,12 +7,12 @@ import project.stratego.ai.mcts.events.StrategoAbstractEvent;
 
 import java.util.ArrayList;
 
-public class StrategoMctsPerformer extends MCTSperformer<StrategoGame, StrategoAbstractEvent> {
+public class StrategoMCTSPerformer extends MCTSPerformer<StrategoGame, StrategoAbstractEvent> {
 
 	private StrategoPlaythrough playthrough;
 
-	public StrategoMctsPerformer(Rules<StrategoGame> rules,
-								 MoveGenerator<StrategoGame, StrategoAbstractEvent> moveGenerator, StrategoPlaythrough playthrough) {
+	public StrategoMCTSPerformer(Rules<StrategoGame> rules,
+                                 MoveGenerator<StrategoGame, StrategoAbstractEvent> moveGenerator, StrategoPlaythrough playthrough) {
 		super(rules, moveGenerator, playthrough);
 		this.playthrough = playthrough;
 	}

@@ -4,7 +4,7 @@ import project.stratego.ai.mcts.abstractDefinitions.*;
 
 import java.util.ArrayList;
 
-public class MCTSperformer<State extends SearchState, Action extends AbstractAction<State>> {
+public class MCTSPerformer<State extends SearchState, Action extends AbstractAction<State>> {
 
 	protected Playthrough<State, Action> playthrough;
 	protected Selection<State, Action> selection;
@@ -13,7 +13,7 @@ public class MCTSperformer<State extends SearchState, Action extends AbstractAct
 	protected MoveGenerator<State, Action> moveGenerator;
 	protected final int noOfItterations = 5000;
 
-	public MCTSperformer(Rules<State> rules, MoveGenerator<State, Action> moveGenerator) {
+	public MCTSPerformer(Rules<State> rules, MoveGenerator<State, Action> moveGenerator) {
 		this.rules = rules;
 		this.moveGenerator = moveGenerator;
 		this.playthrough = new Playthrough<State, Action>(moveGenerator, rules);
@@ -21,7 +21,7 @@ public class MCTSperformer<State extends SearchState, Action extends AbstractAct
 
 	}
 
-	public MCTSperformer(Rules<State> rules, MoveGenerator<State, Action> moveGenerator, Playthrough<State, Action> playthrough) {
+	public MCTSPerformer(Rules<State> rules, MoveGenerator<State, Action> moveGenerator, Playthrough<State, Action> playthrough) {
 		this.rules = rules;
 		this.moveGenerator = moveGenerator;
 		this.playthrough = playthrough;

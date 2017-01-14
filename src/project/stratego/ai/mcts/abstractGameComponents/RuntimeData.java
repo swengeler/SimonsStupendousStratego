@@ -1,6 +1,5 @@
 package project.stratego.ai.mcts.abstractGameComponents;
 
-
 import project.stratego.ai.mcts.gameObjects.StrategoPiece;
 
 public class RuntimeData {
@@ -13,7 +12,6 @@ public class RuntimeData {
 
 	private String getOutInfo;
 
-
 	public RuntimeData() {
 
 	}
@@ -24,7 +22,6 @@ public class RuntimeData {
 	public void setActivePlayer(Player activePlayer) {
 		this.activePlayer = activePlayer;
 	}
-
 
 	public StrategoPiece getActivePiece() {
 		return activePiece;
@@ -49,9 +46,11 @@ public class RuntimeData {
 	public void setAttackToResolve(boolean attackToResolve) {
 		this.attackToResolve = attackToResolve;
 	}
+
 	public String getGetOutInfo() {
 		return getOutInfo;
 	}
+
 	public void setGetOutInfo(String getOutInfo) {
 		this.getOutInfo = getOutInfo;
 	}
@@ -65,13 +64,9 @@ public class RuntimeData {
 	}
 
 	public RuntimeData cloneRunData(Player activePlayer) {
-
 		RuntimeData copy = new RuntimeData();
 		copy.setActivePlayer(activePlayer);
 		return copy;
-
 	}
-
-
 
 }

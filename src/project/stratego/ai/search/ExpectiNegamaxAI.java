@@ -41,11 +41,6 @@ public class ExpectiNegamaxAI extends AbstractAI {
     }
 
     @Override
-    public int getPlayerIndex() {
-        return playerIndex;
-    }
-
-    @Override
     public void makeBoardSetup(GameState inGameState) {
         SetupMaker setupMaker = new SetupMaker() {
             @Override
@@ -59,12 +54,6 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
         gameState.interpretAndCopySetup(example1);
         inGameState.copySetup(gameState, playerIndex);
-    }
-
-    @Override
-    public void copyOpponentSetup(GameState inGameState) {
-        gameState.copySetup(inGameState, 1 - playerIndex);
-        //gameState.printBoard();
     }
 
     public void applyMove(Move move) {

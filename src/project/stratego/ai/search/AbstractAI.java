@@ -21,11 +21,7 @@ public abstract class AbstractAI {
 
     public abstract Move getNextMove(Move lastOpponentMove);
 
-    public abstract int getPlayerIndex();
-
     public abstract void makeBoardSetup(GameState inGameState);
-
-    public abstract void copyOpponentSetup(GameState inGameState);
 
     public void setGameState(EnhancedGameState gameState) {
         this.gameState = gameState;
@@ -35,6 +31,15 @@ public abstract class AbstractAI {
         String[] encodings = gameEncoding.split("\n");
         gameState.interpretEncodedBoard(encodings[0]);
         gameState.interpretEncodedMoves(encodings[1]);
+    }
+
+    public int getPlayerIndex() {
+        return playerIndex;
+    }
+
+    public void copyOpponentSetup(GameState inGameState) {
+        gameState.copySetup(inGameState, 1 - playerIndex);
+        //gameState.printBoard();
     }
 
     public void applyMove(Move move) {

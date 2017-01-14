@@ -201,7 +201,7 @@ public class AIComManager implements Runnable {
         aiMatchRunning = true;
         System.out.println("Start of AI match");
         Move firstMove = findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
-        System.out.println("AI (NORTH) does first " + firstMove);
+        //System.out.println("AI (NORTH) does first " + firstMove);
         ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), firstMove.getOrRow(), firstMove.getOrCol());
         ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), firstMove.getDestRow(), firstMove.getDestCol());
         findAI(PlayerType.NORTH.ordinal()).applyMove(new Move(firstMove));
@@ -227,7 +227,7 @@ public class AIComManager implements Runnable {
 
             AITestsMain.addMoveSearchTime(currentAI.getPlayerIndex(), System.nanoTime() - beforeTwo);
 
-            System.out.println("In AIComManager: " + nextMove);
+            //System.out.println("In AIComManager: " + nextMove);
 
             // update the actual game board by applying the previously generated move
             ModelComManager.getInstance().requestBoardTileSelected(-1, currentAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());

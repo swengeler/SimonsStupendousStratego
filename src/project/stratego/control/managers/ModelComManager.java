@@ -151,11 +151,11 @@ public class ModelComManager {
     }
 
     public void requestPlayerReady(int gameID, int playerIndex) {
-        if (gameMode != GameMode.AIMATCH) {
+        //if (gameMode != GameMode.AIMATCH) {
             if (findGame(gameID) != null) {
                 findGame(gameID).getCurrentRequestProcessor().processPlayerReady(playerIndex);
             }
-        }
+        //}
     }
 
     public void requestTrayPieceSelected(int gameID, int playerIndex, int pieceIndex) {
@@ -178,6 +178,9 @@ public class ModelComManager {
     }
 
     public void requestNextMove() {
+        if (!findGame(-1).gameRunning()) {
+            return;
+        }
         if (gameMode == GameMode.SINGLEPLAYER) {
             if (findGame(-1) != null) {
                 AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());

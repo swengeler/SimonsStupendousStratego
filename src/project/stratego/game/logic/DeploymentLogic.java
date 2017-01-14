@@ -69,7 +69,7 @@ public class DeploymentLogic extends GameLogic {
             ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
         } else if (tempPlayer.getCurrentPiece() != null) {
             pieceFactory.giveBackPiece(tempPlayer.getCurrentPiece());
-            tempPlayer.getActivePieces().remove(tempPlayer.getActivePieces());
+            tempPlayer.getActivePieces().remove(tempPlayer.getCurrentPiece());
             tempPiece = pieceFactory.makePiece(tempPlayer.getType(), PieceType.values()[pieceIndex]);
             tempPlayer.getActivePieces().add(tempPiece);
             tempPlayer.setCurrentPiece(tempPiece);
@@ -101,7 +101,7 @@ public class DeploymentLogic extends GameLogic {
                 parent.getBoard()[row][col].setOccupyingPiece(tempPlayer.getCurrentPiece());
                 //System.out.println(tempPlayer.getCurrentPiece().getType() + " placed at " + row + ", " + col);
                 ModelComManager.getInstance().sendPiecePlaced(parent.getGameID(), playerIndex, tempPlayer.getCurrentPiece().getType().ordinal(), tempPlayer.getCurrentPiece().getRowPos(), tempPlayer.getCurrentPiece().getColPos());
-                //tempPlayer.setCurrentPiece(null);
+                tempPlayer.setCurrentPiece(null);
             } else {
                 // piece from board to be placed on unoccupied tile on board
                 //System.out.println("Piece occupying a tile should be moved");
@@ -109,6 +109,7 @@ public class DeploymentLogic extends GameLogic {
                 int orCol = tempPlayer.getCurrentPiece().getColPos();
                 parent.getBoard()[orRow][orCol].setOccupyingPiece(null);
                 parent.getBoard()[row][col].setOccupyingPiece(tempPlayer.getCurrentPiece());
+                tempPlayer.setCurrentPiece(null);
                 ModelComManager.getInstance().sendPieceMoved(parent.getGameID(), orRow, orCol, row, col);
             }
         } else {

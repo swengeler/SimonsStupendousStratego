@@ -12,6 +12,8 @@ public class MoveInformation {
 
     private double[][] previousProbabilities;
 
+    private HashMap<Piece, double[]> previousProbabilitiesMap;
+
     private MoveResult moveResult;
 
     private int orRow, orCol, destRow, destCol, playerWonIndex;
@@ -38,10 +40,14 @@ public class MoveInformation {
     }
 
     void setPreviousProbabilities(HashMap<Piece, double[]> probabilitiesMap) {
-        previousProbabilities = new double[40][0];
+        /*previousProbabilities = new double[40][0];
         int counter = 0;
         for (Piece p : probabilitiesMap.keySet()) {
             previousProbabilities[counter++] = probabilitiesMap.get(p).clone();
+        }*/
+        previousProbabilitiesMap = new HashMap<>();
+        for (Piece p : probabilitiesMap.keySet()) {
+            previousProbabilitiesMap.put(p.clone(), probabilitiesMap.get(p).clone());
         }
     }
 
@@ -72,7 +78,8 @@ public class MoveInformation {
     void replaceProbabilities(HashMap<Piece, double[]> probabilitiesMap) {
         int counter = 0;
         for (Piece p : probabilitiesMap.keySet()) {
-            probabilitiesMap.replace(p, previousProbabilities[counter++]);
+            //probabilitiesMap.replace(p, previousProbabilities[counter++]);
+            probabilitiesMap.put(p, previousProbabilitiesMap.get(p));
         }
     }
 

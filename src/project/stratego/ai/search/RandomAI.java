@@ -26,6 +26,10 @@ public class RandomAI extends AbstractAI {
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         int randIndex = (int) (Math.random() * legalMoves.size());
         //System.out.println("------------------------------------------------------------------------------------\n");
+        if (legalMoves.size() == 0) {
+            gameState.printBoard();
+            System.exit(1);
+        }
         return legalMoves.get(randIndex);
     }
 

@@ -93,6 +93,7 @@ public class PlayingLogic extends GameLogic {
         if (!gameOver) {
             currentPlayer = currentPlayer == playerNorth ? playerSouth : playerNorth;
             currentOpponent = currentOpponent == playerNorth ? playerSouth : playerNorth;
+            //System.out.println("Game not over: " + (checkPlayerHasFlag(currentOpponent)) + ", " + (checkPlayerCanMove(currentOpponent)));
             ModelComManager.getInstance().sendChangeTurn(parent.getGameID(), currentPlayer.getType().ordinal());
             //System.out.println("Game not over");
         } else {

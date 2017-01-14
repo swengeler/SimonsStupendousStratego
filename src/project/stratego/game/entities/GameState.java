@@ -243,8 +243,8 @@ public class GameState {
     }
 
     public void printBoard() {
-        System.out.println("BOARD:");
-        for (int row = 0; row < BOARD_SIZE; row++) {
+        System.out.println("BOARD:\n" + boardToReadableString());
+        /*for (int row = 0; row < BOARD_SIZE; row++) {
             System.out.print("-------------------------------------------------------------------------------------------\n|");
             for (int col = 0; col < BOARD_SIZE; col++) {
                 if (!board[row][col].isAccessible()) {
@@ -267,7 +267,40 @@ public class GameState {
             }
             System.out.println();
         }
-        System.out.println("-------------------------------------------------------------------------------------------\n");
+        System.out.println("-------------------------------------------------------------------------------------------\n");*/
+    }
+
+    public String boardToReadableString() {
+        String boardString = "";
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            boardString += "-------------------------------------------------------------------------------------------\n|";
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (!board[row][col].isAccessible()) {
+                    boardString += "   ~~   |";
+                } else if (board[row][col].getOccupyingPiece() == null) {
+                    boardString += "        |";
+                } else {
+                    if (board[row][col].getOccupyingPiece().getType() == PieceType.MAJOR) {
+                        boardString += " MJ (" + board[row][col].getOccupyingPiece().getPlayerType().toString().substring(0, 1) + ") |";
+                    } else {
+                        boardString += " " + board[row][col].getOccupyingPiece().getType().toString().substring(0, 2) + " (" + board[row][col].getOccupyingPiece().getPlayerType().toString().substring(0, 1) + ") |";
+                    }
+                }
+            }
+            boardString += "\n|";
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (!board[row][col].isAccessible()) {
+                    boardString += "   ~~   |";
+                } else if (board[row][col].getOccupyingPiece() == null) {
+                    boardString += "        |";
+                } else {
+                    boardString += "  (" + (board[row][col].getOccupyingPiece().isRevealed() ? "rv" : "nr") + ")  |";
+                }
+            }
+            boardString += "\n";
+        }
+        boardString += "-------------------------------------------------------------------------------------------\n";
+        return boardString;
     }
 
 }

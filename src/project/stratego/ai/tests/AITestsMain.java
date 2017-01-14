@@ -5,7 +5,8 @@ import project.stratego.control.managers.ModelComManager;
 
 public class AITestsMain {
 
-    private static final int numberGames = 1;
+    private static final int numberGames = 1000;
+    private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;
     private static int numberMovesAvg = 0;
@@ -35,9 +36,9 @@ public class AITestsMain {
 
     public static void main(String[] args) {
 
-        for (int i = 0; i < numberGames; i++) {
+        for (counter = 0; counter < numberGames; counter++) {
             System.out.println("\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
-            System.out.println("RUN NUMBER " + (i + 1));
+            System.out.println("RUN NUMBER " + (counter + 1));
             System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
             ModelComManager.getInstance().configureAIMatch();
             AIComManager.getInstance().runAutomaticAIMatch();
@@ -63,12 +64,12 @@ public class AITestsMain {
 
         System.out.println("PLAYER ONE SEARCH TIME:");
         System.out.println("Minimum: " + playerOneSearchTimeMin);
-        System.out.println("Average: " + (playerOneSearchTimeAvg / (double) numberGames));
+        System.out.println("Average: " + (playerOneSearchTimeAvg / (double) numberMovesAvg));
         System.out.println("Maximum: " + playerOneSearchTimeMax + "\n");
 
         System.out.println("PLAYER TWO SEARCH TIME:");
         System.out.println("Minimum: " + playerTwoSearchTimeMin);
-        System.out.println("Average: " + (playerTwoSearchTimeAvg / (double) numberGames));
+        System.out.println("Average: " + (playerTwoSearchTimeAvg / (double) numberMovesAvg));
         System.out.println("Maximum: " + playerTwoSearchTimeMax + "\n");
 
         System.out.println("WINS BY FLAG CAPTURE:");
@@ -155,7 +156,7 @@ public class AITestsMain {
 
     public static void printStats() {
         System.out.println("\n-----------------------------------------------------------");
-        System.out.println("RESULTS:");
+        System.out.println("RESULTS (for " + counter + " games):");
         System.out.println("-----------------------------------------------------------");
         System.out.println("NUMBER OF MOVES:");
         System.out.println("Minimum: " + numberMovesMin);
@@ -174,12 +175,12 @@ public class AITestsMain {
 
         System.out.println("PLAYER ONE SEARCH TIME:");
         System.out.println("Minimum: " + playerOneSearchTimeMin);
-        System.out.println("Average: " + (playerOneSearchTimeAvg / (double) numberGames));
+        System.out.println("Average: " + (playerOneSearchTimeAvg / (double) numberMovesAvg));
         System.out.println("Maximum: " + playerOneSearchTimeMax + "\n");
 
         System.out.println("PLAYER TWO SEARCH TIME:");
         System.out.println("Minimum: " + playerTwoSearchTimeMin);
-        System.out.println("Average: " + (playerTwoSearchTimeAvg / (double) numberGames));
+        System.out.println("Average: " + (playerTwoSearchTimeAvg / (double) numberMovesAvg));
         System.out.println("Maximum: " + playerTwoSearchTimeMax + "\n");
 
         System.out.println("WINS BY FLAG CAPTURE:");

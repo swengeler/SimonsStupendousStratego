@@ -415,8 +415,8 @@ public class EnhancedGameState extends GameState {
         for (Piece p : getPlayer(1 - playerIndex).getActivePieces()) {
             counter = 0;
             for (double probability : probabilitiesMap.get(p)) {
-                if (Math.abs(probability - 1.0) < 2 * PROB_EPSILON && counter != p.getType().ordinal()) {
-                    System.out.println("\nCancelled with code " + code);
+                if ((Math.abs(probability - 1.0) < 2 * PROB_EPSILON && counter != p.getType().ordinal()) || (Math.abs(probability) < 2 * PROB_EPSILON && counter == p.getType().ordinal())) {
+                    System.out.println("\nCancelled with code " + code + " because " + (counter != p.getType().ordinal() ? "piece has probability 1.0 for wrong rank" : "piece has probability 0.0 for right rank") + " (" + p.getType() + " at (" + p.getRowPos() + "|" + p.getColPos() + "))");
                     printBoard();
                     System.out.println("OPPONENT'S DEAD PIECES:\n" + opponentDeadPiecesToString());
                     printBoardAssignment();
@@ -455,6 +455,38 @@ public class EnhancedGameState extends GameState {
                         System.out.println(PieceType.values()[i] + " -- " + sum);
                     }
                     System.out.println();
+
+                    int c = 2;
+                    while (c < 10 && !moveInformationStack.isEmpty()) {
+                        System.out.println("BACK BY " + c);
+
+                        undoLastMove();
+                        printBoard();
+                        System.out.println("OPPONENT'S DEAD PIECES:\n" + opponentDeadPiecesToString());
+                        printBoardAssignment();
+                        printProbabilitiesTable();
+
+                        pieces = probabilitiesMap.keySet();
+
+                        for (Piece q : pieces) {
+                            double sum = 0;
+                            for (double val : probabilitiesMap.get(q)) {
+                                sum += val;
+                            }
+                            System.out.println(q + " -- " + sum);
+                        }
+
+                        for (int i = 0; i < PieceType.values().length - 1; i++) {
+                            double sum = 0;
+                            for (Piece q : pieces) {
+                                sum += probabilitiesMap.get(q)[i];
+                            }
+                            System.out.println(PieceType.values()[i] + " -- " + sum);
+                        }
+                        System.out.println();
+                        c++;
+                    }
+
 
                     System.exit(1);
                 }

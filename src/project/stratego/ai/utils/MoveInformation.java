@@ -79,7 +79,7 @@ public class MoveInformation {
         int counter = 0;
         for (Piece p : probabilitiesMap.keySet()) {
             //probabilitiesMap.replace(p, previousProbabilities[counter++]);
-            probabilitiesMap.put(p, previousProbabilitiesMap.get(p));
+            probabilitiesMap.replace(p, previousProbabilitiesMap.get(p));
         }
     }
 

@@ -23,7 +23,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
     private int nodeCounter = 0;
 
     private AbstractEvaluationFunction evaluationFunction;
-    private int maxDepth = 4;
+    private int maxDepth = 2;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);

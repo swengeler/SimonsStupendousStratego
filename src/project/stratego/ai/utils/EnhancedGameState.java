@@ -797,18 +797,23 @@ public class EnhancedGameState extends GameState {
     private void rankProbabilitiesThing() {
         // for each rank loop through all pieces, if there are PieceType.pieceQuantity[rank] pieces with probability almost 1.0, then set all others to 0.0
         int oneCount;
+        double pieceProbabilityCount;
         for (int i = 0; i < PieceType.values().length - 1; i++) {
             oneCount = 0;
+            pieceProbabilityCount = 0;
             for (Piece p : probabilitiesMap.keySet()) {
                 if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 2 * PROB_EPSILON) {
                     oneCount++;
+                    pieceProbabilityCount += 1;
+                } else if (Math.abs(probabilitiesMap.get(p)[i]) > 2 * PROB_EPSILON) {
+                    pieceProbabilityCount += probabilitiesMap.get(p)[i];
                 }
             }
-            if (oneCount == PieceType.pieceQuantity[i]) {
+            if (oneCount == PieceType.pieceQuantity[i] || Math.round(pieceProbabilityCount) == PieceType.pieceQuantity[i]) {
                 for (Piece p : probabilitiesMap.keySet()) {
                     if (Math.abs(probabilitiesMap.get(p)[i] - 1.0) < 2 * PROB_EPSILON) {
                         probabilitiesMap.get(p)[i] = 1.0;
-                    } else {
+                    } else if (Math.abs(probabilitiesMap.get(p)[i]) < 2 * PROB_EPSILON) {
                         probabilitiesMap.get(p)[i] = 0.0;
                     }
                 }

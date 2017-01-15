@@ -89,14 +89,6 @@ public abstract class MoveManager {
         return lastMoveResult;
     }
 
-    public Piece lastRemovedPiece() {
-        return lastRemovedPiece;
-    }
-
-    public void changeBoard(BoardTile[][] newBoard) {
-        this.board = newBoard;
-    }
-
     private boolean checkIfReachable(Piece movingPiece, int destRow, int destCol) {
         int rowDiff = destRow - movingPiece.getRowPos();
         int colDiff = destCol - movingPiece.getColPos();

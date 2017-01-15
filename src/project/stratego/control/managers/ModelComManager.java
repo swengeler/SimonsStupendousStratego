@@ -179,7 +179,7 @@ public class ModelComManager {
     }
 
     public void requestNextMove() {
-        if (!findGame(-1).gameRunning()) {
+        if (findGame(-1) == null || !findGame(-1).gameRunning()) {
             return;
         }
         if (gameMode == GameMode.SINGLEPLAYER) {

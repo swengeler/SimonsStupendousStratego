@@ -10,13 +10,11 @@ public class MoveInformation {
 
     private Piece movingPieceReference, movingPieceClone, encounteredPieceReference, encounteredPieceClone;
 
-    private double[][] previousProbabilities;
-
     private HashMap<Piece, double[]> previousProbabilitiesMap;
 
     private MoveResult moveResult;
 
-    private int orRow, orCol, destRow, destCol, playerWonIndex;
+    private int orRow, orCol, destRow, destCol, previousPlayerWonIndex;
 
     MoveInformation(Move move, Piece movingPiece, Piece encounteredPiece) {
         orRow = move.getOrRow();
@@ -31,8 +29,8 @@ public class MoveInformation {
         }
     }
 
-    public void setPlayerWonIndex(int playerWonIndex) {
-        this.playerWonIndex = playerWonIndex;
+    public void setPreviousPlayerWonIndex(int previousPlayerWonIndex) {
+        this.previousPlayerWonIndex = previousPlayerWonIndex;
     }
 
     void setMoveResult(MoveResult moveResult) {
@@ -51,8 +49,8 @@ public class MoveInformation {
         }
     }
 
-    int getPlayerWonIndex() {
-        return playerWonIndex;
+    int getPreviousPlayerWonIndex() {
+        return previousPlayerWonIndex;
     }
 
     MoveResult getMoveResult() {

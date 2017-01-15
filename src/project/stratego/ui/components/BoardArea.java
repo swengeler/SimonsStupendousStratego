@@ -13,8 +13,8 @@ public class BoardArea extends Pane {
 
     public static final double TILE_SPACING = 1;
 
-    private static final double DURATION_MULTIPLIER = 0.8;
-    //private static final double DURATION_MULTIPLIER = 0.01;
+    //private static final double DURATION_MULTIPLIER = 0.8;
+    private static final double DURATION_MULTIPLIER = 0.01;
 
     private Group northDeploymentArea;
     private Group southDeploymentArea;
@@ -275,7 +275,9 @@ public class BoardArea extends Pane {
         transitions.setOnFinished(e -> {
             // call method to advance game/let AI make next move
             pieces[destRow][destCol] = pieces[orRow][orCol];
-            pieces[destRow][destCol].setBoardPosition(destRow, destCol);
+            if (pieces[destRow][destCol] != null) {
+                pieces[destRow][destCol].setBoardPosition(destRow, destCol);
+            }
             pieces[orRow][orCol] = null;
             ViewComManager.getInstance().requestNextMove();
         });

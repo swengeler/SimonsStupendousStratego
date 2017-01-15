@@ -1,5 +1,6 @@
 package project.stratego.ui.sections;
 
+import javafx.application.Platform;
 import project.stratego.ui.utils.Messages;
 import project.stratego.ui.components.*;
 import javafx.scene.image.Image;
@@ -68,14 +69,14 @@ public class InGameView extends Pane {
         playerNames.resetHighlight();
         if (playerIndex == -1) {
             if (winnerPlayerIndex == 0) {
-                Messages.showNorthWon();
+                Platform.runLater(() -> Messages.showNorthWon());
             } else if (winnerPlayerIndex == 1) {
-                Messages.showSouthWon();
+                Platform.runLater(() -> Messages.showSouthWon());
             }
         } else if (winnerPlayerIndex == playerIndex) {
-            Messages.showPlayerWon();
+            Platform.runLater(() -> Messages.showPlayerWon());
         } else {
-            Messages.showOpponentWon();
+            Platform.runLater(() -> Messages.showOpponentWon());
         }
         processResetGame();
     }

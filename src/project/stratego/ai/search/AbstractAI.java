@@ -37,6 +37,10 @@ public abstract class AbstractAI {
         return playerIndex;
     }
 
+    public EnhancedGameState getEnhancedGameState() {
+        return gameState;
+    }
+
     public void copyOpponentSetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
         //gameState.printBoard();

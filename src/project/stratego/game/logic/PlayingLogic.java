@@ -39,7 +39,7 @@ public class PlayingLogic extends GameLogic {
         if (currentPlayer.getCurrentPiece() == null && (temp == null || temp.getPlayerType() != currentPlayer.getType() || temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {
             // no piece selected but either no piece on selected board tile or opponent's piece or unmovable piece
             //System.out.println("processBoardSelect: return with code 1 (" + row + "|" + col + ") (currentPiece: " + currentPlayer.getCurrentPiece() + ", temp: " + temp + ")");
-            parent.getGameState().printBoard();
+            //parent.getGameState().printBoard();
             return;
         }
         if (temp != null && currentPlayer.getCurrentPiece() != null && temp.getPlayerType() == currentPlayer.getType() && (temp.getType() == PieceType.BOMB || temp.getType() == PieceType.FLAG)) {

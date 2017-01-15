@@ -18,7 +18,7 @@ public class AIMove extends Move {
 
     @Override
     public String toString() {
-        return "Move (isChanceMove = " + isChanceMove + ") FROM (" + orRow + "|" + orCol + ") TO (" + destRow + "|" + destCol + ") by player " + PlayerType.values()[playerIndex];
+        return "AIMove (isChanceMove = " + isChanceMove + ") FROM (" + orRow + "|" + orCol + ") TO (" + destRow + "|" + destCol + ") by player " + PlayerType.values()[playerIndex];
     }
 
     @Override

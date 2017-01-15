@@ -294,7 +294,7 @@ public class GameState {
                 } else if (board[row][col].getOccupyingPiece() == null) {
                     boardString += "        |";
                 } else {
-                    boardString += "  (" + (board[row][col].getOccupyingPiece().isRevealed() ? "rv" : "nr") + ")  |";
+                    boardString += "  (" + (board[row][col].getOccupyingPiece().isRevealed() ? "rv" : (board[row][col].getOccupyingPiece().isMoveRevealed() ? "mr" : "nr")) + ")  |";
                 }
             }
             boardString += "\n";

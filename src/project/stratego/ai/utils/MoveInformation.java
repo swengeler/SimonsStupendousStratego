@@ -101,4 +101,8 @@ public class MoveInformation {
         return movingPieceReference.getPlayerType().ordinal();
     }
 
+    public String toMoveString() {
+        return "MoveInfo from (" + orRow + "|" + orCol + ") to (" + destRow + "|" + destCol + ")";
+    }
+
 }

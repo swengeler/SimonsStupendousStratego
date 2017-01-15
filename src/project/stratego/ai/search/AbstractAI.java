@@ -58,10 +58,10 @@ public abstract class AbstractAI {
         for (Piece p : state.getPlayer(playerIndex).getActivePieces()) {
             // check for unmovable pieces
             if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
-                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) > 2 * EnhancedGameState.PROB_EPSILON || Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) > 2 * EnhancedGameState.PROB_EPSILON))) {
-                int moveRadius = 1;
+                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) + state.getProbability(p, PieceType.FLAG) - 1.0) > 10 * EnhancedGameState.PROB_EPSILON))) {
+                int moveRadius = 1;                             // ^ this here shit, who comes up with that
                 // scouts can move more squares than the other pieces
-                if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) < 2 * EnhancedGameState.PROB_EPSILON) {
+                if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) < /*2 * */EnhancedGameState.PROB_EPSILON) {
                     moveRadius = 9;
                 }
                 // loop through the positions around the piece and check whether they can be moved there

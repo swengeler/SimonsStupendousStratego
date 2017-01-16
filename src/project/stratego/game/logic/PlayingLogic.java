@@ -98,7 +98,16 @@ public class PlayingLogic extends GameLogic {
             //System.out.println("Game not over");
         } else {
             System.out.println("Game over by " + (checkPlayerHasFlag(currentOpponent) ? "piece capture" : "flag capture"));
-            AITestsMain.addWin(currentPlayer.getType().ordinal(), checkPlayerHasFlag(currentOpponent) ? 1 : 0);
+            System.out.println("Current player: " + currentPlayer.getType() + ", current opponent: " + currentOpponent.getType());
+            System.out.println("checkPlayerHasFlag(currentPlayer) = " + checkPlayerHasFlag(currentPlayer));
+            System.out.println("checkPlayerCanMove(currentPlayer) = " + checkPlayerCanMove(currentPlayer));
+            System.out.println("checkPlayerHasFlag(currentOpponent) = " + checkPlayerHasFlag(currentOpponent));
+            System.out.println("checkPlayerCanMove(currentOpponent) = " + checkPlayerCanMove(currentOpponent));
+
+
+            Player winningPlayer = checkPlayerHasFlag(currentOpponent) ? (checkPlayerCanMove(currentOpponent) ? currentOpponent : currentPlayer) : currentPlayer;
+            boolean winByFlag = !checkPlayerHasFlag(winningPlayer == playerNorth ? playerSouth : playerNorth);
+            AITestsMain.addWin(winningPlayer.getType().ordinal(), winByFlag);
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
             AIComManager.getInstance().gameOver(parent);
         }

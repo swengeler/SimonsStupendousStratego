@@ -34,10 +34,10 @@ public class ExpectiNegamaxAI extends AbstractAI {
     @Override
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
-        gameState.checkDebugCondition(0);
-        gameState.checkDebugDepthThreeCondition(0);
+        //gameState.checkDebugCondition(0);
+        //gameState.checkDebugDepthThreeCondition(0);
         Move nextMove = expectiNegamaxSearch();
-        gameState.checkDebugDepthThreeCondition(1);
+        //gameState.checkDebugDepthThreeCondition(1);
         return nextMove;
     }
 
@@ -59,8 +59,8 @@ public class ExpectiNegamaxAI extends AbstractAI {
 
     public void applyMove(Move move) {
         super.applyMove(move);
-        gameState.checkDebugCondition(1);
-        gameState.checkDebugDepthThreeCondition(2);
+        //gameState.checkDebugCondition(1);
+        //gameState.checkDebugDepthThreeCondition(2);
         //System.out.println("In expectimax AI:");
         //gameState.printBoard();
     }
@@ -104,11 +104,11 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 currentValue = expectimaxSearch(1, gameState, m, currentNodeCounter);
             } else {
                 gameState.applyMove(m);
-                gameState.checkDebugDepthThreeCondition(3);
+                //gameState.checkDebugDepthThreeCondition(3);
                 currentValue = negamaxSearch(1, gameState, currentNodeCounter);
-                gameState.checkDebugDepthThreeCondition(4);
+                //gameState.checkDebugDepthThreeCondition(4);
                 gameState.undoLastMove();
-                gameState.checkDebugDepthThreeCondition(5);
+                //gameState.checkDebugDepthThreeCondition(5);
             }
             if (DEBUG) {
                 System.out.println("\n" + m);
@@ -161,11 +161,11 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 currentValue = -expectimaxSearch(currentDepth + 1, state, m, currentNodeCounter);
             } else {
                 state.applyMove(m);
-                state.checkDebugDepthThreeCondition(6);
+                //state.checkDebugDepthThreeCondition(6);
                 currentValue = -negamaxSearch(currentDepth + 1, state, currentNodeCounter);
-                state.checkDebugDepthThreeCondition(7);
+                //state.checkDebugDepthThreeCondition(7);
                 state.undoLastMove();
-                state.checkDebugDepthThreeCondition(8);
+                //state.checkDebugDepthThreeCondition(8);
             }
             if (currentValue > maxValue) {
                 maxValue = currentValue;
@@ -189,11 +189,11 @@ public class ExpectiNegamaxAI extends AbstractAI {
             if ((prevProbability = state.getProbability(unknownPiece, i)) > EnhancedGameState.PROB_EPSILON) {
                 state.assignPieceType(unknownPiece, PieceType.values()[i]);
                 state.applyMove(chanceMove);
-                state.checkDebugDepthThreeCondition(9);
+                //state.checkDebugDepthThreeCondition(9);
                 sum += prevProbability * negamaxSearch(currentDepth, state, parentID);
-                state.checkDebugDepthThreeCondition(10);
+                //state.checkDebugDepthThreeCondition(10);
                 state.undoLastMove();
-                state.checkDebugDepthThreeCondition(11);
+                //state.checkDebugDepthThreeCondition(11);
                 state.undoLastAssignment();
             }
         }

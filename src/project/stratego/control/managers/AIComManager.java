@@ -5,7 +5,9 @@ import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.GameState;
+import project.stratego.game.entities.Piece;
 import project.stratego.game.moves.Move;
+import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 
 import java.util.concurrent.BlockingQueue;

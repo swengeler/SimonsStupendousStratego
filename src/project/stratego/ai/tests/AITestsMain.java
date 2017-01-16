@@ -5,7 +5,7 @@ import project.stratego.control.managers.ModelComManager;
 
 public class AITestsMain {
 
-    private static final int numberGames = 1000;
+    private static final int numberGames = 500;
     private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;
@@ -45,7 +45,7 @@ public class AITestsMain {
         }
 
         System.out.println("\n-----------------------------------------------------------");
-        System.out.println("RESULTS:");
+        System.out.println("RESULTS over " + (playerOneWonFlagCapture + playerOneWonNoMovingPieces + playerTwoWonFlagCapture + playerTwoWonNoMovingPieces) + " games:");
         System.out.println("-----------------------------------------------------------");
         System.out.println("NUMBER OF MOVES:");
         System.out.println("Minimum: " + numberMovesMin);
@@ -92,17 +92,17 @@ public class AITestsMain {
         numberMovesAvg += numberMoves;
     }
 
-    public static void addWin(int playerWonIndex, int winType) {
+    public static void addWin(int playerWonIndex, boolean wonByFlag) {
         if (playerWonIndex == 0) {
-            if (winType == 0) {
+            if (wonByFlag) {
                 playerOneWonFlagCapture++;
-            } else if (winType == 1) {
+            } else {
                 playerOneWonNoMovingPieces++;
             }
         } else if (playerWonIndex == 1) {
-            if (winType == 0) {
+            if (wonByFlag) {
                 playerTwoWonFlagCapture++;
-            } else if (winType == 1) {
+            } else {
                 playerTwoWonNoMovingPieces++;
             }
         }

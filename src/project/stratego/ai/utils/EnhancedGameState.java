@@ -15,7 +15,7 @@ import java.util.*;
  * */
 public class EnhancedGameState extends GameState {
 
-    public static final double PROB_EPSILON = 0.005;
+    public static final double PROB_EPSILON = 0.05;
 
     private double[][] tileEvaluationArray;
 

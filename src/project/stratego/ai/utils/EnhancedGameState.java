@@ -246,6 +246,9 @@ public class EnhancedGameState extends GameState {
             }
             //System.out.println("CHECK 1: " + move);
             updateProbabilities();
+            if (movingPiece.getPlayerType().ordinal() != playerIndex) {
+                updateUnmovablePiecesProbabilities();
+            }
             return;
         }
 
@@ -260,6 +263,9 @@ public class EnhancedGameState extends GameState {
                 }
             }
             updateProbabilities();
+            if (movingPiece.getPlayerType().ordinal() != playerIndex) {
+                updateUnmovablePiecesProbabilities();
+            }
             return;
         }
 
@@ -267,27 +273,10 @@ public class EnhancedGameState extends GameState {
         probabilitiesMap.get(opponentPiece)[PieceType.BOMB.ordinal()] = 0.0;
         probabilitiesMap.get(opponentPiece)[PieceType.FLAG.ordinal()] = 0.0;
         updateProbabilities();
-
-        // in order to recognise when all moving pieces have been "move-revealed" the counter nrMoveRevealedPieces is used
-        // when it reaches totalNrPieces - nrUnmovablePieces = 40 - 7 = 33 then all remaining unrevealed pieces have to be
-        // either BOMB or FLAG, so the probabilities for other pieces should be set to 0
         if (movingPiece.getPlayerType().ordinal() != playerIndex) {
-            int pieceMoveRevealedCounter = 0;
-            for (Piece p : probabilitiesMap.keySet()) {
-                if (probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] == 0.0 && probabilitiesMap.get(p)[PieceType.BOMB.ordinal()] == 0.0) {
-                    pieceMoveRevealedCounter++;
-                }
-            }
-            if (pieceMoveRevealedCounter == 33) {
-                for (Piece p : probabilitiesMap.keySet()) {
-                    if (probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] != 0.0) {
-                        for (int i = 2; i < PieceType.values().length - 1; i++) {
-                            probabilitiesMap.get(p)[i] = 0.0;
-                        }
-                    }
-                }
-            }
+            updateUnmovablePiecesProbabilities();
         }
+
     }
 
     @Override
@@ -702,6 +691,27 @@ public class EnhancedGameState extends GameState {
             }
 
             System.exit(1);
+        }
+    }
+
+    private void updateUnmovablePiecesProbabilities() {
+        // in order to recognise when all moving pieces have been "move-revealed" the counter nrMoveRevealedPieces is used
+        // when it reaches totalNrPieces - nrUnmovablePieces = 40 - 7 = 33 then all remaining unrevealed pieces have to be
+        // either BOMB or FLAG, so the probabilities for other pieces should be set to 0
+        int pieceMoveRevealedCounter = 0;
+        for (Piece p : probabilitiesMap.keySet()) {
+            if (probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] == 0.0 && probabilitiesMap.get(p)[PieceType.BOMB.ordinal()] == 0.0) {
+                pieceMoveRevealedCounter++;
+            }
+        }
+        if (pieceMoveRevealedCounter == 33) {
+            for (Piece p : probabilitiesMap.keySet()) {
+                if (probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] != 0.0) {
+                    for (int i = 2; i < PieceType.values().length - 1; i++) {
+                        probabilitiesMap.get(p)[i] = 0.0;
+                    }
+                }
+            }
         }
     }
 

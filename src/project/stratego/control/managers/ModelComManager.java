@@ -183,9 +183,7 @@ public class ModelComManager {
             return;
         }
         if (gameMode == GameMode.SINGLEPLAYER) {
-            if (findGame(-1) != null) {
-                AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
-            }
+            AIComManager.getInstance().tryNextMove(findGame(-1).getGameState().getMoveHistory().getLast());
         } else if (gameMode == GameMode.AISHOWMATCH) {
             AIComManager.getInstance().advanceAIMatch();
         }

@@ -1,8 +1,7 @@
 package project.stratego.ai.search;
 
-import project.stratego.ai.evaluation.AbstractEvaluationFunction;
+import project.stratego.ai.evaluation.*;
 import project.stratego.ai.utils.EnhancedGameState;
-import project.stratego.ai.evaluation.TestEvaluationFunction;
 import project.stratego.ai.setup.*;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.game.entities.*;
@@ -18,22 +17,25 @@ public class ExpectiNegamaxAI extends AbstractAI {
 
     private static String debugString = "";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
+    private static final boolean DEBUG_2 = false;
 
     private int nodeCounter = 0;
 
     private AbstractEvaluationFunction evaluationFunction;
-    private int maxDepth = 2;
+    public static int maxDepth = 3;
 
     public ExpectiNegamaxAI(int playerIndex) {
         super(playerIndex);
         // perhaps select with one more constructor parameter or make generic AIInterface method setEvaluationFunction();
         evaluationFunction = new TestEvaluationFunction(playerIndex);
+        //evaluationFunction = new MarksEvaluationFunction(playerIndex);
     }
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
+        //gameState.printProbabilitiesTable();
         //gameState.checkDebugCondition(0);
         //gameState.checkDebugDepthThreeCondition(0);
         Move nextMove = expectiNegamaxSearch();
@@ -137,10 +139,10 @@ public class ExpectiNegamaxAI extends AbstractAI {
         //System.out.println("PRINTOUT ON LEVEL: 1");
         //gameState.printProbabilitiesTable();
         //gameState.printBoard();
-        nodeCounter++;
         //addToDebugString(currentDepth, parentID, gameState);
         int currentNodeCounter = nodeCounter;
         if (currentDepth == maxDepth || state.isGameOver()) {
+            nodeCounter++;
             //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
             int multiplier = currentDepth % 2 == 0 ? -1 : 1;
             return multiplier * evaluationFunction.evaluate(state, playerIndex);
@@ -149,10 +151,14 @@ public class ExpectiNegamaxAI extends AbstractAI {
         double maxValue = -Double.MAX_VALUE;
         double currentValue;
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
-        /*System.out.println("\nNumber of legal moves for this node at depth " + currentDepth + ": " + legalMoves.size());
-        for (Move m : legalMoves) {
-            System.out.println(m);
-        }*/
+        if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+            System.out.println("\nNumber of legal moves for this node at depth " + currentDepth + ": " + legalMoves.size());
+            for (Move m : legalMoves) {
+                System.out.println(m);
+            }
+            //state.printBoard();
+            //state.printProbabilitiesTable();
+        }
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -166,6 +172,9 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 //state.checkDebugDepthThreeCondition(7);
                 state.undoLastMove();
                 //state.checkDebugDepthThreeCondition(8);
+            }
+            if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+                System.out.println("value for " + m + ": " + currentValue);
             }
             if (currentValue > maxValue) {
                 maxValue = currentValue;
@@ -184,9 +193,13 @@ public class ExpectiNegamaxAI extends AbstractAI {
         // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)
         // sum over all possible scenarios arising from chanceMove
         //state.printProbabilitiesTable();
+        double relevantProbabilitiesSum = 0.0;
         for (int i = 0; i < PieceType.values().length - 1; i++) {
-            //System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
-            if ((prevProbability = state.getProbability(unknownPiece, i)) > EnhancedGameState.PROB_EPSILON) {
+            if (DEBUG_2 && currentDepth == 1) {
+                System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
+            }
+            if ((prevProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
+                relevantProbabilitiesSum += prevProbability;
                 state.assignPieceType(unknownPiece, PieceType.values()[i]);
                 state.applyMove(chanceMove);
                 //state.checkDebugDepthThreeCondition(9);
@@ -197,6 +210,7 @@ public class ExpectiNegamaxAI extends AbstractAI {
                 state.undoLastAssignment();
             }
         }
+        sum /= relevantProbabilitiesSum;
         return sum;
     }
 

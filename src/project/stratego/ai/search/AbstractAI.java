@@ -75,6 +75,9 @@ public abstract class AbstractAI {
                             if (state.getBoardArray()[destRow][destCol].getOccupyingPiece() != null) {
                                 // either different playerIndex from root (initPlayerIndex) AND piece to be moved is not revealed AND position to be moved to is taken by root player
                                 chanceEvent = playerIndex != this.playerIndex && !p.isRevealed() && !state.probabilityRevealed(p);
+                                if (p.getType() == PieceType.SCOUT) {
+                                    //System.out.println(p + " chanceEvent: " + chanceEvent);
+                                }
                                 // OR same playerIndex as root (initPlayerIndex) AND position to be moved to is taken by opponent's unrevealed piece
                                 chanceEvent = chanceEvent || (playerIndex == this.playerIndex && !state.getBoardArray()[destRow][destCol].getOccupyingPiece().isRevealed() && !state.probabilityRevealed(state.getBoardArray()[destRow][destCol].getOccupyingPiece()));
                             }

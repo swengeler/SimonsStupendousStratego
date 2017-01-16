@@ -1069,4 +1069,59 @@ public class EnhancedGameState extends GameState {
         return deadPiecesString;
     }
 
+   /*
+    private void updateNewProbabilities(){
+
+
+        board[x][y].getOccupyingPiece;
+        //Check around if there are anny opponent's pieces, 2 square distance
+        check : board[x][y-2].isOccupied || board[x][y-1].isOccupied || board[x][y+1].isOccupied || board[x][y+2].isOccupied
+            || board[x-1][y-1].isOccupied || board[x-1][y].isOccupied || board[x-1][y+1].isOccupied || board[x-2][y].isOccupied
+            || board[x+1][y-1].isOccupied || board[x+1][y].isOccupied || board[x+1][y+1].isOccupied || board[x+2][y].isOccupied
+        //For each ally piece in a range of two squares check if it goes towards it or away
+
+        Move.OriginX
+        Move.OriginY
+        Move.DestinX
+        Move.DestinY
+
+        get.AllyPieceX
+        get.AllyPieceY
+
+        //Checks if the unknown piece goes towards or away from my piece
+        originSubstraction = (get.AllyPieceX - Move.OriginX) + (get.AllyPieceY - Move.OriginY)
+        destinationSubstraction = (get.AllyPieceX - Move.DestinX) + (get.AllyPieceY - Move.DestinY)
+
+       //CASE 1 & 2
+
+       int p = 50;
+
+       If(originSubstraction >= destination Substraction && AllyPiece.isRevealed){
+               get.AllyPieceProbabilityMap
+
+            for (AllyPiece.ProbabilityMap.rank > AllyPiece.rank){
+                AllyPiece.ProbabilityMap.rank += (AllyPiece.ProbabilityMap.rank * p/100)
+            }
+            for (AllyPiece.ProbabilityMap.rank <= AllyPiece.rank){
+                AllyPiece.ProbabilityMap.rank -= (AllyPiece.ProbabilityMap.rank * p/100)
+            }
+
+       }
+
+       If(originSubstraction < destination Substraction && AllyPiece.isRevealed){
+               get.AllyPieceProbabilityMap
+
+            for (AllyPiece.ProbabilityMap.rank > AllyPiece.rank){
+                AllyPiece.ProbabilityMap.rank -= (AllyPiece.ProbabilityMap.rank * p/100)
+            }
+            for (AllyPiece.ProbabilityMap.rank <= AllyPiece.rank){
+                AllyPiece.ProbabilityMap.rank += (AllyPiece.ProbabilityMap.rank * p/100)
+            }
+
+       }
+
+    }
+
+    */
+
 }

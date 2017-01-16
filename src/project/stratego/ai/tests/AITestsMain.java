@@ -1,14 +1,12 @@
 package project.stratego.ai.tests;
 
-import project.stratego.ai.search.ExpectiNegamaxAI;
 import project.stratego.control.managers.AIComManager;
 import project.stratego.control.managers.ModelComManager;
 
 public class AITestsMain {
 
 
-    private static final int numberGames = 10;
-    private static final int expectimaxMaxDepth = 4;
+    private static final int numberGames = 10000;
     private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;
@@ -39,13 +37,16 @@ public class AITestsMain {
 
     public static void main(String[] args) {
 
+        long before;
         for (counter = 0; counter < numberGames; counter++) {
             System.out.println("\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
-            System.out.println("RUN NUMBER " + (counter + 1) + " with maxDepth = " + expectimaxMaxDepth);
+            System.out.println("RUN NUMBER " + (counter + 1));
             System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
             ModelComManager.getInstance().configureAIMatch();
-            ExpectiNegamaxAI.maxDepth = expectimaxMaxDepth;
+            //ExpectiNegamaxAI.maxDepth = expectimaxMaxDepth;
+            before = System.currentTimeMillis();
             AIComManager.getInstance().runAutomaticAIMatch();
+            System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");
         }
 
         System.out.println("\n-----------------------------------------------------------");

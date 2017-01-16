@@ -23,12 +23,13 @@ public class ExpectiNegamaxAI extends AbstractAI {
     private int nodeCounter = 0;
 
     private AbstractEvaluationFunction evaluationFunction;
-    public static int maxDepth = 4;
+    private int maxDepth = 3;
 
-    public ExpectiNegamaxAI(int playerIndex) {
+    public ExpectiNegamaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);
         // perhaps select with one more constructor parameter or make generic AIInterface method setEvaluationFunction();
         evaluationFunction = new TestEvaluationFunction(playerIndex);
+        this.maxDepth = maxDepth;
         //evaluationFunction = new MarksEvaluationFunction(playerIndex);
     }
 

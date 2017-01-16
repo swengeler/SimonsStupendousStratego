@@ -140,6 +140,17 @@ public class GameState {
         }
     }
 
+    public void undoLastMove() {
+        Move lastMove = moveHistory.pop();
+        if (board[lastMove.getDestRow()][lastMove.getDestCol()].getOccupyingPiece() == null) {
+            // pieces eliminated each other
+        } else if (lastMove.getPlayerIndex() == board[lastMove.getDestRow()][lastMove.getDestCol()].getOccupyingPiece().getType().ordinal()) {
+            // attacking piece won or piece just moved to this square
+        } else if (lastMove.getPlayerIndex() != board[lastMove.getDestRow()][lastMove.getDestCol()].getOccupyingPiece().getType().ordinal()) {
+            // attacking piece lost
+        }
+    }
+
     public void saveInitBoard() {
         if (initBoardEncoding != null) {
             return;
@@ -244,30 +255,6 @@ public class GameState {
 
     public void printBoard() {
         System.out.println("BOARD:\n" + boardToReadableString());
-        /*for (int row = 0; row < BOARD_SIZE; row++) {
-            System.out.print("-------------------------------------------------------------------------------------------\n|");
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if (!board[row][col].isAccessible()) {
-                    System.out.print("   ~~   |");
-                } else if (board[row][col].getOccupyingPiece() == null) {
-                    System.out.print("        |");
-                } else {
-                    System.out.print(" " + board[row][col].getOccupyingPiece().getType().toString().substring(0, 2) + " (" + board[row][col].getOccupyingPiece().getPlayerType().toString().substring(0, 1) + ") |");
-                }
-            }
-            System.out.print("\n|");
-            for (int col = 0; col < BOARD_SIZE; col++) {
-                if (!board[row][col].isAccessible()) {
-                    System.out.print("   ~~   |");
-                } else if (board[row][col].getOccupyingPiece() == null) {
-                    System.out.print("        |");
-                } else {
-                    System.out.print("  (" + (board[row][col].getOccupyingPiece().isRevealed() ? "rv" : "nr") + ")  |");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println("-------------------------------------------------------------------------------------------\n");*/
     }
 
     public String boardToReadableString() {

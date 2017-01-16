@@ -55,6 +55,9 @@ public class StrategoGame extends SearchState {
 	}
 
 	public StrategoGame(EnhancedGameState gameState) {
+		BoardFactory boardFactory = new BoardFactory();
+		this.board = boardFactory.createBoard();
+
 		ArrayList<StrategoPiece> piecesPlayerNorth = new ArrayList<>();
 		ArrayList<StrategoPiece> piecesPlayerSouth = new ArrayList<>();
 		ArrayList<StrategoPiece> piecesKnownToPlayerNorth = new ArrayList<>();
@@ -94,6 +97,8 @@ public class StrategoGame extends SearchState {
 		// player's perspective
 		runtimeData = new RuntimeData();
 		runtimeData.setActivePlayer(gameState.getPlayerIndex() == 0 ? playerNorth : playerSouth);
+
+		fixPiecePlacement(this);
 	}
 
 	public StrategoBoard getBoard() {

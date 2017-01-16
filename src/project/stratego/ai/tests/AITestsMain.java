@@ -1,15 +1,14 @@
 package project.stratego.ai.tests;
 
 import project.stratego.ai.search.ExpectiNegamaxAI;
-import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.control.managers.AIComManager;
 import project.stratego.control.managers.ModelComManager;
 
 public class AITestsMain {
 
 
-    private static final int numberGames = 50;
-    private static final int expectimaxMaxDepth = 3;
+    private static final int numberGames = 10;
+    private static final int expectimaxMaxDepth = 4;
     private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;
@@ -39,7 +38,6 @@ public class AITestsMain {
 
 
     public static void main(String[] args) {
-
 
         for (counter = 0; counter < numberGames; counter++) {
             System.out.println("\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");

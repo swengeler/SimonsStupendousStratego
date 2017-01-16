@@ -147,6 +147,7 @@ public class AIComManager implements Runnable {
         }
         if (gameMode != GameMode.MULTIPLAYER && primaryAI != null && move.getPlayerIndex() != primaryAI.getPlayerIndex()) {
             Move nextMove = primaryAI.getNextMove(move);
+            System.out.println(nextMove);
             ModelComManager.getInstance().requestBoardTileSelected(-1, primaryAI.getPlayerIndex(), nextMove.getOrRow(), nextMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, primaryAI.getPlayerIndex(), nextMove.getDestRow(), nextMove.getDestCol());
         } else if (gameMode != GameMode.MULTIPLAYER && primaryAI != null) {

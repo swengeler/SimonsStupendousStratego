@@ -79,6 +79,7 @@ public class PlayingLogic extends GameLogic {
         }
         if (result != MoveResult.NOMOVE) {
             parent.getGameState().getMoveHistory().add(new Move(playerIndex, orRow, orCol, row, col));
+            System.out.println("In playinglogic: " + parent.getGameState().getMoveHistory().getLast());
             processPlayerReady(currentPlayer.getType().ordinal());
         }
     }

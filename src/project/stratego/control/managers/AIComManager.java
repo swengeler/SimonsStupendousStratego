@@ -94,22 +94,36 @@ public class AIComManager implements Runnable {
     }
 
     void setPrimaryAI(String aiType, int playerIndex) {
-        if (aiType.equals("random")) {
+        if (aiType.startsWith("random")) {
             primaryAI = new RandomAI(playerIndex);
-        } else if (aiType.equals("expectinegamax")) {
-            primaryAI = new ExpectiNegamaxAI(playerIndex);
-        } else if (aiType.equals("mcts")) {
+        } else if (aiType.startsWith("expectinegamax")) {
+            String[] parts = aiType.split(" ");
+            int maxDepth;
+            if (parts.length > 1) {
+                maxDepth = Integer.parseInt(parts[1]);
+            } else {
+                maxDepth = 2;
+            }
+            primaryAI = new ExpectiNegamaxAI(playerIndex, maxDepth);
+        } else if (aiType.startsWith("mcts")) {
             primaryAI = new MonteCarloTreeSearchAI(playerIndex);
         }
     }
 
     void setSecondaryAI(String aiType, int playerIndex) {
-        if (aiType.equals("random")) {
+        if (aiType.startsWith("random")) {
             secondaryAI = new RandomAI(playerIndex);
-        } else if (aiType.equals("expectinegamax")) {
-            secondaryAI = new ExpectiNegamaxAI(playerIndex);
-        } else if (aiType.equals("mcts")) {
-            primaryAI = new MonteCarloTreeSearchAI(playerIndex);
+        } else if (aiType.startsWith("expectinegamax")) {
+            String[] parts = aiType.split(" ");
+            int maxDepth;
+            if (parts.length > 1) {
+                maxDepth = Integer.parseInt(parts[1]);
+            } else {
+                maxDepth = 2;
+            }
+            secondaryAI = new ExpectiNegamaxAI(playerIndex, maxDepth);
+        } else if (aiType.startsWith("mcts")) {
+            secondaryAI = new MonteCarloTreeSearchAI(playerIndex);
         }
     }
 

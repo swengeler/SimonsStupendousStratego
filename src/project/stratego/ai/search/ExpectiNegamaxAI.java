@@ -44,30 +44,6 @@ public class ExpectiNegamaxAI extends AbstractAI {
         return nextMove;
     }
 
-    @Override
-    public void makeBoardSetup(GameState inGameState) {
-        SetupMaker setupMaker = new SetupMaker() {
-            @Override
-            public void makeBoardSetup(GameState state, int playerIndex) {
-                // something something
-            }
-        };
-        String example1 = "SCOUT MINER BOMB SCOUT MINER BOMB FLAG BOMB MINER MINER " +
-                "SERGEANT BOMB SERGEANT MAJOR COLONEL LIEUTENANT BOMB LIEUTENANT CAPTAIN SERGEANT " +
-                "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
-                "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
-        gameState.interpretAndCopySetup(example1);
-        inGameState.copySetup(gameState, playerIndex);
-    }
-
-    public void applyMove(Move move) {
-        super.applyMove(move);
-        //gameState.checkDebugCondition(1);
-        //gameState.checkDebugDepthThreeCondition(2);
-        //System.out.println("In expectimax AI:");
-        //gameState.printBoard();
-    }
-
     private Move expectiNegamaxSearch() {
         if (DEBUG) {
             System.out.println("\n------------------------------------------------------------------------------------");

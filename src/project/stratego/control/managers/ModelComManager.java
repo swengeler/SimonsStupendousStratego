@@ -82,7 +82,8 @@ public class ModelComManager {
         AIComManager.getInstance().configureSinglePlayer();
         //AIComManager.getInstance().setPrimaryAI("mcts", PlayerType.SOUTH.ordinal());
         //AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("star1 1", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("iterdeepexp", PlayerType.SOUTH.ordinal());
+        //AIComManager.getInstance().setPrimaryAI("star1 1", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
@@ -94,11 +95,12 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIMatch();
-        //AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
+        AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("random", PlayerType.SOUTH.ordinal());
         //AIComManager.getInstance().setSecondaryAI("mcts", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setSecondaryAI("expectinegamax 1", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("expectinegamax 1", PlayerType.SOUTH.ordinal());
-        AIComManager.getInstance().setPrimaryAIEval("marks");
+        //AIComManager.getInstance().setSecondaryAI("expectinegamax 1", PlayerType.NORTH.ordinal());
+        //AIComManager.getInstance().setPrimaryAI("expectinegamax 1", PlayerType.SOUTH.ordinal());
+        //AIComManager.getInstance().setPrimaryAIEval("marks");
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         //findGame(-1).getGameState().printBoard();
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());

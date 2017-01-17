@@ -2,6 +2,7 @@ package project.stratego.ai.search;
 
 import project.stratego.ai.evaluation.AbstractEvaluationFunction;
 import project.stratego.ai.evaluation.TestEvaluationFunction;
+import project.stratego.ai.setup.SetupMaker;
 import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.game.entities.GameState;
@@ -16,16 +17,30 @@ public abstract class AbstractAI {
     protected int playerIndex;
     protected EnhancedGameState gameState;
     protected AbstractEvaluationFunction evaluationFunction;
+    protected SetupMaker setupMaker;
 
     protected AbstractAI(int playerIndex) {
         this.playerIndex = playerIndex;
         gameState = new EnhancedGameState(playerIndex);
         evaluationFunction = new TestEvaluationFunction(playerIndex);
+        setupMaker = new SetupMaker() {
+            @Override
+            public void makeBoardSetup(GameState state, int playerIndex) {
+                // something something
+            }
+        };
     }
 
     public abstract Move getNextMove(Move lastOpponentMove);
 
-    public abstract void makeBoardSetup(GameState inGameState);
+    public void makeBoardSetup(GameState inGameState) {
+        String example1 = "SCOUT MINER BOMB SCOUT MINER BOMB FLAG BOMB MINER MINER " +
+                "SERGEANT BOMB SERGEANT MAJOR COLONEL LIEUTENANT BOMB LIEUTENANT CAPTAIN SERGEANT " +
+                "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
+                "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
+        gameState.interpretAndCopySetup(example1);
+        inGameState.copySetup(gameState, playerIndex);
+    }
 
     public void setEvaluationFunction(AbstractEvaluationFunction evaluationFunction) {
         this.evaluationFunction = evaluationFunction;

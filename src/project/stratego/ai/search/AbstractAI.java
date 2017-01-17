@@ -1,5 +1,7 @@
 package project.stratego.ai.search;
 
+import project.stratego.ai.evaluation.AbstractEvaluationFunction;
+import project.stratego.ai.evaluation.TestEvaluationFunction;
 import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.game.entities.GameState;
@@ -13,15 +15,21 @@ public abstract class AbstractAI {
 
     protected int playerIndex;
     protected EnhancedGameState gameState;
+    protected AbstractEvaluationFunction evaluationFunction;
 
     protected AbstractAI(int playerIndex) {
         this.playerIndex = playerIndex;
         gameState = new EnhancedGameState(playerIndex);
+        evaluationFunction = new TestEvaluationFunction(playerIndex);
     }
 
     public abstract Move getNextMove(Move lastOpponentMove);
 
     public abstract void makeBoardSetup(GameState inGameState);
+
+    public void setEvaluationFunction(AbstractEvaluationFunction evaluationFunction) {
+        this.evaluationFunction = evaluationFunction;
+    }
 
     public void setGameState(EnhancedGameState gameState) {
         this.gameState = gameState;

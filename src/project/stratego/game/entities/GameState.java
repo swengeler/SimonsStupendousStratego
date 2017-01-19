@@ -30,8 +30,10 @@ public class GameState {
                 this.board[row][col] = board[row][col].clone();
                 if (this.board[row][col].getOccupyingPiece() != null && this.board[row][col].getOccupyingPiece().getPlayerType() == PlayerType.NORTH) {
                     this.playerNorth.getActivePieces().add(this.board[row][col].getOccupyingPiece());
+                    //this.playerNorth.getHiddenPieces().add(this.board[row][col].getOccupyingPiece());
                 } else if (this.board[row][col].getOccupyingPiece() != null) {
                     this.playerSouth.getActivePieces().add(this.board[row][col].getOccupyingPiece());
+                    //this.playerSouth.getHiddenPieces().add(this.board[row][col].getOccupyingPiece());
                 }
             }
         }
@@ -176,6 +178,7 @@ public class GameState {
                 board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col] = state.getBoardArray()[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].clone();
                 if (board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece() != null) {
                     getPlayer(playerIndex).getActivePieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
+                    //getPlayer(playerIndex).getHiddenPieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
                 }
             }
         }
@@ -206,6 +209,7 @@ public class GameState {
             tempPieceIndex = Integer.parseInt(pieceIndexStrings[i]);
             temp = new Piece(PieceType.values()[tempPieceIndex], PlayerType.NORTH);
             playerNorth.getActivePieces().add(temp);
+            //playerNorth.getHiddenPieces().add(temp);
             board[3 - i / 10][9 - i % 10].setOccupyingPiece(temp);
         }
         pieceIndexStrings = setups[1].split("-");
@@ -213,6 +217,7 @@ public class GameState {
             tempPieceIndex = Integer.parseInt(pieceIndexStrings[i]);
             temp = new Piece(PieceType.values()[tempPieceIndex], PlayerType.SOUTH);
             playerSouth.getActivePieces().add(temp);
+            //playerSouth.getHiddenPieces().add(temp);
             board[6 + i / 10][i % 10].setOccupyingPiece(temp);
         }
     }

@@ -41,7 +41,8 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
             }
         }
         if (opponentSum != 0) {
-            return ownSum / opponentSum;
+            double randomFactor = Math.random() * 0.05;
+            return (ownSum / opponentSum) + randomFactor;
         }
         return 1000.0;
     }

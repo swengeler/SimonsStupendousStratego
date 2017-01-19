@@ -66,7 +66,7 @@ public abstract class AbstractAI {
 
     public void copyOpponentSetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
-        //gameState.printBoard();
+        System.out.println("Test for probabilities: ");
     }
 
     public void applyMove(Move move) {

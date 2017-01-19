@@ -73,6 +73,10 @@ public class MoveInformation {
         return encounteredPieceReference;
     }
 
+    Piece getPlayersPieceClone(int playerIndex) {
+        return movingPieceClone.getPlayerType().ordinal() == playerIndex ? movingPieceClone : encounteredPieceClone;
+    }
+
     void replaceProbabilities(HashMap<Piece, double[]> probabilitiesMap) {
         int counter = 0;
         for (Piece p : probabilitiesMap.keySet()) {

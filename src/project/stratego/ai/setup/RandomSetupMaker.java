@@ -17,6 +17,7 @@ public class RandomSetupMaker implements SetupMaker {
             for (int col = 0; col < 10; col++) {
                 temp = pieceFactory.makeRandomPiece(tempPlayer.getType());
                 tempPlayer.getActivePieces().add(temp);
+                //tempPlayer.getHiddenPieces().add(temp);
                 state.getBoardArray()[tempPlayer.getType() == PlayerType.NORTH ? row : 9 - row][col].setOccupyingPiece(temp);
             }
         }

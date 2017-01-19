@@ -67,7 +67,7 @@ public class AIComManager {
             } else {
                 maxDepth = 2;
             }
-            primaryAI = new ExpectiNegamaxAI(playerIndex, maxDepth);
+            primaryAI = new ExpectiMinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("mcts")) {
             primaryAI = new MonteCarloTreeSearchAI(playerIndex);
         } else if (aiType.startsWith("star1")) {
@@ -98,7 +98,7 @@ public class AIComManager {
             } else {
                 maxDepth = 2;
             }
-            secondaryAI = new ExpectiNegamaxAI(playerIndex, maxDepth);
+            secondaryAI = new ExpectiMinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("mcts")) {
             secondaryAI = new MonteCarloTreeSearchAI(playerIndex);
         } else if (aiType.startsWith("star1")) {
@@ -274,7 +274,7 @@ public class AIComManager {
         }
 
         AITestsMain.addPlayTime(System.currentTimeMillis() - beforeOne);
-        //AITestsMain.addNodesSearched(((ExpectiNegamaxAI) primaryAI).getNodesSearched());
+        //AITestsMain.addNodesSearched(((ExpectiMinimaxAI) primaryAI).getNodesSearched());
         AITestsMain.addNumberMoves(moveCounter);
         //AITestsMain.addWin(primaryAI.getPlayerWonIndex());
     }

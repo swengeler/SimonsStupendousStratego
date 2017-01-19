@@ -13,12 +13,14 @@ public class Player {
      * been placed and not been eliminated yet).
      */
     private ArrayList<Piece> activePieces;
+    private ArrayList<Piece> hiddenPieces;
     private ArrayList<Piece> deadPieces;
     private Piece currentPiece;
 
     public Player(PlayerType type) {
         this.type = type;
         this.activePieces = new ArrayList<>();
+        this.hiddenPieces = new ArrayList<>();
         this.deadPieces = new ArrayList<>();
     }
 
@@ -36,6 +38,8 @@ public class Player {
         return activePieces;
     }
 
+    public ArrayList<Piece> getHiddenPieces() { return hiddenPieces; }
+
     public ArrayList<Piece> getDeadPieces() {
         return deadPieces;
     }
@@ -46,23 +50,18 @@ public class Player {
         this.currentPiece = activePiece;
     }
 
-    /* Other methods */
-
-    public void addPiece(Piece piece) {
-        //System.out.println("Piece added for " + type + ": " + piece);
-        activePieces.add(piece);
-    }
-
-    public void removePiece(Piece piece) {
-        activePieces.remove(piece);
-    }
-
     /* Clone methods */
 
     public Player clone() {
         Player clone = new Player(type);
         for (Piece p : activePieces) {
             clone.getActivePieces().add(p.clone());
+        }
+        for (Piece p : hiddenPieces) {
+            clone.getHiddenPieces().add(p.clone());
+        }
+        for (Piece p : deadPieces) {
+            clone.getDeadPieces().add(p.clone());
         }
         clone.setCurrentPiece(currentPiece == null ? null : currentPiece.clone());
         return clone;

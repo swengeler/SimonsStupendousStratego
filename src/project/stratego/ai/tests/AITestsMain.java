@@ -43,7 +43,7 @@ public class AITestsMain {
             System.out.println("RUN NUMBER " + (counter + 1));
             System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
             ModelComManager.getInstance().configureAIMatch();
-            //ExpectiNegamaxAI.maxDepth = expectimaxMaxDepth;
+            //ExpectiMinimaxAI.maxDepth = expectimaxMaxDepth;
             before = System.currentTimeMillis();
             AIComManager.getInstance().runAutomaticAIMatch();
             System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");

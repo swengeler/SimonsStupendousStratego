@@ -50,14 +50,16 @@ public abstract class MoveManager {
 
         if (destTile.getOccupyingPiece() != null) {
             movingPiece.reveal();
+            //movingPlayer.getHiddenPieces().remove(movingPiece);
             if (checkIfDraw(destTile.getOccupyingPiece(), movingPiece)) {
                 lastMoveResult = MoveResult.ATTACKTIE;
                 destTile.getOccupyingPiece().reveal();
                 lastRemovedPiece = destTile.getOccupyingPiece();
                 destTile.setOccupyingPiece(null);
                 movingPlayer.getActivePieces().remove(movingPiece);
-                staticPlayer.getActivePieces().remove(lastRemovedPiece);
                 movingPlayer.getDeadPieces().add(movingPiece);
+                staticPlayer.getActivePieces().remove(lastRemovedPiece);
+                //staticPlayer.getHiddenPieces().remove(lastRemovedPiece);
                 staticPlayer.getDeadPieces().add(lastRemovedPiece);
             } else if (checkIfAttackWins(movingPiece, destTile.getOccupyingPiece())) {
                 lastMoveResult = MoveResult.ATTACKWON;
@@ -66,6 +68,7 @@ public abstract class MoveManager {
                 destTile.getOccupyingPiece().reveal();
                 destTile.setOccupyingPiece(movingPiece);
                 staticPlayer.getActivePieces().remove(lastRemovedPiece);
+                //staticPlayer.getHiddenPieces().remove(lastRemovedPiece);
                 staticPlayer.getDeadPieces().add(lastRemovedPiece);
             } else {
                 lastMoveResult = MoveResult.ATTACKLOST;

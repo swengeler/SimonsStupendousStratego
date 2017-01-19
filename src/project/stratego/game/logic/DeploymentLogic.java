@@ -35,6 +35,7 @@ public class DeploymentLogic extends GameLogic {
             for (int col = 0; col < 10; col++) {
                 temp = pieceFactory.makeRandomPiece(tempPlayer.getType());
                 tempPlayer.getActivePieces().add(temp);
+                //tempPlayer.getHiddenPieces().add(temp);
                 parent.getBoard()[tempPlayer.getType() == PlayerType.NORTH ? row : 9 - row][col].setOccupyingPiece(temp);
                 ModelComManager.getInstance().sendPiecePlaced(parent.getGameID(), playerIndex, temp.getType().ordinal(), temp.getRowPos(), temp.getColPos());
             }
@@ -65,13 +66,16 @@ public class DeploymentLogic extends GameLogic {
             //System.out.println("Can place piece of type " + temp.getType());
             tempPiece = pieceFactory.makePiece(tempPlayer.getType(), PieceType.values()[pieceIndex]);
             tempPlayer.getActivePieces().add(tempPiece);
+            //tempPlayer.getHiddenPieces().add(tempPiece);
             tempPlayer.setCurrentPiece(tempPiece);
             ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
         } else if (tempPlayer.getCurrentPiece() != null) {
             pieceFactory.giveBackPiece(tempPlayer.getCurrentPiece());
             tempPlayer.getActivePieces().remove(tempPlayer.getCurrentPiece());
+            //tempPlayer.getHiddenPieces().remove(tempPlayer.getCurrentPiece());
             tempPiece = pieceFactory.makePiece(tempPlayer.getType(), PieceType.values()[pieceIndex]);
             tempPlayer.getActivePieces().add(tempPiece);
+            //tempPlayer.getHiddenPieces().add(tempPiece);
             tempPlayer.setCurrentPiece(tempPiece);
             ModelComManager.getInstance().sendTrayActiveUpdate(parent.getGameID(), playerIndex, pieceIndex);
         }

@@ -7,13 +7,8 @@ import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.GameState;
-import project.stratego.game.entities.Piece;
 import project.stratego.game.moves.Move;
-import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
-
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class AIComManager {
 
@@ -81,7 +76,7 @@ public class AIComManager {
             if (parts.length > 1) {
                 maxDepth = Integer.parseInt(parts[1]);
             }
-            primaryAI = new Star1NegamaxAI(playerIndex, maxDepth);
+            primaryAI = new Star1UniformMinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;
@@ -112,7 +107,7 @@ public class AIComManager {
             if (parts.length > 1) {
                 maxDepth = Integer.parseInt(parts[1]);
             }
-            secondaryAI = new Star1NegamaxAI(playerIndex, maxDepth);
+            secondaryAI = new Star1UniformMinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;

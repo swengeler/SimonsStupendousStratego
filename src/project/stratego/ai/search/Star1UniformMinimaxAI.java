@@ -91,7 +91,7 @@ public class Star1UniformMinimaxAI extends AbstractAI {
             before = System.currentTimeMillis();
             if (m.isChanceMove()) {
                 // do expectimax evaluation
-                currentValue = star1Max(1, gameState, m, -Double.MAX_VALUE, Double.MAX_VALUE);
+                currentValue = star1Minimax(0, gameState, m, -Double.MAX_VALUE, Double.MAX_VALUE);
             } else {
                 gameState.applyMove(m);
                 currentValue = alphaBetaMax(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
@@ -131,7 +131,7 @@ public class Star1UniformMinimaxAI extends AbstractAI {
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
             if (m.isChanceMove()) {
-                alphaValue = Math.max(alphaValue, (currentValue = star1Min(currentDepth + 1, state, m, alphaValue, betaValue)));
+                alphaValue = Math.max(alphaValue, (currentValue = star1Minimax(currentDepth, state, m, alphaValue, betaValue)));
             } else {
                 state.applyMove(m);
                 alphaValue = Math.max(alphaValue, (currentValue = alphaBetaMin(currentDepth + 1, state, alphaValue, betaValue)));
@@ -154,7 +154,7 @@ public class Star1UniformMinimaxAI extends AbstractAI {
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
             if (m.isChanceMove()) {
-                betaValue = Math.min(betaValue, (currentValue = star1Max(currentDepth + 1, state, m, alphaValue, betaValue)));
+                betaValue = Math.min(betaValue, (currentValue = star1Minimax(currentDepth, state, m, alphaValue, betaValue)));
             } else {
                 state.applyMove(m);
                 betaValue = Math.min(betaValue, (currentValue = alphaBetaMax(currentDepth + 1, state, alphaValue, betaValue)));
@@ -167,7 +167,7 @@ public class Star1UniformMinimaxAI extends AbstractAI {
         return betaValue;
     }
 
-    private double star1Max(int currentDepth, EnhancedGameState state, AIMove chanceMove, double alphaValue, double betaValue) {
+    private double star1Minimax(int currentDepth, EnhancedGameState state, AIMove chanceMove, double alphaValue, double betaValue) {
         Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
         int[] relevantIndeces = new int[PieceType.values().length - 1];
@@ -193,51 +193,8 @@ public class Star1UniformMinimaxAI extends AbstractAI {
 
             state.assignPieceType(unknownPiece, PieceType.values()[relevantIndeces[i]]);
             state.applyMove(chanceMove);
-            currentValue = alphaBetaMax(currentDepth, state, nextLowerBound, nextUpperBound);
-            state.undoLastMove();
-            state.undoLastAssignment();
-
-            if (currentValue <= lowerBound) {
-                return alphaValue;
-            }
-            if (currentValue >= upperBound) {
-                return betaValue;
-            }
-
-            valueSum += currentValue;
-            lowerBound += evalUpperBound - currentValue;
-            upperBound += evalLowerBound - currentValue;
-        }
-        return valueSum / nrChanceEvents;
-    }
-
-    private double star1Min(int currentDepth, EnhancedGameState state, AIMove chanceMove, double alphaValue, double betaValue) {
-        Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
-
-        int[] relevantIndeces = new int[PieceType.values().length - 1];
-        int nrChanceEvents = 0;
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
-            if (state.getProbability(unknownPiece, i) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
-                relevantIndeces[nrChanceEvents] = i;
-                nrChanceEvents++;
-            }
-        }
-
-        double lowerBound = nrChanceEvents * (alphaValue - evalUpperBound) + evalUpperBound; // A
-        double upperBound = nrChanceEvents * (betaValue - evalLowerBound) + evalLowerBound; // B
-        double nextLowerBound; // AX
-        double nextUpperBound; // BX
-
-        double valueSum = 0;
-        double currentValue;
-
-        for (int i = 0; i < nrChanceEvents; i++) {
-            nextLowerBound = Math.max(lowerBound, evalLowerBound);
-            nextUpperBound = Math.min(upperBound, evalUpperBound);
-
-            state.assignPieceType(unknownPiece, PieceType.values()[relevantIndeces[i]]);
-            state.applyMove(chanceMove);
-            currentValue = alphaBetaMin(currentDepth, state, nextLowerBound, nextUpperBound);
+            // depending on the depth (or the active player) the next value will be computed as the value of the resulting MAX node or that of the resulting MIN node
+            currentValue = currentDepth % 2 == 0 ? alphaBetaMax(currentDepth + 1, state, nextLowerBound, nextUpperBound) : alphaBetaMin(currentDepth + 1, state, nextLowerBound, nextUpperBound);
             state.undoLastMove();
             state.undoLastAssignment();
 

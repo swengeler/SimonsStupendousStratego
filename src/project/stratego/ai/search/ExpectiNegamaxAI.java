@@ -17,12 +17,12 @@ public class ExpectiNegamaxAI extends AbstractAI {
 
     private static String debugString = "";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final boolean DEBUG_2 = false;
 
     private int nodeCounter = 0;
 
-    private int maxDepth = 3;
+    private int maxDepth = 2;
 
     public ExpectiNegamaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);

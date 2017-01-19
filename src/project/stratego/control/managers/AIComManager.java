@@ -76,7 +76,7 @@ public class AIComManager {
             if (parts.length > 1) {
                 maxDepth = Integer.parseInt(parts[1]);
             }
-            primaryAI = new Star1UniformMinimaxAI(playerIndex, maxDepth);
+            primaryAI = new Star1MinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;
@@ -107,7 +107,7 @@ public class AIComManager {
             if (parts.length > 1) {
                 maxDepth = Integer.parseInt(parts[1]);
             }
-            secondaryAI = new Star1UniformMinimaxAI(playerIndex, maxDepth);
+            secondaryAI = new Star1MinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;

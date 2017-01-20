@@ -77,6 +77,13 @@ public class AIComManager {
                 maxDepth = Integer.parseInt(parts[1]);
             }
             primaryAI = new Star1MinimaxAI(playerIndex, maxDepth);
+        } else if (aiType.startsWith("star2")) {
+            String[] parts = aiType.split(" ");
+            int maxDepth = 2;
+            if (parts.length > 1) {
+                maxDepth = Integer.parseInt(parts[1]);
+            }
+            primaryAI = new Star2MinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;
@@ -108,6 +115,13 @@ public class AIComManager {
                 maxDepth = Integer.parseInt(parts[1]);
             }
             secondaryAI = new Star1MinimaxAI(playerIndex, maxDepth);
+        } else if (aiType.startsWith("star2")) {
+            String[] parts = aiType.split(" ");
+            int maxDepth = 2;
+            if (parts.length > 1) {
+                maxDepth = Integer.parseInt(parts[1]);
+            }
+            secondaryAI = new Star2MinimaxAI(playerIndex, maxDepth);
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;

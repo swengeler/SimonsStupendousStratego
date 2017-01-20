@@ -774,15 +774,15 @@ public class EnhancedGameState extends GameState {
 
     private void updateProbabilities() {
         //ArrayList<Piece> pieces = getPlayer(1 - playerIndex).getActivePieces();
-        int[] remainingPieceCount = new int[PieceType.values().length - 1];
+        /*int[] remainingPieceCount = new int[PieceType.values().length - 1];
         ArrayList<Piece> pieces = new ArrayList<>(40);
         for (Piece p : probabilitiesMap.keySet()) {
             if (!p.isRevealed()) {
                 remainingPieceCount[p.getType().ordinal()]++;
                 pieces.add(p);
             }
-        }
-        //ArrayList<Piece> pieces = getPlayer(1 - playerIndex).getHiddenPieces();
+        }*/
+        Set<Piece> pieces = probabilitiesMap.keySet();
         double[] currentProbabilities;
         boolean updated = false;
         long before = System.nanoTime();
@@ -878,8 +878,8 @@ public class EnhancedGameState extends GameState {
                     sum += probabilitiesMap.get(p)[i];
                 }
 
-                //sum /= PieceType.pieceQuantity[i];
-                sum /= remainingPieceCount[i];
+                sum /= PieceType.pieceQuantity[i];
+                //sum /= remainingPieceCount[i];
 
                 if (Math.abs(1 - sum) > PROB_EPSILON) {
                     updated = false;

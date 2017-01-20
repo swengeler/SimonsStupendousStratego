@@ -6,7 +6,7 @@ import project.stratego.control.managers.ModelComManager;
 public class AITestsMain {
 
 
-    private static final int numberGames = 50;
+    private static final int numberGames = 500;
     private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;

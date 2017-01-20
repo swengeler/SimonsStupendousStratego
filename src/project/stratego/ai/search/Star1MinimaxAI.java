@@ -93,7 +93,7 @@ public class Star1MinimaxAI extends AbstractAI {
                 currentValue = star1Minimax(0, gameState, m, -Double.MAX_VALUE, Double.MAX_VALUE);
             } else {
                 gameState.applyMove(m);
-                currentValue = alphaBetaMax(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
+                currentValue = alphaBetaMin(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
                 gameState.undoLastMove();
             }
             if (DEBUG) {
@@ -209,7 +209,7 @@ public class Star1MinimaxAI extends AbstractAI {
             state.assignPieceType(unknownPiece, PieceType.values()[relevantIndeces[i]]);
             state.applyMove(chanceMove);
             // depending on the depth (or the active player) the next value will be computed as the value of the resulting MAX node or that of the resulting MIN node
-            currentValue = currentDepth % 2 == 0 ? alphaBetaMax(currentDepth + 1, state, nextLowerBound, nextUpperBound) : alphaBetaMin(currentDepth + 1, state, nextLowerBound, nextUpperBound);
+            currentValue = currentDepth % 2 == 1 ? alphaBetaMax(currentDepth + 1, state, nextLowerBound, nextUpperBound) : alphaBetaMin(currentDepth + 1, state, nextLowerBound, nextUpperBound);
             state.undoLastMove();
             state.undoLastAssignment();
 

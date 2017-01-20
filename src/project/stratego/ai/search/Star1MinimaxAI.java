@@ -175,7 +175,7 @@ public class Star1MinimaxAI extends AbstractAI {
         double relevantProbabilitiesSum = 0.0;
         double tempProbability;
         for (int i = 0; i < PieceType.values().length - 1; i++) {
-            if ((tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
+            if ((i > 1 || unknownPiece.getType().ordinal() == playerIndex) && (tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantIndeces[nrChanceEvents] = i;
                 relevantProbabilities[nrChanceEvents] = tempProbability;
                 relevantProbabilitiesSum += tempProbability;

@@ -85,6 +85,9 @@ public class Star2MinimaxAI extends AbstractAI {
         long before;
         long total = System.currentTimeMillis();
 
+        ArrayList<AIMove> testList = new ArrayList<>();
+        testList.add(legalMoves.get(0));
+
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
             before = System.currentTimeMillis();
@@ -93,7 +96,7 @@ public class Star2MinimaxAI extends AbstractAI {
                 currentValue = star2Min(0, gameState, m, -Double.MAX_VALUE, Double.MAX_VALUE);
             } else {
                 gameState.applyMove(m);
-                currentValue = alphaBetaMax(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
+                currentValue = alphaBetaMin(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
                 gameState.undoLastMove();
             }
             if (DEBUG) {
@@ -124,8 +127,8 @@ public class Star2MinimaxAI extends AbstractAI {
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
-        ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
-
+        // generate moves for MAX player
+        ArrayList<AIMove> legalMoves = generateLegalMoves(state, playerIndex);
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -148,7 +151,8 @@ public class Star2MinimaxAI extends AbstractAI {
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
-        ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
+        // generate moves for MIN player
+        ArrayList<AIMove> legalMoves = generateLegalMoves(state, 1 - playerIndex);
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -176,7 +180,7 @@ public class Star2MinimaxAI extends AbstractAI {
         double relevantProbabilitiesSum = 0.0;
         double tempProbability;
         for (int i = 0; i < PieceType.values().length - 1; i++) {
-            if ((tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
+            if ((i > 1) && (tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantIndeces[nrChanceEvents] = i;
                 relevantProbabilities[nrChanceEvents] = tempProbability;
                 relevantProbabilitiesSum += tempProbability;
@@ -304,7 +308,7 @@ public class Star2MinimaxAI extends AbstractAI {
 
             state.assignPieceType(unknownPiece, PieceType.values()[relevantIndeces[i]]);
             state.applyMove(chanceMove);
-            probedValues[i] = probe(currentDepth, state, nextLowerBound, nextUpperBound);
+            probedValues[i] = probe(currentDepth + 1, state, nextLowerBound, nextUpperBound);
             state.undoLastMove();
             state.undoLastAssignment();
 
@@ -352,8 +356,26 @@ public class Star2MinimaxAI extends AbstractAI {
         return weightedValueSum;
     }
 
-    private static double probe(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
-        return 0.0;
+    private double probe(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
+        if (currentDepth == maxDepth || state.isGameOver()) {
+            return evaluationFunction.evaluate(state, playerIndex);
+        }
+
+        // generate moves (children) for MAX if currentDepth is even, for MIN if currentDepth is odd
+        // order by how promising they are
+        boolean maxPlayersTurn = currentDepth % 2 == 0;
+        AIMove probedMove = orderMoves(generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex)).get(0);
+        // get best one's value
+        double probedValue;
+        // now need to get the value of the opposite player's node which is the probed child
+        if (probedMove.isChanceMove()) {
+            probedValue = maxPlayersTurn ? star2Min(currentDepth, state, probedMove, alphaValue, betaValue) : star2Max(currentDepth, state, probedMove, alphaValue, betaValue);
+        } else {
+            state.applyMove(probedMove);
+            probedValue = maxPlayersTurn ? alphaBetaMin(currentDepth + 1, state, alphaValue, betaValue) : alphaBetaMax(currentDepth + 1, state, alphaValue, betaValue);
+            state.undoLastMove();
+        }
+        return probedValue;
     }
 
     /* stats */

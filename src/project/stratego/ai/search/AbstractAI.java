@@ -73,6 +73,10 @@ public abstract class AbstractAI {
         gameState.applyMove(move);
     }
 
+    protected ArrayList<AIMove> orderMoves(ArrayList<AIMove> legalMoves) {
+        return legalMoves;
+    }
+
     protected ArrayList<AIMove> generateLegalMoves(EnhancedGameState state, int playerIndex) {
         //System.out.println("Number of player pieces: " + state.getPlayer(playerIndex).getActivePieces().size());
         ArrayList<AIMove> legalMoves = new ArrayList<>();

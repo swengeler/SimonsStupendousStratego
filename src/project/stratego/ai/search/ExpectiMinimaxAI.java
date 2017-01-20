@@ -13,7 +13,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
 
     private static String debugString = "";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final boolean DEBUG_2 = false;
 
     private int nodeCounter = 0;
@@ -64,6 +64,11 @@ public class ExpectiMinimaxAI extends AbstractAI {
         long before;
         long total = System.currentTimeMillis();
 
+        ArrayList<AIMove> testList = new ArrayList<>(3);
+        testList.add(legalMoves.get(0));
+        //testList.add(legalMoves.get(1));
+        //testList.add(legalMoves.get(2));
+
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
             before = System.currentTimeMillis();
@@ -77,7 +82,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
             }
             if (DEBUG) {
                 System.out.println("\n" + m);
-                System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s");
+                System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s\n");
             }
             if (currentValue > maxValue) {
                 maxValue = currentValue;
@@ -238,13 +243,16 @@ public class ExpectiMinimaxAI extends AbstractAI {
         // sum over all possible scenarios arising from chanceMove
         double relevantProbabilitiesSum = 0.0;
         for (int i = 0; i < PieceType.values().length - 1; i++) {
-            if (DEBUG_2 && currentDepth == 1) {
+            if (DEBUG_2 && currentDepth == 2) {
                 System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
             }
-            if (i > 1 && (prevProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
+            if ((currentDepth % 2 == 1 || i > 1) && (prevProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantProbabilitiesSum += prevProbability;
                 state.assignPieceType(unknownPiece, PieceType.values()[i]);
                 state.applyMove(chanceMove);
+                if (DEBUG_2 && currentDepth == 1) {
+                    state.printBoard();
+                }
                 if (currentDepth % 2 == 1) {
                     sum += prevProbability * minSearch(currentDepth, state);
                 } else {
@@ -254,11 +262,11 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 state.undoLastAssignment();
             }
         }
-        if (DEBUG_2) {
+        if (DEBUG_2 && currentDepth == 2) {
             System.out.println("sum = " + sum + ", relevantProbabilitiesSum = " + relevantProbabilitiesSum);
         }
         sum /= relevantProbabilitiesSum;
-        if (DEBUG_2) {
+        if (DEBUG_2 && currentDepth == 2) {
             System.out.println("sum after = " + sum);
         }
         return sum;

@@ -17,12 +17,14 @@ public class Star2MinimaxAI extends AbstractAI {
     private static final boolean DEBUG_MIN = false;
     private static final boolean DEBUG_STAR2_MAX = false;
 
-    private int nodeCounter = 0;
-
     private int maxDepth = 2;
 
     private double evalUpperBound = 2.0;
     private double evalLowerBound = 0.0;
+
+    private boolean iterativeDeepening;
+    private boolean timeLimitReached;
+    private boolean moveOrdering;
 
     public Star2MinimaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);
@@ -66,6 +68,9 @@ public class Star2MinimaxAI extends AbstractAI {
             System.out.println("------------------------------------------------------------------------------------\n");
         }
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
+        if (moveOrdering) {
+            legalMoves = orderMoves(gameState, legalMoves);
+        }
         if (DEBUG) {
             System.out.println("Number of legal moves: " + legalMoves.size());
             int sum = 0;
@@ -132,6 +137,10 @@ public class Star2MinimaxAI extends AbstractAI {
 
         // generate moves for MAX player
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, playerIndex);
+        if (moveOrdering) {
+            legalMoves = orderMoves(gameState, legalMoves);
+        }
+
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -157,6 +166,9 @@ public class Star2MinimaxAI extends AbstractAI {
 
         // generate moves for MIN player
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, 1 - playerIndex);
+        if (moveOrdering) {
+            legalMoves = orderMoves(gameState, legalMoves);
+        }
         if (DEBUG_MIN) {
             System.out.println("Number of legal moves at depth " + currentDepth + " (MIN) where alphaValue = " + alphaValue + " and betaValue = " + betaValue);
             for (AIMove m : legalMoves) {
@@ -403,6 +415,8 @@ public class Star2MinimaxAI extends AbstractAI {
     }
 
     /* stats */
+
+    private int nodeCounter = 0;
 
     public int getNodesSearched() {
         return nodeCounter;

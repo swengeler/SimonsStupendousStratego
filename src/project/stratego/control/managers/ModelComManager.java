@@ -94,10 +94,10 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIMatch();
-        //AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
+        AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         //AIComManager.getInstance().setPrimaryAI("random", PlayerType.SOUTH.ordinal());
         //AIComManager.getInstance().setSecondaryAI("mcts", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setSecondaryAI("expectinegamax 1", PlayerType.NORTH.ordinal());
+        //AIComManager.getInstance().setSecondaryAI("expectinegamax 1", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("expectinegamax 3", PlayerType.SOUTH.ordinal());
         //AIComManager.getInstance().setPrimaryAI("iterdeepexp 2000", PlayerType.SOUTH.ordinal());
         //AIComManager.getInstance().setPrimaryAIEval("marks");

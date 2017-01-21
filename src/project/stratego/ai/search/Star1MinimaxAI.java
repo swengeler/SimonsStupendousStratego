@@ -15,12 +15,14 @@ public class Star1MinimaxAI extends AbstractAI {
 
     private static final boolean DEBUG = true;
 
-    private int nodeCounter = 0;
-
     private int maxDepth = 2;
 
-    private double evalUpperBound = 1.1;
-    private double evalLowerBound = 0.9;
+    private double evalUpperBound = 2.0;
+    private double evalLowerBound = 0.0;
+
+    private boolean iterativeDeepening;
+    private boolean timeLimitReached;
+    private boolean moveOrdering = false;
 
     public Star1MinimaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);
@@ -64,6 +66,9 @@ public class Star1MinimaxAI extends AbstractAI {
             System.out.println("------------------------------------------------------------------------------------\n");
         }
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
+        if (moveOrdering) {
+            legalMoves = orderMoves(gameState, legalMoves);
+        }
         if (DEBUG) {
             System.out.println("Number of legal moves: " + legalMoves.size());
             int sum = 0;
@@ -126,6 +131,9 @@ public class Star1MinimaxAI extends AbstractAI {
         }
 
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
+        if (moveOrdering) {
+            legalMoves = orderMoves(state, legalMoves);
+        }
 
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
@@ -151,6 +159,10 @@ public class Star1MinimaxAI extends AbstractAI {
         }
 
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
+        if (moveOrdering) {
+            legalMoves = orderMoves(state, legalMoves);
+        }
+
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -234,6 +246,8 @@ public class Star1MinimaxAI extends AbstractAI {
     }
 
     /* stats */
+
+    private int nodeCounter = 0;
 
     public int getNodesSearched() {
         return nodeCounter;

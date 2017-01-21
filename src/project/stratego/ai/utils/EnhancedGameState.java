@@ -33,6 +33,8 @@ public class EnhancedGameState extends GameState {
     private int playerWonIndex;
     private int nrMoveRevealedPieces;
 
+    private boolean opponentModellingEnabled;
+
     public EnhancedGameState(int playerIndex) {
         super();
         this.playerIndex = playerIndex;
@@ -225,7 +227,7 @@ public class EnhancedGameState extends GameState {
 
         // only if the move was performed in the actual game should the probabilities of the piece be updated
         // according to the outcome of the encounter, otherwise the piece was already assigned a probability
-        if (!(move instanceof AIMove) && encounteredPiece != null /*&& movingPiece != encounteredPiece*/) {
+        if (!(move instanceof AIMove) && encounteredPiece != null) {
             // check whether opponent's piece was encountered with our move or the other way around
             // then, regardless of the outcome of that move, the piece should be revealed
             int typeIndex = opponentPiece.getType().ordinal();
@@ -265,11 +267,14 @@ public class EnhancedGameState extends GameState {
         }
 
         // the last possibility is a simple move of the opponent's piece which means it cannot be a FLAG or a BOMB
-        probabilitiesMap.get(opponentPiece)[PieceType.BOMB.ordinal()] = 0.0;
-        probabilitiesMap.get(opponentPiece)[PieceType.FLAG.ordinal()] = 0.0;
-        updateProbabilities();
         if (movingPiece.getPlayerType().ordinal() != playerIndex) {
+            probabilitiesMap.get(opponentPiece)[PieceType.BOMB.ordinal()] = 0.0;
+            probabilitiesMap.get(opponentPiece)[PieceType.FLAG.ordinal()] = 0.0;
+            updateProbabilities();
             updateUnmovablePiecesProbabilities();
+            if (opponentModellingEnabled) {
+                updateProbabilitisAfterMove(move, opponentPiece);
+            }
         }
 
     }
@@ -412,7 +417,6 @@ public class EnhancedGameState extends GameState {
                         probabilitiesMap.get(board[actualRow][actualCol].getOccupyingPiece())[PieceType.valueOf(array[0]).ordinal()] = Double.parseDouble(array[1].trim());
                     }
                 }
-                //System.out.println("Probabilities initialised, opponent has " + getPlayer(1 - playerIndex).getActivePieces().size() + " pieces");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -438,9 +442,7 @@ public class EnhancedGameState extends GameState {
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
                 board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].setOccupyingPiece(new Piece(PieceType.valueOf(pieceEncodings[counter++]), PlayerType.values()[playerIndex]));
-                //System.out.println("EnhancedGameState");
                 getPlayer(playerIndex).getActivePieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
-                //getPlayer(playerIndex).getHiddenPieces().add(board[playerIndex == PlayerType.NORTH.ordinal() ? row : BOARD_SIZE - 1 - row][col].getOccupyingPiece());
             }
         }
     }
@@ -451,18 +453,6 @@ public class EnhancedGameState extends GameState {
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
             probabilitiesMap = new HashMap<>(40);
             double[] initProbabilities = new double[PieceType.numberTypes];
-            /*for (int i = 0; i < initProbabilities.length; i++) {
-                initProbabilities[i] = ((double) PieceType.pieceQuantity[i]) / getPlayer(playerIndex).getActivePieces().size();
-            }
-            for (Piece p : getPlayer(playerIndex).getActivePieces()) {
-                probabilitiesMap.put(p, initProbabilities.clone());
-                if (playerIndex == PlayerType.NORTH.ordinal() && p.getRowPos() > 1) {
-                    probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
-                } else if (playerIndex == PlayerType.SOUTH.ordinal() && p.getRowPos() < 8) {
-                    probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
-                }
-            }
-            updateProbabilities();*/
             try (BufferedReader br = new BufferedReader(new FileReader("res\\mirroredprobs.txt"))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {
                     probabilitiesMap.put(p, new double[PieceType.numberTypes]);
@@ -480,39 +470,11 @@ public class EnhancedGameState extends GameState {
                         probabilitiesMap.get(board[actualRow][actualCol].getOccupyingPiece())[PieceType.valueOf(array[0]).ordinal()] = Double.parseDouble(array[1].trim());
                     }
                 }
-                //System.out.println("Probabilities initialised, opponent has " + getPlayer(1 - playerIndex).getActivePieces().size() + " pieces");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-   /* public void interpretEncodedBoard(String encodedBoard) {
-        super.interpretEncodedBoard(encodedBoard);
-        // make probability table for opponent
-        probabilitiesMap = new HashMap<>(40);
-        double[] initProbabilities = new double[PieceType.numberTypes];
-        try (BufferedReader br = new BufferedReader(new FileReader("res\\savefile.txt"))) {
-            for (Piece p : getPlayer(1 - playerIndex).getActivePieces()) {
-                probabilitiesMap.put(p, new double[PieceType.numberTypes]);
-            }
-            String line;
-            int readRow = 0, readCol = 0, actualRow = 0, actualCol = 0;
-            while ((line = br.readLine()) != null) {
-                if (line.length() != 0 && line.charAt(0) == '(') {
-                    readRow = Integer.parseInt(line.charAt(1) + "");
-                    readCol = Integer.parseInt(line.charAt(3) + "");
-                } else if (line.length() != 0 && !line.startsWith(" ")) {
-                    String[] array = line.split(":");
-                    actualRow = (1 - playerIndex) == PlayerType.NORTH.ordinal() ? 9 - readRow : readRow;
-                    actualCol = (1 - playerIndex) == PlayerType.NORTH.ordinal() ? 9 - readCol : readCol;
-                    probabilitiesMap.get(board[actualRow][actualCol].getOccupyingPiece())[PieceType.valueOf(array[0]).ordinal()] = Double.parseDouble(array[1].trim());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public int getPlayerIndex() {
         return playerIndex;
@@ -539,6 +501,15 @@ public class EnhancedGameState extends GameState {
             return 0;
         }
         return probabilitiesMap.get(piece)[typeIndex];
+    }
+
+    public PieceType getProbabilityRevealedType(Piece piece) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
+            if (Math.abs(probabilitiesMap.get(piece)[i] - 1.0) < PROB_EPSILON) {
+                return PieceType.values()[i];
+            }
+        }
+        return PieceType.UNKNOWN;
     }
 
     /**
@@ -580,6 +551,10 @@ public class EnhancedGameState extends GameState {
         //System.out.println("Undo assignment for " + assignmentInfo.getAssignedPiece());
         assignmentInfo.replaceProbabilities(probabilitiesMap);
         updateProbabilities();
+    }
+
+    public void setOpponentModellingEnabled(boolean opponentModellingEnabled) {
+        this.opponentModellingEnabled = opponentModellingEnabled;
     }
 
     private int lastUpdated = -1;
@@ -1214,6 +1189,54 @@ public class EnhancedGameState extends GameState {
             deadPiecesString += p + " where probability for that type is: " + probabilitiesMap.get(p)[p.getType().ordinal()] + "\n";
         }
         return deadPiecesString;
+    }
+
+    private void updateProbabilitisAfterMove(Move opponentMove, Piece movingPiece) {
+        // get all pieces in the region around the original position and the destination positon of the piece
+        // those are the pieces that are assumed to influence the behaviour
+        ArrayList<Piece> surroundingPieces = new ArrayList<>();
+        for (int row = opponentMove.getOrRow() - 2; row <= opponentMove.getOrRow() + 2; row++) {
+            for (int col = opponentMove.getOrCol() - 2; col <= opponentMove.getOrCol() + 2; col++) {
+                if (row >= 0 && row < 10 && col >= 0 && col < 10 && !(row == opponentMove.getOrRow() && col == opponentMove.getOrCol())) {
+                    if (board[row][col].getOccupyingPiece() != null && board[row][col].getOccupyingPiece().getPlayerType().ordinal() == playerIndex) {
+                        surroundingPieces.add(board[row][col].getOccupyingPiece());
+                    }
+                }
+            }
+        }
+        for (int row = opponentMove.getDestRow() - 2; row <= opponentMove.getDestRow() + 2; row++) {
+            for (int col = opponentMove.getDestCol() - 2; col <= opponentMove.getDestCol() + 2; col++) {
+                if (row >= 0 && row < 10 && col >= 0 && col < 10 && !(row == opponentMove.getDestRow() && col == opponentMove.getDestCol())) {
+                    if (board[row][col].getOccupyingPiece() != null && board[row][col].getOccupyingPiece().getPlayerType().ordinal() == playerIndex) {
+                        surroundingPieces.add(board[row][col].getOccupyingPiece());
+                    }
+                }
+            }
+        }
+
+        int orDistance;
+        int destDistance;
+
+        double probabilityChange = 0.1;
+
+        double[] movingPieceProbabilities = probabilitiesMap.get(movingPiece);
+        for (Piece p : surroundingPieces) {
+            // Manhattan distances
+            orDistance = Math.abs(opponentMove.getOrRow() - p.getRowPos() + opponentMove.getOrCol() - p.getColPos());
+            destDistance = Math.abs(opponentMove.getDestRow() - p.getRowPos() + opponentMove.getDestCol() - p.getColPos());
+
+            if (p.isRevealed() && orDistance > destDistance) {
+                // aggressive move
+                for (int i = p.getType().ordinal(); i < PieceType.numberTypes; i++) {
+                    movingPieceProbabilities[i] *= (1.0 + probabilityChange);
+                }
+            } else if (p.isRevealed() && orDistance < destDistance) {
+                // defensive move
+                for (int i = 3; i < p.getType().ordinal(); i++) {
+                    movingPieceProbabilities[i] *= (1.0 + probabilityChange);
+                }
+            }
+        }
     }
 
    /*

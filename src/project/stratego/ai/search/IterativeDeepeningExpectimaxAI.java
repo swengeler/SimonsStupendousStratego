@@ -20,6 +20,7 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
 
     private int currentMaxDepth;
 
+    private boolean iterativeDeepening = true;
     private boolean timeLimitReached;
 
     public IterativeDeepeningExpectimaxAI(int playerIndex, long timeLimitMillis) {
@@ -67,15 +68,36 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
         long before;
         long total = System.currentTimeMillis();
 
-        while (!timeLimitReached) {
-            // loop through all moves and find the one with the highest expecti-negamax value
+        if (iterativeDeepening) {
+            while (!timeLimitReached) {
+                // loop through all moves and find the one with the highest expecti-negamax value
+                for (AIMove m : legalMoves) {
+                    if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                        timeLimitReached = true;
+                        break;
+                    }
+                    before = System.currentTimeMillis();
+                    if (m.isChanceMove()) {
+                        // do expectimax evaluation
+                        currentValue = expectimaxSearch(1, gameState, m);
+                    } else {
+                        gameState.applyMove(m);
+                        currentValue = minSearch(1, gameState);
+                        gameState.undoLastMove();
+                    }
+                    if (DEBUG) {
+                        System.out.println("\n" + m);
+                        System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s (maxDepth: " + currentMaxDepth + ")");
+                    }
+                    if (currentValue > maxValue && !timeLimitReached) {
+                        maxValue = currentValue;
+                        bestMove = m;
+                    }
+                }
+                currentMaxDepth++;
+            }
+        } else {
             for (AIMove m : legalMoves) {
-                if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
-                    timeLimitReached = true;
-                }
-                if (timeLimitReached) {
-                    break;
-                }
                 before = System.currentTimeMillis();
                 if (m.isChanceMove()) {
                     // do expectimax evaluation
@@ -87,14 +109,13 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
                 }
                 if (DEBUG) {
                     System.out.println("\n" + m);
-                    System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s (maxDepth: " + currentMaxDepth + ")");
+                    System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s");
                 }
-                if (currentValue > maxValue && !timeLimitReached) {
+                if (currentValue > maxValue) {
                     maxValue = currentValue;
                     bestMove = m;
                 }
             }
-            currentMaxDepth++;
         }
 
         if (DEBUG) {
@@ -186,10 +207,8 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
-            if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
                 timeLimitReached = true;
-            }
-            if (timeLimitReached) {
                 return maxValue;
             }
             if (m.isChanceMove()) {
@@ -201,7 +220,7 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
                 currentValue = minSearch(currentDepth + 1, state);
                 state.undoLastMove();
             }
-            if (currentValue > maxValue && !timeLimitReached) {
+            if (currentValue > maxValue && (!iterativeDeepening || !timeLimitReached)) {
                 maxValue = currentValue;
             }
         }
@@ -222,10 +241,8 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
-            if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
                 timeLimitReached = true;
-            }
-            if (timeLimitReached) {
                 return minValue;
             }
             if (m.isChanceMove()) {
@@ -237,7 +254,7 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
                 currentValue = maxSearch(currentDepth + 1, state);
                 state.undoLastMove();
             }
-            if (currentValue < minValue && !timeLimitReached) {
+            if (currentValue < minValue && (!iterativeDeepening || !timeLimitReached)) {
                 minValue = currentValue;
             }
         }
@@ -255,10 +272,8 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
         // sum over all possible scenarios arising from chanceMove
         double relevantProbabilitiesSum = 0.0;
         for (int i = 0; i < PieceType.numberTypes; i++) {
-            if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
                 timeLimitReached = true;
-            }
-            if (timeLimitReached) {
                 return sum / relevantProbabilitiesSum;
             }
             if ((currentDepth % 2 == 1 || i > 1) && (prevProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {

@@ -9,8 +9,10 @@ import project.stratego.game.entities.GameState;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PieceType;
+import project.stratego.game.utils.PlayerType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public abstract class AbstractAI {
 
@@ -71,28 +73,119 @@ public abstract class AbstractAI {
     }
 
     protected ArrayList<AIMove> orderMoves(EnhancedGameState state, ArrayList<AIMove> legalMoves) {
-        // move captures flag? -> opponent's piece has flag "revealed"
-        // move wins
-        // move attacking unknown piece
-        // move towards opponent's piece (maybe differentiate between known/unknown
-        // -> towards means withing x range forward
-        // move sideways (same)
-        // move back (same)
-        // attacking move with loss
-        ArrayList<Integer> scores = new ArrayList<>(legalMoves.size());
-        int movePlayerIndex = legalMoves.get(0).getPlayerIndex();
+        // 1. game-winning move + 1000
+        // 2. attack-winning move + 100
+        // 3. attack against unknown + 10
+        // 4. move next to opponent pieces + 2 per piece
+        // 5. move in direction of opponent (straightforward first piece encountered is opponent) + 1
+        // 6. any other normal move +-0
+        // 7. move away, i.e. 5. holds in other direction -1
+        // 8. attack piece with sure loss -100
+        int[] scores = new int[legalMoves.size()];
         Piece encounteredPiece, movingPiece;
+        int counter = 0;
         for (AIMove m : legalMoves) {
             movingPiece = state.getBoardArray()[m.getOrRow()][m.getOrCol()].getOccupyingPiece();
             encounteredPiece = state.getBoardArray()[m.getDestRow()][m.getDestCol()].getOccupyingPiece();
-            if (encounteredPiece == null) {
-                // moving towards a position with adjacent opponents pieces
+            if (m.getPlayerIndex() == playerIndex) {
+                // moves are for the AI itself
+                if (encounteredPiece != null) {
+                    // attacking opponent's piece
+                    if (gameState.probabilityRevealed(encounteredPiece)) {
+                        if (Math.abs(gameState.getProbability(encounteredPiece, 0) - 1.0) < EnhancedGameState.PROB_EPSILON) {
+                            // game-winning move
+                            scores[counter] = 1000;
+                        } else if (movingPiece.getType() == gameState.getProbabilityRevealedType(encounteredPiece)) {
+                            // eliminate piece and yourself
+                            scores[counter] = 20;
+                        } else if (movingPiece.getType() == PieceType.MINER && gameState.getProbabilityRevealedType(encounteredPiece) == PieceType.BOMB ||
+                                movingPiece.getType() == PieceType.SPY && gameState.getProbabilityRevealedType(encounteredPiece) == PieceType.MARSHAL ||
+                                PieceType.pieceLvlMap.get(movingPiece.getType()) > PieceType.pieceLvlMap.get(gameState.getProbabilityRevealedType(encounteredPiece))) {
+                            // win attack
+                            scores[counter] = 100;
+                        } else {
+                            // lose attack
+                            scores[counter] = -100;
+                        }
+                    } else {
+                        // attack unknown piece
+                        scores[counter] = 10;
+                    }
+                } else {
+                    // below are simplified versions of recognising when a move in the "right" or "wrong" direction is made
+                    int colDiff = m.getDestCol() - m.getOrCol();
+                    int rowDiff = m.getDestRow() - m.getOrRow();
+                    if (rowDiff != 0) {
+                        // move sideways
+                        scores[counter] = 0;
+                    } else if ((colDiff < 0 && playerIndex == 1) || (colDiff > 0 && playerIndex == 0)) {
+                        // move towards opponent's side
+                        scores[counter] = 10;
+                    } else {
+                        // move away from opponent's side
+                        scores[counter] = -10;
+                    }
+                }
+            } else {
+                // moves are for the opponent
+                if (encounteredPiece != null) {
+                    // attacking opponent's piece
+                    if (gameState.probabilityRevealed(movingPiece)) {
+                        if (encounteredPiece.getType() == PieceType.FLAG) {
+                            // game-winning move
+                            scores[counter] = 1000;
+                        } else if (encounteredPiece.getType() == gameState.getProbabilityRevealedType(movingPiece)) {
+                            // eliminate piece and yourself
+                            scores[counter] = 20;
+                        } else if (encounteredPiece.getType() == PieceType.BOMB && gameState.getProbabilityRevealedType(movingPiece) == PieceType.MINER ||
+                                encounteredPiece.getType() == PieceType.MARSHAL && gameState.getProbabilityRevealedType(movingPiece) == PieceType.SPY ||
+                                PieceType.pieceLvlMap.get(encounteredPiece.getType()) < PieceType.pieceLvlMap.get(gameState.getProbabilityRevealedType(movingPiece))) {
+                            // win attack
+                            scores[counter] = 100;
+                        } else {
+                            // lose attack
+                            scores[counter] = -100;
+                        }
+                    } else {
+                        // attack unknown piece
+                        scores[counter] = 10;
+                    }
+                } else {
+                    // below are simplified versions of recognising when a move in the "right" or "wrong" direction is made
+                    int colDiff = m.getDestCol() - m.getOrCol();
+                    int rowDiff = m.getDestRow() - m.getOrRow();
+                    if (rowDiff != 0) {
+                        // move sideways
+                        scores[counter] = 0;
+                    } else if ((colDiff < 0 && playerIndex == 1) || (colDiff > 0 && playerIndex == 0)) {
+                        // move towards opponent's side
+                        scores[counter] = 10;
+                    } else {
+                        // move away from opponent's side
+                        scores[counter] = -10;
+                    }
+                }
             }
+            counter++;
+        }
 
-            if (movePlayerIndex != playerIndex && state.getBoardArray()[m.getDestRow()][m.getDestCol()].getOccupyingPiece().getType() == PieceType.FLAG) {
-
+        // sort moves by score
+        int minIndex, tempScore;
+        for (int i = 0; i < legalMoves.size() - 1; i++) {
+            minIndex = i;
+            for (int j = minIndex + 1; j < legalMoves.size(); j++) {
+                if (scores[j] < scores[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            if (minIndex != i) {
+                tempScore = scores[i];
+                scores[i] = scores[minIndex];
+                scores[minIndex] = tempScore;
+                Collections.swap(legalMoves, i, minIndex);
             }
         }
+
         return legalMoves;
     }
 

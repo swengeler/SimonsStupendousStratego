@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class TestEvaluationFunction extends AbstractEvaluationFunction {
 
+    private static final boolean randomElement = false;
+
     private double allPiecesSum = 0.0;
 
     public TestEvaluationFunction(int playerIndex) {
@@ -84,8 +86,12 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
         }
 
         if (opponentSum != 0) {
-            double randomFactor = Math.random() * 0.001;
-            return (ownSum / opponentSum) + randomFactor;
+            if (randomElement) {
+                double randomFactor = Math.random() * 0.001;
+                return (ownSum / opponentSum) + randomFactor;
+            } else {
+                return (ownSum / opponentSum);
+            }
         }
         return 1000.0;
     }

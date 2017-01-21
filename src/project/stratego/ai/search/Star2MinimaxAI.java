@@ -24,7 +24,7 @@ public class Star2MinimaxAI extends AbstractAI {
 
     private boolean iterativeDeepening;
     private boolean timeLimitReached;
-    private boolean moveOrdering;
+    private boolean moveOrdering = true;
 
     public Star2MinimaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);

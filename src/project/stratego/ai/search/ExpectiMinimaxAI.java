@@ -11,9 +11,7 @@ import java.util.ArrayList;
 
 public class ExpectiMinimaxAI extends AbstractAI {
 
-    private static String debugString = "";
-
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final boolean DEBUG_MIN = false;
     private static final boolean DEBUG_MAX = false;
     private static final boolean DEBUG_EXP = false;

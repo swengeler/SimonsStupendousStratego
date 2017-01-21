@@ -4,6 +4,7 @@ import project.stratego.ai.mcts.abstractDefinitions.TreeNode;
 import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
 import project.stratego.ai.mcts.abstractSearchComponents.*;
 import project.stratego.ai.mcts.events.StrategoAbstractEvent;
+import project.stratego.ai.mcts.logger.Logger;
 
 import java.util.ArrayList;
 
@@ -39,7 +40,7 @@ public class StrategoMCTSPerformer extends MCTSPerformer<StrategoGame, StrategoA
 		}
 		// Logger.println(" selection result: " + " depth " + visititedNode.getNodeDepth());
 
-		// ssssS
+
 		if (rules.isTerminal(visititedNode)) {
 			int result = playthrough.returnStrategoPlaythroughResult(visititedNode.getState());
       result *= scoreMultiplier;

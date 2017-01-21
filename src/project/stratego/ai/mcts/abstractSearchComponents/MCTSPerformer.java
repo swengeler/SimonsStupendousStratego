@@ -3,6 +3,7 @@ package project.stratego.ai.mcts.abstractSearchComponents;
 import project.stratego.ai.mcts.abstractDefinitions.*;
 
 import java.util.ArrayList;
+import  project.stratego.ai.mcts.logger.Logger;
 
 public class MCTSPerformer<State extends SearchState, Action extends AbstractAction<State>> {
 
@@ -11,7 +12,7 @@ public class MCTSPerformer<State extends SearchState, Action extends AbstractAct
 
 	protected Rules<State> rules;
 	protected MoveGenerator<State, Action> moveGenerator;
-	protected final int noOfItterations = 5000;
+	protected  int noOfItterations = 3000;
 
 	public MCTSPerformer(Rules<State> rules, MoveGenerator<State, Action> moveGenerator) {
 		this.rules = rules;
@@ -38,9 +39,9 @@ public class MCTSPerformer<State extends SearchState, Action extends AbstractAct
 
 			// Logger.println("number of  Tottal itterations  : " + (i + 1));
 		}
-		// Logger.println("" + rootNode.getGamesPlayed());
+		Logger.println("" + rootNode.getGamesPlayed());
 
-		// Logger.println(rootNode.getState().toString());
+		 Logger.println(rootNode.getState().toString());
 
 		return getBestChild(rootNode);
 
@@ -155,6 +156,9 @@ public class MCTSPerformer<State extends SearchState, Action extends AbstractAct
 			// newNode.setPlaythoughNode(aNode.isPlaythoughNode());
 
 	}
+	}
+	public  void setNoOfItterations(int noOfItterations){
+		this.noOfItterations=noOfItterations;
 	}
 
 

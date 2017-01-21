@@ -8,6 +8,7 @@ import project.stratego.ai.mcts.events.StrategoMoveEvent;
 import project.stratego.ai.mcts.gameLogic.SystemsManager;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
+import project.stratego.ai.mcts.logger.Logger;
 
 public class MonteCarloTreeSearchAI extends AbstractAI {
 
@@ -32,6 +33,10 @@ public class MonteCarloTreeSearchAI extends AbstractAI {
         StrategoGame gameForMCTS = new StrategoGame(gameState);
         TreeNode<StrategoGame, StrategoAbstractEvent> node = performer.runMCTS(new StrategoNode(gameForMCTS));
         StrategoMoveEvent move = (StrategoMoveEvent) node.getAction();
+        double score = 1.0 * node.getGamesWon() / node.getGamesPlayed();
+        Logger.println(move.getOrigintX() + " = x || y = " + move.getOriginY());
+        Logger.println(move.getDestX() + "=x|y=" + move.getDestY());
+        Logger.println("Score: " + score);
         // --- WRAPPER CODE --- //
 
         Move actualMove = new Move(playerIndex, move.getOriginY(), move.getOrigintX(), move.getDestY(), move.getDestX());

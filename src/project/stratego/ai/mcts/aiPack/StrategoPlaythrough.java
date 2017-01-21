@@ -25,7 +25,7 @@ public class StrategoPlaythrough extends Playthrough<StrategoGame, StrategoAbstr
 		// TreeNode<StrategoGame, StrategoAbstractEvent> rootNode = leafNode.getRootNode();
 		// int referance = rootNode.getState().getActivePlayer();
 		int movesCount = 0;
-		while (!rules.isTerminal(state) && movesCount < 10) {
+		while (!rules.isTerminal(state) && movesCount < 5) {
 			state = (StrategoGame) state.deepCopySelf();
 
 			ArrayList<StrategoAbstractEvent> childrenNodes = nodeGenerator.generateAvailiableMoves(state);
@@ -35,6 +35,6 @@ public class StrategoPlaythrough extends Playthrough<StrategoGame, StrategoAbstr
 		}
 		return rules.getScoreValue(state, 0);
 	}
-	// ssssssSS
+
 
 }

@@ -16,8 +16,8 @@ public class TreeNode<State extends SearchState, Action extends AbstractAction<S
 	/** Value of the Node */
 	// private double valueOfNode;
 
-	private int gamesPlayed = 0;
-	private int gamesWon = 0;
+	private double gamesPlayed = 0;
+	private double gamesWon = 0;
 
 	private TreeNode<State, Action> parentNode;
 
@@ -36,19 +36,19 @@ public class TreeNode<State extends SearchState, Action extends AbstractAction<S
 		this.childrenList = (ArrayList<TreeNode<State, Action>>) childrenList;
 	}
 
-	public int getGamesPlayed() {
+	public double getGamesPlayed() {
 		return gamesPlayed;
 	}
 
-	public void setGamesPlayed(int gamesPlayed) {
+	public void setGamesPlayed(double gamesPlayed) {
 		this.gamesPlayed = gamesPlayed;
 	}
 
-	public int getGamesWon() {
+	public double getGamesWon() {
 		return gamesWon;
 	}
 
-	public void setGamesWon(int gamesWon) {
+	public void setGamesWon(double gamesWon) {
 		this.gamesWon = gamesWon;
 	}
 

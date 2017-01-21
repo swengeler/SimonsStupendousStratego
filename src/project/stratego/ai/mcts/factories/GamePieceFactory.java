@@ -1,9 +1,9 @@
 package project.stratego.ai.mcts.factories;
 
+import java.util.ArrayList;
+
 import project.stratego.ai.mcts.abstractGameComponents.PieceHierarchyData;
 import project.stratego.ai.mcts.gameObjects.StrategoPiece;
-
-import java.util.ArrayList;
 
 public class GamePieceFactory {
 

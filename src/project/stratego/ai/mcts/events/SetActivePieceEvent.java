@@ -2,6 +2,7 @@ package project.stratego.ai.mcts.events;
 
 public class SetActivePieceEvent extends StrategoAbstractEvent {
 
+
 	private int xCoord;
 	private int yCoord;
 
@@ -10,6 +11,9 @@ public class SetActivePieceEvent extends StrategoAbstractEvent {
 		this.xCoord = x;
 		this.yCoord = y;
 	}
+
+
+
 
 	public int getxCoord() {
 		return xCoord;

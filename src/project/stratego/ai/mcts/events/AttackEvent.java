@@ -7,12 +7,12 @@ public class AttackEvent extends StrategoMoveEvent {
 
 	}
 
-	public int getDestX() {
-		return super.getDestX();
+	public int getdX() {
+		return super.getdX();
 	}
 
-	public int getDestY() {
-		return super.getDestY();
+	public int getdY() {
+		return super.getdY();
 	}
 
 }

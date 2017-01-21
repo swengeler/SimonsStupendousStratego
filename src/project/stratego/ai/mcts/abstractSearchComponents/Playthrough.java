@@ -1,8 +1,10 @@
 package project.stratego.ai.mcts.abstractSearchComponents;
 
-import project.stratego.ai.mcts.abstractDefinitions.*;
-
 import java.util.ArrayList;
+
+import project.stratego.ai.mcts.abstractDefinitions.AbstractAction;
+import project.stratego.ai.mcts.abstractDefinitions.SearchState;
+import project.stratego.ai.mcts.abstractDefinitions.TreeNode;
 
 public class Playthrough<State extends SearchState, Action extends AbstractAction<State>> {
 
@@ -16,7 +18,7 @@ public class Playthrough<State extends SearchState, Action extends AbstractActio
 	
 	
 
-	public int returnPlaythroughResult(TreeNode<State, Action> leafNode) {
+	public double returnPlaythroughResult(TreeNode<State, Action> leafNode) {
 		@SuppressWarnings("unchecked")
 
 		State state = (State) leafNode.getState().deepCopySelf();

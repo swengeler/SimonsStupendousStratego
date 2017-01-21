@@ -1,11 +1,12 @@
 package project.stratego.ai.mcts.gameSystems;
 
+import java.util.ArrayList;
+
 import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
 import project.stratego.ai.mcts.events.SetActivePieceEvent;
 import project.stratego.ai.mcts.events.StrategoAbstractEvent;
 import project.stratego.ai.mcts.gameObjects.StrategoPiece;
 
-import java.util.ArrayList;
 
 public class RuntimeDataManipulationSystem {
 

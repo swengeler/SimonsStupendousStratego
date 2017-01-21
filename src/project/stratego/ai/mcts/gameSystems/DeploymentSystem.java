@@ -1,14 +1,20 @@
 package project.stratego.ai.mcts.gameSystems;
 
-import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
-import project.stratego.ai.mcts.events.DeploymentEvent;
-import project.stratego.ai.mcts.events.StrategoAbstractEvent;
-import project.stratego.ai.mcts.gameObjects.*;
-
 import java.util.ArrayList;
 import java.util.Random;
 
+import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
+import project.stratego.ai.mcts.events.DeploymentEvent;
+import project.stratego.ai.mcts.events.StrategoAbstractEvent;
+import project.stratego.ai.mcts.gameObjects.PieceType;
+import project.stratego.ai.mcts.gameObjects.StrategoBoardTile;
+import project.stratego.ai.mcts.gameObjects.StrategoPiece;
+import project.stratego.ai.mcts.gameObjects.TerrainType;
+
 public class DeploymentSystem {
+
+
+
 
 	public void proccessDeployEvent(StrategoGame aGame, StrategoAbstractEvent anEvent) {
 		ArrayList<StrategoPiece> tempList;
@@ -46,7 +52,7 @@ public class DeploymentSystem {
 		ArrayList<StrategoPiece> deployList = aGame.getRuntimeData().getActivePlayer().getUnDeployedPieces();
 		System.out.println(deployList.size());
 
-    boolean fixRandom = true;
+		boolean fixRandom = !true;
     Random random = fixRandom ? new Random(0) : new Random();
 
 		if (aGame.getRuntimeData().getActivePlayer() == aGame.getPlayerNorth()) {
@@ -58,8 +64,8 @@ public class DeploymentSystem {
 					StrategoPiece randomPiece = deployList.get(tempIndex);
 					deployList.remove(tempIndex);
           // Logger.println("new ListSize : " + deployList.size());
-					randomPiece.setXPos(j);
-					randomPiece.setYPos(i);
+					randomPiece.setxPos(j);
+					randomPiece.setyPos(i);
           // Logger.println(i + " " + j);
 					aGame.getBoard().getBoardStracture()[i][j].setOccupyingPiece(randomPiece);
 
@@ -72,8 +78,8 @@ public class DeploymentSystem {
           // Logger.println("tempIndex : " + tempIndex);
 					StrategoPiece randomPiece = deployList.get(tempIndex);
 					deployList.remove(tempIndex);
-					randomPiece.setXPos(j);
-					randomPiece.setYPos(i);
+					randomPiece.setxPos(j);
+					randomPiece.setyPos(i);
 					aGame.getBoard().getBoardStracture()[i][j].setOccupyingPiece(randomPiece);
 
 				}
@@ -91,8 +97,8 @@ public class DeploymentSystem {
 	private void placePieceOnBoard(StrategoGame aGame, StrategoPiece aPiece, DeploymentEvent event,
 			ArrayList<StrategoPiece> availiablePieces) {
 		if(checkIfTileAvailiable(aGame, event)){
-			aPiece.setXPos(event.getxCoord());
-			aPiece.setYPos(event.getyCoord());
+			aPiece.setxPos(event.getxCoord());
+			aPiece.setyPos(event.getyCoord());
 			aGame.getBoard().getBoardStracture()[event.getyCoord()][event.getxCoord()].setOccupyingPiece(aPiece);
 
 			System.out.println(aGame.getBoard().getBoardStracture()[event.getyCoord()][event.getxCoord()].getOccupyingPiece()

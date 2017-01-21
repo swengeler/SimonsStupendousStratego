@@ -1,6 +1,8 @@
 package project.stratego.ai.mcts.factories;
 
-import project.stratego.ai.mcts.gameObjects.*;
+import project.stratego.ai.mcts.gameObjects.StrategoBoard;
+import project.stratego.ai.mcts.gameObjects.StrategoBoardTile;
+import project.stratego.ai.mcts.gameObjects.TerrainType;
 
 public class BoardFactory {
 

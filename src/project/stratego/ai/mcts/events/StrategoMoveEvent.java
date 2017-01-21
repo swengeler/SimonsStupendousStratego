@@ -3,33 +3,38 @@ package project.stratego.ai.mcts.events;
 
 public class StrategoMoveEvent extends StrategoAbstractEvent {
 
+
+
 	private int pathLength = 1;
 
-	private int destX;
-	private int destY;
+	private int dX;
+
+	private int dY;
+	
 	private int originX;
+
 	private int originY;
 
 	public StrategoMoveEvent(int dX, int dY, int dL) {
 		this.pathLength = dL;
-		this.destX = dX;
-		this.destY = dY;
+		this.dX = dX;
+		this.dY = dY;
 	}
 
 	public StrategoMoveEvent(int originX, int originY, int destX, int destY) {
 
-		this.destX = destX;
-		this.destY = destY;
+		this.dX = destX;
+		this.dY = destY;
 		this.originX = originX;
 		this.originY = originY;
 
 	}
-	public int getDestX() {
-		return destX;
+	public int getdX() {
+		return dX;
 	}
 
-	public int getDestY() {
-		return destY;
+	public int getdY() {
+		return dY;
 	}
 
 	public int getPathLength() {
@@ -56,9 +61,9 @@ public class StrategoMoveEvent extends StrategoAbstractEvent {
 		this.originY = targetY;
 	}
 
-	@Override
-	public String toString() {
-		return "StrategoMoveEvent [destX=" + destX + ", destY=" + destY + ", originX=" + originX + ", originY=" + originY + "]";
-	}
+  @Override
+  public String toString() {
+    return "StrategoMoveEvent [dX=" + dX + ", dY=" + dY + ", originX=" + originX + ", originY=" + originY + "]";
+  }
 
 }

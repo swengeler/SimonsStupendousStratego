@@ -1,8 +1,18 @@
 package project.stratego.ai.mcts.gameLogic;
 
 import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
-import project.stratego.ai.mcts.events.*;
-import project.stratego.ai.mcts.gameSystems.*;
+import project.stratego.ai.mcts.events.AttackEvent;
+import project.stratego.ai.mcts.events.AutoDeployEvent;
+import project.stratego.ai.mcts.events.ChangeActivePlayerEvent;
+import project.stratego.ai.mcts.events.DeploymentEvent;
+import project.stratego.ai.mcts.events.SetActivePieceEvent;
+import project.stratego.ai.mcts.events.StrategoAbstractEvent;
+import project.stratego.ai.mcts.events.StrategoMoveEvent;
+import project.stratego.ai.mcts.gameSystems.AttackSystem;
+import project.stratego.ai.mcts.gameSystems.CheckVictorySystem;
+import project.stratego.ai.mcts.gameSystems.DeploymentSystem;
+import project.stratego.ai.mcts.gameSystems.MoveSystem;
+import project.stratego.ai.mcts.gameSystems.RuntimeDataManipulationSystem;
 
 public class SystemsManager {
 

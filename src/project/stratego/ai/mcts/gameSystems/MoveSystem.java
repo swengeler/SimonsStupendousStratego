@@ -1,11 +1,16 @@
 package project.stratego.ai.mcts.gameSystems;
 
+import java.util.ArrayList;
+
 import project.stratego.ai.mcts.abstractGameComponents.Player;
 import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
-import project.stratego.ai.mcts.events.*;
-import project.stratego.ai.mcts.gameObjects.*;
-
-import java.util.ArrayList;
+import project.stratego.ai.mcts.events.ChangeActivePlayerEvent;
+import project.stratego.ai.mcts.events.StrategoAbstractEvent;
+import project.stratego.ai.mcts.events.StrategoMoveEvent;
+import project.stratego.ai.mcts.gameObjects.PieceType;
+import project.stratego.ai.mcts.gameObjects.StrategoPiece;
+import project.stratego.ai.mcts.gameObjects.TerrainType;
+import project.stratego.ai.mcts.logger.Logger;
 
 public class MoveSystem {
 
@@ -24,15 +29,15 @@ public class MoveSystem {
 		StrategoPiece movingPiece = aGame.getRuntimeData().getActivePiece();
 		
 
-		int targetXcoord = movingPiece.getXPos() + trueEvent.getDestX();
-		int targetYcoord = movingPiece.getYPos() + trueEvent.getDestY();
+		int targetXcoord = movingPiece.getxPos() + trueEvent.getdX();
+		int targetYcoord = movingPiece.getyPos() + trueEvent.getdY();
 		
 
     // System.out.println("move system input target coord x  " + targetXcoord);
     // System.out.println("move system input target coord y  " + targetYcoord);
     // System.out.println("MOVE SYSTEM RUNNING");
 		if (!aGame.getRuntimeData().isActivePlayerHasAction()) {
-			// Logger.println("not your  turn");
+      Logger.println("not your  turn");
 			return;
 
 		}
@@ -41,8 +46,8 @@ public class MoveSystem {
 		}
 		if (movingPiece.getPieceType() == PieceType.SCOUT) {
 			int pathLength = trueEvent.getPathLength();
-			targetXcoord = movingPiece.getXPos() + trueEvent.getDestX() * pathLength;
-			targetYcoord = movingPiece.getYPos() + trueEvent.getDestY() * pathLength;
+			targetXcoord = movingPiece.getxPos() + trueEvent.getdX() * pathLength;
+			targetYcoord = movingPiece.getyPos() + trueEvent.getdY() * pathLength;
 
 			if (!checkScoutPath(aGame, trueEvent, targetXcoord, targetYcoord)) {
 				return;
@@ -67,16 +72,16 @@ public class MoveSystem {
 
 
 		
-    // System.out.println("old w x pos " + movingPiece.getXPos() + " old y pos " + movingPiece.getXPos());
-		aGame.getBoard().getBoardStracture()[movingPiece.getYPos()][movingPiece.getXPos()].setOccupyingPiece(null);
-		movingPiece.setXPos(targetXcoord);
-		movingPiece.setYPos(targetYcoord);
+    // System.out.println("old w x pos " + movingPiece.getxPos() + " old y pos " + movingPiece.getxPos());
+		aGame.getBoard().getBoardStracture()[movingPiece.getyPos()][movingPiece.getxPos()].setOccupyingPiece(null);
+		movingPiece.setxPos(targetXcoord);
+		movingPiece.setyPos(targetYcoord);
 		aGame.getBoard().getBoardStracture()[targetYcoord][targetXcoord].setOccupyingPiece(movingPiece);
 		aGame.getRuntimeData().setActivePlayerHasAction(false);
 
-    // System.out.println("new x pos " + movingPiece.getXPos() + " new y pos " + movingPiece.getYPos());
-    // System.out.println("activePieceNewPosition x  " + aGame.getRuntimeData().getActivePiece().getXPos());
-    // System.out.println("activePieceNewPosition y  " + aGame.getRuntimeData().getActivePiece().getYPos());
+    // System.out.println("new x pos " + movingPiece.getxPos() + " new y pos " + movingPiece.getyPos());
+    // System.out.println("activePieceNewPosition x  " + aGame.getRuntimeData().getActivePiece().getxPos());
+    // System.out.println("activePieceNewPosition y  " + aGame.getRuntimeData().getActivePiece().getyPos());
     // System.out.println(movingPiece);
     // System.out.println(aGame.getRuntimeData().getActivePiece());
 
@@ -84,8 +89,8 @@ public class MoveSystem {
 
 	private boolean checkScoutPath(StrategoGame aGame, StrategoMoveEvent anEvent, int targetXcoord, int targetYcoord) {
 		StrategoPiece movingPiece = aGame.getRuntimeData().getActivePiece();
-		for (int i = movingPiece.getYPos() + anEvent.getDestY(); i <= targetYcoord; i++) {
-			for (int j = movingPiece.getXPos() + anEvent.getDestX(); j <= targetXcoord; j++) {
+		for (int i = movingPiece.getyPos() + anEvent.getdY(); i <= targetYcoord; i++) {
+			for (int j = movingPiece.getxPos() + anEvent.getdX(); j <= targetXcoord; j++) {
 				if (!checkIfInsideBoard(j, i, aGame)) {
 					System.out.println("illegal target Coords");
 					return false;
@@ -111,11 +116,11 @@ public class MoveSystem {
 	public void moveActivePieceForAttack(StrategoGame aGame, StrategoAbstractEvent anEvent) {
 		StrategoMoveEvent trueEvent = (StrategoMoveEvent) anEvent;
 		StrategoPiece movingPiece = aGame.getRuntimeData().getActivePiece();
-		int targetXcoord = aGame.getRuntimeData().getActivePiece().getXPos() + trueEvent.getDestX();
-		int targetYcoord = aGame.getRuntimeData().getActivePiece().getYPos() + trueEvent.getDestY();
+		int targetXcoord = aGame.getRuntimeData().getActivePiece().getxPos() + trueEvent.getdX();
+		int targetYcoord = aGame.getRuntimeData().getActivePiece().getyPos() + trueEvent.getdY();
 
 		if (!aGame.getRuntimeData().isActivePlayerHasAction()) {
-			// Logger.println("not your turn");
+      Logger.println("not your turn");
 			return;
 		}
 
@@ -124,11 +129,11 @@ public class MoveSystem {
 		}
 		if (movingPiece.getPieceType() == PieceType.SCOUT) {
 			int pathLength = trueEvent.getPathLength();
-			targetXcoord = movingPiece.getXPos() + trueEvent.getDestX() * pathLength;
-			targetYcoord = movingPiece.getYPos() + trueEvent.getDestY() * pathLength;
+			targetXcoord = movingPiece.getxPos() + trueEvent.getdX() * pathLength;
+			targetYcoord = movingPiece.getyPos() + trueEvent.getdY() * pathLength;
 
-			if (!checkScoutPath(aGame, trueEvent, targetXcoord - Math.abs(trueEvent.getDestX()),
-					targetYcoord - Math.abs(trueEvent.getDestY()))) {
+			if (!checkScoutPath(aGame, trueEvent, targetXcoord - Math.abs(trueEvent.getdX()),
+					targetYcoord - Math.abs(trueEvent.getdY()))) {
 				return;
 			}
 		}
@@ -158,9 +163,9 @@ public class MoveSystem {
 		System.out.println("moveFORattack  system  x input :" + targetXcoord);
 		System.out.println("moveFORattack  system  y input :" + targetYcoord);
 
-		aGame.getBoard().getBoardStracture()[movingPiece.getYPos()][movingPiece.getXPos()].setOccupyingPiece(null);
-		movingPiece.setXPos(targetXcoord);
-		movingPiece.setYPos(targetYcoord);
+		aGame.getBoard().getBoardStracture()[movingPiece.getyPos()][movingPiece.getxPos()].setOccupyingPiece(null);
+		movingPiece.setxPos(targetXcoord);
+		movingPiece.setyPos(targetYcoord);
 		aGame.getRuntimeData().setAttackToResolve(true);
 		aGame.getRuntimeData().setActivePlayerHasAction(false);
 
@@ -172,13 +177,13 @@ public class MoveSystem {
 		StrategoMoveEvent trueEvent = (StrategoMoveEvent) anEvent;
 		StrategoPiece movingPiece = aGame.getBoard().getBoardStracture()[trueEvent.getOriginY()][trueEvent.getOrigintX()]
 				.getOccupyingPiece();
-		int targetXcoord = trueEvent.getDestX();
-		int targetYcoord = trueEvent.getDestY();
+		int targetXcoord = trueEvent.getdX();
+		int targetYcoord = trueEvent.getdY();
 
 
 		if (movingPiece == null) {
-			System.out.println("Move Sys line 184 " + " null piece " + trueEvent.getOriginY() + " " + trueEvent.getDestY()
-					+ " Y " + trueEvent.getOrigintX() + " " + trueEvent.getDestX() + " free "
+			System.out.println("Move Sys line 184 " + " null piece " + trueEvent.getOriginY() + " " + trueEvent.getdY()
+					+ " Y " + trueEvent.getOrigintX() + " " + trueEvent.getdX() + " free "
 					+ checkTileFree(aGame, targetXcoord, targetYcoord) + " own ");
 			// System.out.println();
 			// System.out.println(" own " + checkValidOwnerships(aGame, targetXcoord, targetYcoord));
@@ -201,7 +206,7 @@ public class MoveSystem {
 
 			} else {
 				StrategoPiece attackPiece = movingPiece;
-				aGame.getBoard().getBoardStracture()[movingPiece.getYPos()][movingPiece.getXPos()]
+				aGame.getBoard().getBoardStracture()[movingPiece.getyPos()][movingPiece.getxPos()]
 						.setOccupyingPiece(null);
 				StrategoPiece defendPiece = aGame.getBoard().getBoardStracture()[targetYcoord][targetXcoord]
 						.getOccupyingPiece();
@@ -209,13 +214,13 @@ public class MoveSystem {
 				// if (defendPiece == null) {
 				// System.out.println("no def piece");
 				// }
-				attackPiece.setYPos(targetYcoord);
-				attackPiece.setXPos(targetXcoord);
-				defendPiece.setYPos(targetYcoord);
-				defendPiece.setXPos(targetXcoord);
-				// aGame.getBoard().getBoardStracture()[targetYcoord][targetXcoord].getOccupyingPiece().setYPos(
+				attackPiece.setyPos(targetYcoord);
+				attackPiece.setxPos(targetXcoord);
+				defendPiece.setyPos(targetYcoord);
+				defendPiece.setxPos(targetXcoord);
+				// aGame.getBoard().getBoardStracture()[targetYcoord][targetXcoord].getOccupyingPiece().setyPos(
 				// targetYcoord);
-				// aGame.getBoard().getBoardStracture()[targetYcoord][targetXcoord].getOccupyingPiece().setXPos(
+				// aGame.getBoard().getBoardStracture()[targetYcoord][targetXcoord].getOccupyingPiece().setxPos(
 				// targetXcoord);
 				runtimeSystem.changeActivePlayer(aGame, new ChangeActivePlayerEvent());
 				return;
@@ -223,9 +228,9 @@ public class MoveSystem {
 			}
 		}
 
-		aGame.getBoard().getBoardStracture()[movingPiece.getYPos()][movingPiece.getXPos()].setOccupyingPiece(null);
-		movingPiece.setXPos(targetXcoord);
-		movingPiece.setYPos(targetYcoord);
+		aGame.getBoard().getBoardStracture()[movingPiece.getyPos()][movingPiece.getxPos()].setOccupyingPiece(null);
+		movingPiece.setxPos(targetXcoord);
+		movingPiece.setyPos(targetYcoord);
 		aGame.getBoard().getBoardStracture()[targetYcoord][targetXcoord].setOccupyingPiece(movingPiece);
 		runtimeSystem.changeActivePlayer(aGame, new ChangeActivePlayerEvent());
 

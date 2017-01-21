@@ -13,8 +13,8 @@ public class StrategoEvaluationValues {
 		pieceValues.put(PieceType.COLONEL, 50);
 		pieceValues.put(PieceType.MAJOR, 25);
 		pieceValues.put(PieceType.CAPTAIN, 20);
-		pieceValues.put(PieceType.LIUTENANT, 10);
-		pieceValues.put(PieceType.SEARGENT, 7);
+		pieceValues.put(PieceType.LIEUTENANT, 10);
+		pieceValues.put(PieceType.SERGEANT, 7);
 		pieceValues.put(PieceType.MINER, 5);
 		pieceValues.put(PieceType.SCOUT, 1);
 		pieceValues.put(PieceType.SPY, 6);

@@ -91,6 +91,17 @@ public class StrategoGame extends SearchState {
 				piecesKnownToPlayerNorth.add(temp);
 			}
 		}
+		this.playerNorth = new Player(piecesPlayerNorth);
+		this.playerSouth = new Player(piecesPlayerSouth);
+
+		fixPiecePlacement(this);
+		this.runtimeData = new RuntimeData();
+		int playerIndex = gameState.getPlayerIndex();
+		if(playerIndex == 0) {
+			this.runtimeData.setActivePlayer(this.getPlayerNorth());
+		} else {
+			this.runtimeData.setActivePlayer(this.getPlayerSouth());
+		}
 	}
 	public StrategoBoard getBoard() {
 		return board;
@@ -124,6 +135,9 @@ public class StrategoGame extends SearchState {
 
 	@Override
 	public int getActivePlayer() {
+		if(runtimeData == null) {
+			throw new RuntimeException("Runtime data was nu");
+		}
 		if (runtimeData.getActivePlayer() == playerNorth) {
 			return 1;
 		}
@@ -154,7 +168,6 @@ public class StrategoGame extends SearchState {
 	}
 
 	public void fixPiecePlacement(StrategoGame aGame) {
-	
 		ArrayList<StrategoPiece> northPieces = aGame.getPlayerNorth().getInGamePieces();
 		ArrayList<StrategoPiece> southPieces = aGame.getPlayerSouth().getInGamePieces();
 		

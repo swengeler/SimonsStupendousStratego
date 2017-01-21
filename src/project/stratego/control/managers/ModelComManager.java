@@ -79,10 +79,10 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureSinglePlayer();
-        //AIComManager.getInstance().setPrimaryAI("mcts", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("mcts", PlayerType.SOUTH.ordinal());
         //AIComManager.getInstance().setPrimaryAI("expectinegamax 4", PlayerType.SOUTH.ordinal());
         //AIComManager.getInstance().setPrimaryAI("iterdeepexp", PlayerType.SOUTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("star1 4", PlayerType.SOUTH.ordinal());
+       // AIComManager.getInstance().setPrimaryAI("star1 4", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());

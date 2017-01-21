@@ -14,8 +14,8 @@ public class PieceHierarchyData {
 		pieceLvlMap.put(PieceType.COLONEL, 8);
 		pieceLvlMap.put(PieceType.MAJOR, 7);
 		pieceLvlMap.put(PieceType.CAPTAIN, 6);
-		pieceLvlMap.put(PieceType.LIUTENANT, 5);
-		pieceLvlMap.put(PieceType.SEARGENT, 4);
+		pieceLvlMap.put(PieceType.LIEUTENANT, 5);
+		pieceLvlMap.put(PieceType.SERGEANT, 4);
 		pieceLvlMap.put(PieceType.MINER, 3);
 		pieceLvlMap.put(PieceType.SCOUT, 2);
 		pieceLvlMap.put(PieceType.SPY, 1);
@@ -31,8 +31,8 @@ public class PieceHierarchyData {
 		pieceTypeMap.put(8, PieceType.COLONEL);
 		pieceTypeMap.put(7, PieceType.MAJOR);
 		pieceTypeMap.put(6, PieceType.CAPTAIN);
-		pieceTypeMap.put(5, PieceType.LIUTENANT);
-		pieceTypeMap.put(4, PieceType.SEARGENT);
+		pieceTypeMap.put(5, PieceType.LIEUTENANT);
+		pieceTypeMap.put(4, PieceType.SERGEANT);
 		pieceTypeMap.put(3, PieceType.MINER);
 		pieceTypeMap.put(2, PieceType.SCOUT);
 		pieceTypeMap.put(1, PieceType.SPY);

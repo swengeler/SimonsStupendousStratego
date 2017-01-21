@@ -39,4 +39,9 @@ public class AssignmentInformation {
         }
     }
 
+    @Override
+    public String toString() {
+        return "AssignmentInformation for " + assignedPiece;
+    }
+
 }

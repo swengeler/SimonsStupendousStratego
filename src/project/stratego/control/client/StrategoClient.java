@@ -12,7 +12,7 @@ public class StrategoClient implements Runnable {
     private volatile boolean stopThread = false;
 
     //private static final String SERVER_ADDRESS = "82.165.162.249";
-    private static final String SERVER_ADDRESS = "localhost";
+    private String SERVER_ADDRESS = "localhost";
 
     private static final int SERVER_PORT = 2000;
 
@@ -110,6 +110,10 @@ public class StrategoClient implements Runnable {
             // save game
             Platform.runLater(() -> ViewComManager.getInstance().sendSaveGame(parts[1], parts[2]));
         }
+    }
+
+    public void setServerAddress(String serverAddress) {
+        SERVER_ADDRESS = serverAddress;
     }
 
     public void sendCommandToServer(String command) {

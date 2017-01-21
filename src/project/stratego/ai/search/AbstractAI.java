@@ -101,10 +101,19 @@ public abstract class AbstractAI {
         ArrayList<AIMove> legalMoves = new ArrayList<>();
         boolean chanceEvent = false;
         int destRow, destCol;
+        boolean movableProbabilitiesLargeEnough = false;
         for (Piece p : state.getPlayer(playerIndex).getActivePieces()) {
+            // check for pieces with large enough probability
+            if (playerIndex != state.getPlayerIndex()) {
+                for (int i = 2; !movableProbabilitiesLargeEnough && i < PieceType.numberTypes; i++) {
+                    if (state.getProbability(p, i) > EnhancedGameState.PROB_EPSILON) {
+                        movableProbabilitiesLargeEnough = true;
+                    }
+                }
+            }
             // check for unmovable pieces
             if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
-                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) + state.getProbability(p, PieceType.FLAG) - 1.0) > 2 * EnhancedGameState.PROB_EPSILON))) {
+                    (playerIndex != state.getPlayerIndex() && movableProbabilitiesLargeEnough)) {
                 int moveRadius = 1;                             // ^ this here shit, who comes up with that
                 // scouts can move more squares than the other pieces
                 if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) < /*2 * */EnhancedGameState.PROB_EPSILON) {
@@ -121,12 +130,9 @@ public abstract class AbstractAI {
                             // add legal move to list and also specify whether it will induce a chance event
                             if (state.getBoardArray()[destRow][destCol].getOccupyingPiece() != null) {
                                 // either different playerIndex from root (initPlayerIndex) AND piece to be moved is not revealed AND position to be moved to is taken by root player
-                                chanceEvent = playerIndex != this.playerIndex && !p.isRevealed() && !state.probabilityRevealed(p);
-                                if (p.getType() == PieceType.SCOUT) {
-                                    //System.out.println(p + " chanceEvent: " + chanceEvent);
-                                }
+                                chanceEvent = playerIndex != this.playerIndex && !state.probabilityRevealed(p);
                                 // OR same playerIndex as root (initPlayerIndex) AND position to be moved to is taken by opponent's unrevealed piece
-                                chanceEvent = chanceEvent || (playerIndex == this.playerIndex && !state.getBoardArray()[destRow][destCol].getOccupyingPiece().isRevealed() && !state.probabilityRevealed(state.getBoardArray()[destRow][destCol].getOccupyingPiece()));
+                                chanceEvent = chanceEvent || (playerIndex == this.playerIndex && !state.probabilityRevealed(state.getBoardArray()[destRow][destCol].getOccupyingPiece()));
                             }
                             legalMoves.add(new AIMove(playerIndex, p.getRowPos(), p.getColPos(), destRow, destCol, chanceEvent));
                             chanceEvent = false;
@@ -134,6 +140,7 @@ public abstract class AbstractAI {
                     }
                 }
             }
+            movableProbabilitiesLargeEnough = false;
         }
         return legalMoves;
     }

@@ -189,12 +189,12 @@ public class Star2MinimaxAI extends AbstractAI {
         Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
         // determine actual successors (i.e. probability for unknownPiece to be a rank i must be over the threshold
-        int[] relevantIndeces = new int[PieceType.values().length - 1];
+        int[] relevantIndeces = new int[PieceType.numberTypes];
         int nrChanceEvents = 0;
         double[] relevantProbabilities = new double[relevantIndeces.length];
         double relevantProbabilitiesSum = 0.0;
         double tempProbability;
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             if (DEBUG_STAR2_MAX) {
                 System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
             }
@@ -292,12 +292,12 @@ public class Star2MinimaxAI extends AbstractAI {
         Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
         // determine actual successors (i.e. probability for unknownPiece to be a rank i must be over the threshold
-        int[] relevantIndeces = new int[PieceType.values().length - 1];
+        int[] relevantIndeces = new int[PieceType.numberTypes];
         int nrChanceEvents = 0;
         double[] relevantProbabilities = new double[relevantIndeces.length];
         double relevantProbabilitiesSum = 0.0;
         double tempProbability;
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             if ((tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantIndeces[nrChanceEvents] = i;
                 relevantProbabilities[nrChanceEvents] = tempProbability;

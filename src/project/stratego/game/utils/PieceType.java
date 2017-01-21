@@ -6,6 +6,8 @@ public enum PieceType {
 
     FLAG, BOMB, SPY, SCOUT, MINER, SERGEANT, LIEUTENANT, CAPTAIN, MAJOR, COLONEL, GENERAL, MARSHAL, UNKNOWN;
 
+    public static final int numberTypes = 12;
+
     public static final int[] pieceQuantity = {1, 6, 1, 8, 5, 4, 4, 4, 3, 2, 1, 1};
 
     public static final HashMap<PieceType, Integer> pieceLvlMap = new HashMap<>();

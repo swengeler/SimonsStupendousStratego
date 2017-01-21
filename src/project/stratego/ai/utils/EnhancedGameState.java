@@ -25,6 +25,7 @@ public class EnhancedGameState extends GameState {
 
     private Stack<MoveInformation> moveInformationStack;
     private Stack<AssignmentInformation> assignmentHistory;
+    private Stack<Integer> historyIdentifierStack;
 
     // from the perspective of the player whose pieces are all known
     // the opponent (1 - playerIndex) is associated with the probabilitiesMap
@@ -40,6 +41,7 @@ public class EnhancedGameState extends GameState {
         // initTileEvalArray();
         moveInformationStack = new Stack<>();
         assignmentHistory = new Stack<>();
+        historyIdentifierStack = new Stack<>();
         playerWonIndex = -1;
         nrMoveRevealedPieces = 0;
     }
@@ -119,7 +121,7 @@ public class EnhancedGameState extends GameState {
 
             Set<Piece> pieces = probabilitiesMap.keySet();
 
-            for (int i = 0; i < PieceType.values().length - 1; i++) {
+            for (int i = 0; i < PieceType.numberTypes; i++) {
                 double sum = 0;
                 for (Piece q : pieces) {
                     sum += probabilitiesMap.get(q)[i];
@@ -148,7 +150,7 @@ public class EnhancedGameState extends GameState {
                     System.out.println(q + " -- " + sum);
                 }
 
-                for (int i = 0; i < PieceType.values().length - 1; i++) {
+                for (int i = 0; i < PieceType.numberTypes; i++) {
                     double sum = 0;
                     for (Piece q : pieces) {
                         sum += probabilitiesMap.get(q)[i];
@@ -176,6 +178,7 @@ public class EnhancedGameState extends GameState {
 
         moveInformation.setMoveResult(moveManager.lastMoveResult());
         moveInformationStack.add(moveInformation);
+        historyIdentifierStack.add(0);
 
         // depending on the outcome of the move, update probabilities
            
@@ -275,6 +278,7 @@ public class EnhancedGameState extends GameState {
 
     public void undoLastMove() {
         MoveInformation lastMoveInfo = moveInformationStack.pop();
+        historyIdentifierStack.pop();
         if (lastMoveInfo.getMoveResult() == MoveResult.MOVE && lastMoveInfo.getMovingPieceReference().getPlayerType().ordinal() != playerIndex) {
             // in this case the move was performed by the opponent, possibly revealing that it is a SCOUT or NOT a BOMB or FLAG
             getPlayer(lastMoveInfo.getMovingPieceClone().getPlayerType()).getActivePieces().remove(lastMoveInfo.getMovingPieceReference());
@@ -393,7 +397,7 @@ public class EnhancedGameState extends GameState {
             probabilitiesMap = new HashMap<>(40);
             try (BufferedReader br = new BufferedReader(new FileReader("res\\mirroredprobs.txt"))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {
-                    probabilitiesMap.put(p, new double[PieceType.values().length - 1]);
+                    probabilitiesMap.put(p, new double[PieceType.numberTypes]);
                 }
                 String line;
                 int readRow = 0, readCol = 0, actualRow = 0, actualCol = 0;
@@ -446,7 +450,7 @@ public class EnhancedGameState extends GameState {
 
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
             probabilitiesMap = new HashMap<>(40);
-            double[] initProbabilities = new double[PieceType.values().length - 1];
+            double[] initProbabilities = new double[PieceType.numberTypes];
             /*for (int i = 0; i < initProbabilities.length; i++) {
                 initProbabilities[i] = ((double) PieceType.pieceQuantity[i]) / getPlayer(playerIndex).getActivePieces().size();
             }
@@ -461,7 +465,7 @@ public class EnhancedGameState extends GameState {
             updateProbabilities();*/
             try (BufferedReader br = new BufferedReader(new FileReader("res\\mirroredprobs.txt"))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {
-                    probabilitiesMap.put(p, new double[PieceType.values().length - 1]);
+                    probabilitiesMap.put(p, new double[PieceType.numberTypes]);
                 }
                 String line;
                 int readRow = 0, readCol = 0, actualRow = 0, actualCol = 0;
@@ -487,10 +491,10 @@ public class EnhancedGameState extends GameState {
         super.interpretEncodedBoard(encodedBoard);
         // make probability table for opponent
         probabilitiesMap = new HashMap<>(40);
-        double[] initProbabilities = new double[PieceType.values().length - 1];
+        double[] initProbabilities = new double[PieceType.numberTypes];
         try (BufferedReader br = new BufferedReader(new FileReader("res\\savefile.txt"))) {
             for (Piece p : getPlayer(1 - playerIndex).getActivePieces()) {
-                probabilitiesMap.put(p, new double[PieceType.values().length - 1]);
+                probabilitiesMap.put(p, new double[PieceType.numberTypes]);
             }
             String line;
             int readRow = 0, readCol = 0, actualRow = 0, actualCol = 0;
@@ -558,6 +562,7 @@ public class EnhancedGameState extends GameState {
         //System.out.println(assignedType + " assigned to " + piece);
         double[] probabilitiesArray = probabilitiesMap.get(piece);
         assignmentHistory.add(new AssignmentInformation(piece, probabilitiesMap));
+        historyIdentifierStack.add(1);
         for (int i = 0; i < probabilitiesArray.length; i++) {
             if (i != assignedType.ordinal()) {
                 probabilitiesArray[i] = 0;
@@ -565,11 +570,13 @@ public class EnhancedGameState extends GameState {
                 probabilitiesArray[i] = 1;
             }
         }
+        updateUnmovablePiecesProbabilities();
         updateProbabilities();
     }
 
     public void undoLastAssignment() {
         AssignmentInformation assignmentInfo = assignmentHistory.pop();
+        historyIdentifierStack.pop();
         //System.out.println("Undo assignment for " + assignmentInfo.getAssignedPiece());
         assignmentInfo.replaceProbabilities(probabilitiesMap);
         updateProbabilities();
@@ -616,7 +623,7 @@ public class EnhancedGameState extends GameState {
                         System.out.println(p + " -- " + sum);
                     }
 
-                    for (int i = 0; i < PieceType.values().length - 1; i++) {
+                    for (int i = 0; i < PieceType.numberTypes; i++) {
                         double sum = 0;
                         for (Piece q : pieces) {
                             sum += probabilitiesMap.get(q)[i];
@@ -645,7 +652,7 @@ public class EnhancedGameState extends GameState {
                             System.out.println(q + " -- " + sum);
                         }
 
-                        for (int i = 0; i < PieceType.values().length - 1; i++) {
+                        for (int i = 0; i < PieceType.numberTypes; i++) {
                             double sum = 0;
                             for (Piece q : pieces) {
                                 sum += probabilitiesMap.get(q)[i];
@@ -724,7 +731,7 @@ public class EnhancedGameState extends GameState {
 
             Set<Piece> pieces = probabilitiesMap.keySet();
 
-            for (int i = 0; i < PieceType.values().length - 1; i++) {
+            for (int i = 0; i < PieceType.numberTypes; i++) {
                 double sum = 0;
                 for (Piece q : pieces) {
                     sum += probabilitiesMap.get(q)[i];
@@ -753,7 +760,7 @@ public class EnhancedGameState extends GameState {
                     System.out.println(q + " -- " + sum);
                 }
 
-                for (int i = 0; i < PieceType.values().length - 1; i++) {
+                for (int i = 0; i < PieceType.numberTypes; i++) {
                     double sum = 0;
                     for (Piece q : pieces) {
                         sum += probabilitiesMap.get(q)[i];
@@ -765,6 +772,89 @@ public class EnhancedGameState extends GameState {
             }
 
             System.exit(1);
+        }
+    }
+
+    public void checkBombDebugCondition(int code) {
+        for (Piece p : probabilitiesMap.keySet()) {
+            if (p.getType() == PieceType.BOMB && probabilitiesMap.get(p)[0] == 0.0 && probabilitiesMap.get(p)[1] == 0.0) {
+                for (int i = 2; i < PieceType.numberTypes; i++) {
+                    if (probabilitiesMap.get(p)[i] != 0.0 && Math.abs(probabilitiesMap.get(p)[i] - 1.0) > PROB_EPSILON) {
+                        System.out.println("\nBomb debugger with code " + code);
+                        System.out.println(p + " where probability for " + PieceType.values()[i] + " is " + probabilitiesMap.get(p)[i]);
+                        printBoard();
+                        System.out.println("OPPONENT'S DEAD PIECES:\n" + opponentDeadPiecesToString());
+                        printBoardAssignment();
+                        printProbabilitiesTable();
+
+                        for (Piece q : probabilitiesMap.keySet()) {
+                            double sum = 0;
+                            for (double val : probabilitiesMap.get(q)) {
+                                sum += val;
+                            }
+                            System.out.println(q + " -- " + sum);
+                        }
+
+                        for (int j = 0; j < PieceType.numberTypes; j++) {
+                            double sum = 0;
+                            for (Piece q : probabilitiesMap.keySet()) {
+                                sum += probabilitiesMap.get(q)[j];
+                            }
+                            System.out.println(PieceType.values()[j] + " -- " + sum);
+                        }
+                        System.out.println();
+
+                        while (!assignmentHistory.isEmpty() && !moveInformationStack.isEmpty()) {
+                            int identifier = historyIdentifierStack.peek();
+                            if (identifier == 0) {
+                                System.out.println("Last action was move: " + moveInformationStack.peek().toMoveString());
+                                undoLastMove();
+                            } else if (identifier == 1) {
+                                System.out.println("Last action was assignment: " + assignmentHistory.peek());
+                                undoLastAssignment();
+                            }
+
+                            printBoard();
+                            System.out.println("OPPONENT'S DEAD PIECES:\n" + opponentDeadPiecesToString());
+                            printBoardAssignment();
+                            printProbabilitiesTable();
+
+                            Set<Piece> piecesInMap = probabilitiesMap.keySet();
+
+                            for (Piece q : piecesInMap) {
+                                double sum = 0;
+                                for (double val : probabilitiesMap.get(q)) {
+                                    sum += val;
+                                }
+                                System.out.println(q + " -- " + sum);
+                            }
+
+                            for (int j = 0; j < PieceType.numberTypes; j++) {
+                                double sum = 0;
+                                for (Piece q : piecesInMap) {
+                                    sum += probabilitiesMap.get(q)[j];
+                                }
+                                System.out.println(PieceType.values()[j] + " -- " + sum);
+                            }
+                            System.out.println();
+                        }
+
+                        System.out.println("\nEXTRA:\nLast move was " + (lastMoveAIMove == 1 ? "AIMove" : "normal Move") + ": " + moveInformationStack.peek().toMoveString());
+                        if (lastUpdated == 0) {
+                            undoLastMove();
+                        } else if (lastUpdated == 1) {
+                            undoLastAssignment();
+                        } else {
+                            System.out.println("wat");
+                            System.exit(1);
+                        }
+
+                        AITestsMain.printStats();
+
+                        System.exit(1);
+                    }
+                }
+            }
         }
     }
 
@@ -781,7 +871,7 @@ public class EnhancedGameState extends GameState {
         if (pieceMoveRevealedCounter == 33) {
             for (Piece p : probabilitiesMap.keySet()) {
                 if (probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] != 0.0) {
-                    for (int i = 2; i < PieceType.values().length - 1; i++) {
+                    for (int i = 2; i < PieceType.numberTypes; i++) {
                         probabilitiesMap.get(p)[i] = 0.0;
                     }
                 }
@@ -791,7 +881,7 @@ public class EnhancedGameState extends GameState {
 
     private void updateProbabilities() {
         //ArrayList<Piece> pieces = getPlayer(1 - playerIndex).getActivePieces();
-        /*int[] remainingPieceCount = new int[PieceType.values().length - 1];
+        /*int[] remainingPieceCount = new int[PieceType.numberTypes];
         ArrayList<Piece> pieces = new ArrayList<>(40);
         for (Piece p : probabilitiesMap.keySet()) {
             if (!p.isRevealed()) {
@@ -826,7 +916,7 @@ public class EnhancedGameState extends GameState {
                     System.out.println(p + " -- " + sum);
                 }
 
-                for (int i = 0; i < PieceType.values().length - 1; i++) {
+                for (int i = 0; i < PieceType.numberTypes; i++) {
                     double sum = 0;
                     for (Piece p : pieces) {
                         sum += probabilitiesMap.get(p)[i];
@@ -834,6 +924,41 @@ public class EnhancedGameState extends GameState {
                     System.out.println(PieceType.values()[i] + " -- " + sum);
                 }
                 System.out.println();
+
+                while (!assignmentHistory.isEmpty() && !moveInformationStack.isEmpty()) {
+                    int identifier = historyIdentifierStack.peek();
+                    if (identifier == 0) {
+                        System.out.println("Last action was move: " + moveInformationStack.peek().toMoveString());
+                        undoLastMove();
+                    } else if (identifier == 1) {
+                        System.out.println("Last action was assignment: " + assignmentHistory.peek());
+                        undoLastAssignment();
+                    }
+
+                    printBoard();
+                    System.out.println("OPPONENT'S DEAD PIECES:\n" + opponentDeadPiecesToString());
+                    printBoardAssignment();
+                    printProbabilitiesTable();
+
+                    Set<Piece> piecesInMap = probabilitiesMap.keySet();
+
+                    for (Piece q : piecesInMap) {
+                        double sum = 0;
+                        for (double val : probabilitiesMap.get(q)) {
+                            sum += val;
+                        }
+                        System.out.println(q + " -- " + sum);
+                    }
+
+                    for (int i = 0; i < PieceType.numberTypes; i++) {
+                        double sum = 0;
+                        for (Piece q : piecesInMap) {
+                            sum += probabilitiesMap.get(q)[i];
+                        }
+                        System.out.println(PieceType.values()[i] + " -- " + sum);
+                    }
+                    System.out.println();
+                }
 
                 System.out.println("\nEXTRA:\nLast move was " + (lastMoveAIMove == 1 ? "AIMove" : "normal Move") + ": " + moveInformationStack.peek().toMoveString());
                 if (lastUpdated == 0) {
@@ -844,6 +969,10 @@ public class EnhancedGameState extends GameState {
                     System.out.println("wat");
                     System.exit(1);
                 }
+
+                AITestsMain.printStats();
+
+                System.exit(1);
 
                 printBoard();
                 System.out.println("OPPONENT'S DEAD PIECES:\n" + opponentDeadPiecesToString());
@@ -870,7 +999,7 @@ public class EnhancedGameState extends GameState {
                         System.out.println(q + " -- " + sum);
                     }
 
-                    for (int i = 0; i < PieceType.values().length - 1; i++) {
+                    for (int i = 0; i < PieceType.numberTypes; i++) {
                         double sum = 0;
                         for (Piece q : piecesInMap) {
                             sum += probabilitiesMap.get(q)[i];
@@ -880,14 +1009,10 @@ public class EnhancedGameState extends GameState {
                     System.out.println();
                     c++;
                 }
-
-                AITestsMain.printStats();
-
-                System.exit(1);
             }
 
             // go through each rank
-            for (int i = 0; i < PieceType.values().length - 1; i++) {
+            for (int i = 0; i < PieceType.numberTypes; i++) {
                 double sum = 0;
 
                 for (Piece p : pieces) {
@@ -911,14 +1036,14 @@ public class EnhancedGameState extends GameState {
                 currentProbabilities = probabilitiesMap.get(p);
                 double sum = 0;
 
-                for (int i = 0; i < PieceType.values().length - 1; i++) {
+                for (int i = 0; i < PieceType.numberTypes; i++) {
                     // sum += p.prob(rank associated with i);
                     sum += currentProbabilities[i];
                 }
 
                 if (Math.abs(1 - sum) > PROB_EPSILON) {
                     updated = false;
-                    for (int i = 0; i < PieceType.values().length - 1; i++) {
+                    for (int i = 0; i < PieceType.numberTypes; i++) {
                         // p.prob(rank associated with i) /= sum;
                         currentProbabilities[i] /= sum;
                     }
@@ -934,7 +1059,7 @@ public class EnhancedGameState extends GameState {
         // for each rank loop through all pieces, if there are PieceType.pieceQuantity[rank] pieces with probability almost 1.0, then set all others to 0.0
         int oneCount;
         double pieceProbabilityCount;
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             oneCount = 0;
             pieceProbabilityCount = 0;
             for (Piece p : probabilitiesMap.keySet()) {
@@ -964,13 +1089,13 @@ public class EnhancedGameState extends GameState {
     public String probabilitiesTableToReadableString() {
         String probabilitiesTableString = "";
         probabilitiesTableString += "--------------";
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             probabilitiesTableString += "---------";
         }
         probabilitiesTableString += "\n";
 
         probabilitiesTableString += "|            |";
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             if (PieceType.values()[i] == PieceType.MAJOR) {
                 probabilitiesTableString += " MJ (" + PieceType.pieceQuantity[i] + ") |";
             } else {
@@ -980,7 +1105,7 @@ public class EnhancedGameState extends GameState {
         probabilitiesTableString += "\n";
 
         probabilitiesTableString += "--------------";
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             probabilitiesTableString += "---------";
         }
         probabilitiesTableString += "\n";
@@ -991,21 +1116,21 @@ public class EnhancedGameState extends GameState {
         for (Piece p : probabilitiesMap.keySet()) {
             //probabilitiesTableString += "| (" + p.getRowPos() + "|" + p.getColPos() + ") |";
             probabilitiesTableString += "| (" + p.getRowPos() + "|" + p.getColPos() + ") - " + (p.getType() == PieceType.MAJOR ? "MJ" : p.getType().toString().substring(0, 2)) + " |";
-            for (int i = 0; i < PieceType.values().length - 1; i++) {
+            for (int i = 0; i < PieceType.numberTypes; i++) {
                 stringBuilder.setLength(0);
                 format.format(" %.4f |", probabilitiesMap.get(p)[i]);
                 probabilitiesTableString += stringBuilder.toString();
             }
 
             probabilitiesTableString += "\n--------------";
-            for (int i = 0; i < PieceType.values().length - 1; i++) {
+            for (int i = 0; i < PieceType.numberTypes; i++) {
                 probabilitiesTableString += "---------";
             }
             probabilitiesTableString += "\n";
 
             if (counter % 10 == 9 && counter != 39) {
                 probabilitiesTableString += "|            |";
-                for (int i = 0; i < PieceType.values().length - 1; i++) {
+                for (int i = 0; i < PieceType.numberTypes; i++) {
                     if (PieceType.values()[i] == PieceType.MAJOR) {
                         probabilitiesTableString += " MJ (" + PieceType.pieceQuantity[i] + ") |";
                     } else {
@@ -1015,7 +1140,7 @@ public class EnhancedGameState extends GameState {
                 probabilitiesTableString += "\n";
 
                 probabilitiesTableString += "--------------";
-                for (int i = 0; i < PieceType.values().length - 1; i++) {
+                for (int i = 0; i < PieceType.numberTypes; i++) {
                     probabilitiesTableString += "---------";
                 }
                 probabilitiesTableString += "\n";
@@ -1050,7 +1175,7 @@ public class EnhancedGameState extends GameState {
                         int counter = 0;
                         boolean found = false;
                         double[] temp = probabilitiesMap.get(board[row][col].getOccupyingPiece());
-                        for (int i = 0; !found && i < PieceType.values().length - 1; i++) {
+                        for (int i = 0; !found && i < PieceType.numberTypes; i++) {
                             if (Math.abs(temp[i] - 1.0) < /*2 * */PROB_EPSILON) {
                                 assignedType = PieceType.values()[counter];
                                 break;

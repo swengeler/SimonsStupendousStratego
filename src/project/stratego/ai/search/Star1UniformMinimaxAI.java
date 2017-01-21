@@ -170,9 +170,9 @@ public class Star1UniformMinimaxAI extends AbstractAI {
     private double star1Minimax(int currentDepth, EnhancedGameState state, AIMove chanceMove, double alphaValue, double betaValue) {
         Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
-        int[] relevantIndeces = new int[PieceType.values().length - 1];
+        int[] relevantIndeces = new int[PieceType.numberTypes];
         int nrChanceEvents = 0;
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             if (state.getProbability(unknownPiece, i) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantIndeces[nrChanceEvents] = i;
                 nrChanceEvents++;

@@ -82,14 +82,14 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
                     currentValue = expectimaxSearch(1, gameState, m);
                 } else {
                     gameState.applyMove(m);
-                    currentValue = negamaxSearch(1, gameState);
+                    currentValue = minSearch(1, gameState);
                     gameState.undoLastMove();
                 }
                 if (DEBUG) {
                     System.out.println("\n" + m);
                     System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s (maxDepth: " + currentMaxDepth + ")");
                 }
-                if (currentValue > maxValue) {
+                if (currentValue > maxValue && !timeLimitReached) {
                     maxValue = currentValue;
                     bestMove = m;
                 }
@@ -108,7 +108,7 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
         return bestMove;
     }
 
-    private double negamaxSearch(int currentDepth, EnhancedGameState state) {
+    /*private double negamaxSearch(int currentDepth, EnhancedGameState state) {
         if (currentDepth == currentMaxDepth || state.isGameOver()) {
             nodeCounter++;
             //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
@@ -153,18 +153,123 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
         // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)
         // sum over all possible scenarios arising from chanceMove
         double relevantProbabilitiesSum = 0.0;
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
                 timeLimitReached = true;
             }
             if (timeLimitReached) {
                 return sum / relevantProbabilitiesSum;
             }
-            if ((prevProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
+            if ((prevProbability = state.getProbability(unknownPiece, i)) > *//*0.2 * *//*EnhancedGameState.PROB_EPSILON) {
                 relevantProbabilitiesSum += prevProbability;
                 state.assignPieceType(unknownPiece, PieceType.values()[i]);
                 state.applyMove(chanceMove);
                 sum += prevProbability * negamaxSearch(currentDepth, state);
+                state.undoLastMove();
+                state.undoLastAssignment();
+            }
+        }
+        sum /= relevantProbabilitiesSum;
+        return sum;
+    }*/
+
+    private double maxSearch(int currentDepth, EnhancedGameState state) {
+        if (currentDepth == currentMaxDepth || state.isGameOver()) {
+            nodeCounter++;
+            //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
+            return evaluationFunction.evaluate(state, playerIndex);
+        }
+
+        double maxValue = -Double.MAX_VALUE;
+        double currentValue;
+        ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
+
+        // loop through all moves and find the one with the highest expecti-negamax value
+        for (AIMove m : legalMoves) {
+            if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+            }
+            if (timeLimitReached) {
+                return maxValue;
+            }
+            if (m.isChanceMove()) {
+                // do expectimax evaluation
+                currentValue = expectimaxSearch(currentDepth + 1, state, m);
+            } else {
+                state.applyMove(m);
+                //gameState.checkBombDebugCondition(2);
+                currentValue = minSearch(currentDepth + 1, state);
+                state.undoLastMove();
+            }
+            if (currentValue > maxValue && !timeLimitReached) {
+                maxValue = currentValue;
+            }
+        }
+
+        return maxValue;
+    }
+
+    private double minSearch(int currentDepth, EnhancedGameState state) {
+        if (currentDepth == currentMaxDepth || state.isGameOver()) {
+            nodeCounter++;
+            //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
+            return evaluationFunction.evaluate(state, playerIndex);
+        }
+
+        double minValue = Double.MAX_VALUE;
+        double currentValue;
+        ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
+
+        // loop through all moves and find the one with the highest expecti-negamax value
+        for (AIMove m : legalMoves) {
+            if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+            }
+            if (timeLimitReached) {
+                return minValue;
+            }
+            if (m.isChanceMove()) {
+                // do expectimax evaluation
+                currentValue = expectimaxSearch(currentDepth + 1, state, m);
+            } else {
+                state.applyMove(m);
+                //gameState.checkBombDebugCondition(3);
+                currentValue = maxSearch(currentDepth + 1, state);
+                state.undoLastMove();
+            }
+            if (currentValue < minValue && !timeLimitReached) {
+                minValue = currentValue;
+            }
+        }
+
+        return minValue;
+    }
+
+    private double expectimaxSearch(int currentDepth, EnhancedGameState state, AIMove chanceMove) {
+        double sum = 0;
+        double prevProbability;
+        Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
+
+        // make clones of all possible assignments for either the piece that is moved or the piece that is attacked
+        // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)
+        // sum over all possible scenarios arising from chanceMove
+        double relevantProbabilitiesSum = 0.0;
+        for (int i = 0; i < PieceType.numberTypes; i++) {
+            if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+            }
+            if (timeLimitReached) {
+                return sum / relevantProbabilitiesSum;
+            }
+            if ((currentDepth % 2 == 1 || i > 1) && (prevProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
+                relevantProbabilitiesSum += prevProbability;
+                state.assignPieceType(unknownPiece, PieceType.values()[i]);
+                state.applyMove(chanceMove);
+                if (currentDepth % 2 == 1) {
+                    sum += prevProbability * minSearch(currentDepth, state);
+                } else {
+                    sum += prevProbability * maxSearch(currentDepth, state);
+                }
                 state.undoLastMove();
                 state.undoLastAssignment();
             }

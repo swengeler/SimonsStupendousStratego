@@ -12,7 +12,7 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
 
     public TestEvaluationFunction(int playerIndex) {
         super(playerIndex);
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             if (PieceType.values()[i] == PieceType.BOMB) {
                 allPiecesSum += PieceType.pieceQuantity[i] * 4.5;
             } else if (PieceType.values()[i] == PieceType.FLAG) {
@@ -57,7 +57,7 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
             if (Math.abs(gameState.getProbability(p, p.getType()) - 1.0) < EnhancedGameState.PROB_EPSILON) {
                 opponentSum -= PieceType.pieceLvlMap.get(p.getType());
             } else {
-                for (int i = 0; !found && i < PieceType.values().length - 1; i++) {
+                for (int i = 0; !found && i < PieceType.numberTypes; i++) {
                     if (Math.abs(gameState.getProbability(p, i) - 1.0) < EnhancedGameState.PROB_EPSILON) {
                         found = true;
                         if (i == 1) {

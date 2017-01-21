@@ -308,7 +308,7 @@ public class AIComManager {
         }
 
         AITestsMain.addPlayTime(System.currentTimeMillis() - beforeOne);
-        //AITestsMain.addNodesSearched(((ExpectiMinimaxAI) primaryAI).getNodesSearched());
+        //AITestsMain.addNodesSearched(((ExpectiMinimaxAI) primaryAI).getLeafNodeCounter());
         AITestsMain.addNumberMoves(moveCounter);
         //AITestsMain.addWin(primaryAI.getPlayerWonIndex());
     }

@@ -7,10 +7,10 @@ import java.io.*;
 
 public class AITestsMain {
 
-    private static final boolean REAL_TESTS = true;
+    private static final boolean REAL_TESTS = false;
     private static final int REP_PER_CONFIG = 1;
 
-    private static final int numberGames = 100;
+    private static final int numberGames = 50;
     private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;
@@ -79,8 +79,30 @@ public class AITestsMain {
                 System.out.println("No files");
                 System.exit(1);
             }
+            /*
+            if (setups != null) {
+                long before;
+                int setupOneIndex, setupTwoIndex;
+                for (counter = 0; counter < REP_PER_CONFIG; counter++) {
+                    setupOneIndex = (int) (Math.random() * setups.length);
+                    setupTwoIndex = (int) (Math.random() * setups.length);
+
+                    System.out.println("\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+                    System.out.println("RUN NUMBER " + (counter + 1) + " (with setups " + setupOneIndex + " and " + setupTwoIndex + ")");
+                    System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
+
+                    ModelComManager.getInstance().configureAIMatch(setups[setupOneIndex], setups[setupTwoIndex]);
+                    before = System.currentTimeMillis();
+                    AIComManager.getInstance().runAutomaticAIMatch();
+                    System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");
+                    counter++;
+                }
+            } else {
+                System.out.println("No files");
+                System.exit(1);
+            }*/
         } else {
-            String testSetup = "7-3-3-6-3-7-4-11-3-7-6-5-1-2-10-3-8-8-9-3-5-1-5-8-9-6-1-6-7-5-3-4-1-3-4-1-0-1-4-4\n";
+            String testSetup = "7-3-3-6-3-7-4-11-3-7-6-5-1-2-10-3-8-8-9-3-5-1-5-8-9-6-1-6-7-5-3-4-1-3-4-1-0-1-4-4";
 
             long before;
             for (counter = 0; counter < numberGames; counter++) {

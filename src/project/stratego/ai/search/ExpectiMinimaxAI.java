@@ -18,8 +18,6 @@ public class ExpectiMinimaxAI extends AbstractAI {
     private static final boolean DEBUG_MAX = false;
     private static final boolean DEBUG_EXP = false;
 
-    private int nodeCounter = 0;
-
     private int maxDepth = 4;
 
     public ExpectiMinimaxAI(int playerIndex, int maxDepth) {
@@ -79,6 +77,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 currentValue = expectimaxSearch(1, gameState, m);
             } else {
                 gameState.applyMove(m);
+                //gameState.checkBombDebugCondition(0);
                 currentValue = minSearch(1, gameState);
                 gameState.undoLastMove();
             }
@@ -96,7 +95,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
             System.out.println("------------------------------------------------------------------------------------\nBest move:");
             System.out.println(bestMove);
             System.out.println("Max value: " + maxValue);
-            System.out.println("Searched " + nodeCounter + " nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
+            System.out.println("Searched " + leafNodeCounter + " nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
             System.out.println("------------------------------------------------------------------------------------\n");
         }
 
@@ -110,9 +109,9 @@ public class ExpectiMinimaxAI extends AbstractAI {
         //gameState.printProbabilitiesTable();
         //gameState.printBoard();
         //addToDebugString(currentDepth, parentID, gameState);
-        int currentNodeCounter = nodeCounter;
+        int currentNodeCounter = leafNodeCounter;
         if (currentDepth == maxDepth || state.isGameOver()) {
-            nodeCounter++;
+            leafNodeCounter++;
             //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
             int multiplier = currentDepth % 2 == 0 ? -1 : 1;
             //int multiplier = 1;
@@ -138,6 +137,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 currentValue = expectimaxSearch(currentDepth + 1, state, m);
             } else {
                 state.applyMove(m);
+                //gameState.checkBombDebugCondition(1);
                 //state.checkDebugDepthThreeCondition(6);
                 currentValue = -negamaxSearch(currentDepth + 1, state, currentNodeCounter);
                 //state.checkDebugDepthThreeCondition(7);
@@ -157,7 +157,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
 
     private double maxSearch(int currentDepth, EnhancedGameState state) {
         if (currentDepth == maxDepth || state.isGameOver()) {
-            nodeCounter++;
+            leafNodeCounter++;
             //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
             return evaluationFunction.evaluate(state, playerIndex);
         }
@@ -173,6 +173,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
             //state.printBoard();
             //state.printProbabilitiesTable();
         }
+        minMaxNodeCounter++;
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -181,6 +182,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 currentValue = expectimaxSearch(currentDepth + 1, state, m);
             } else {
                 state.applyMove(m);
+                //gameState.checkBombDebugCondition(2);
                 currentValue = minSearch(currentDepth + 1, state);
                 state.undoLastMove();
             }
@@ -197,10 +199,11 @@ public class ExpectiMinimaxAI extends AbstractAI {
 
     private double minSearch(int currentDepth, EnhancedGameState state) {
         if (currentDepth == maxDepth || state.isGameOver()) {
-            nodeCounter++;
+            leafNodeCounter++;
             //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
             return evaluationFunction.evaluate(state, playerIndex);
         }
+        minMaxNodeCounter++;
 
         double minValue = Double.MAX_VALUE;
         double currentValue;
@@ -221,6 +224,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 currentValue = expectimaxSearch(currentDepth + 1, state, m);
             } else {
                 state.applyMove(m);
+                //gameState.checkBombDebugCondition(3);
                 currentValue = maxSearch(currentDepth + 1, state);
                 state.undoLastMove();
             }
@@ -236,6 +240,8 @@ public class ExpectiMinimaxAI extends AbstractAI {
     }
 
     private double expectimaxSearch(int currentDepth, EnhancedGameState state, AIMove chanceMove) {
+        chanceNodeCounter++;
+
         double sum = 0;
         double prevProbability;
         Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
@@ -244,7 +250,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
         // take probability values from table/array that is stored and updated with each move made in the actual game (should probably adapt this later to be adjusted also for AI moves)
         // sum over all possible scenarios arising from chanceMove
         double relevantProbabilitiesSum = 0.0;
-        for (int i = 0; i < PieceType.values().length - 1; i++) {
+        for (int i = 0; i < PieceType.numberTypes; i++) {
             if (DEBUG_EXP && currentDepth == 2) {
                 System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
             }
@@ -276,8 +282,20 @@ public class ExpectiMinimaxAI extends AbstractAI {
 
     /* stats */
 
-    public int getNodesSearched() {
-        return nodeCounter;
+    private int leafNodeCounter = 0;
+    private int chanceNodeCounter = 0;
+    private int minMaxNodeCounter = 0;
+
+    public int getLeafNodeCounter() {
+        return leafNodeCounter;
+    }
+
+    public int getChanceNodeCounter() {
+        return chanceNodeCounter;
+    }
+
+    public int getMinMaxNodeCounter() {
+        return minMaxNodeCounter;
     }
 
 }

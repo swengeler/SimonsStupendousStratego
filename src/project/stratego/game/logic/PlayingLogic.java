@@ -107,6 +107,12 @@ public class PlayingLogic extends GameLogic {
 
             Player winningPlayer = checkPlayerHasFlag(currentOpponent) ? (checkPlayerCanMove(currentOpponent) ? currentOpponent : currentPlayer) : currentPlayer;
             boolean winByFlag = !checkPlayerHasFlag(winningPlayer == playerNorth ? playerSouth : playerNorth);
+            System.out.println("Winning player: " + winningPlayer.getType() + ", win by " + (winByFlag ? "flag capture" : "piece elimination"));
+            if (!winByFlag) {
+                for (Piece p : (winningPlayer == playerNorth ? playerSouth : playerNorth).getActivePieces()) {
+                    System.out.println(p);
+                }
+            }
             AITestsMain.addWin(winningPlayer.getType().ordinal(), winByFlag);
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
             AIComManager.getInstance().gameOver(parent);
@@ -117,16 +123,33 @@ public class PlayingLogic extends GameLogic {
         return !checkPlayerHasFlag(currentOpponent) || !checkPlayerHasFlag(currentPlayer) || !checkPlayerCanMove(currentOpponent) || !checkPlayerCanMove(currentPlayer);
     }
 
+    private boolean checkOpponentFlagUnreachable(Player player) {
+        return true;
+    }
+
     private boolean checkPlayerCanMove(Player player) {
         for (Piece p : player.getActivePieces()) {
             if (p.getType() != PieceType.FLAG && p.getType() != PieceType.BOMB) {
-                for (int row = p.getRowPos() - 1; row <= p.getRowPos() + 1; row += 2) {
-                    for (int col = p.getColPos() - 1; col <= p.getColPos() + 1; col += 2) {
-                        if (row >= 0 && row < 10 && col >= 0 && col < 10 && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
-                            //System.out.println(p + " can move");
-                            return true;
-                        }
-                    }
+                int row = p.getRowPos() - 1;
+                int col = p.getColPos();
+                if (row >= 0 && row < 10 && parent.getBoard()[row][col].isAccessible() && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    return true;
+                }
+                row = p.getRowPos() + 1;
+                if (row >= 0 && row < 10 && parent.getBoard()[row][col].isAccessible() && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    //System.out.println(p + " can move");
+                    return true;
+                }
+                row = 0;
+                col = p.getColPos() - 1;
+                if (col >= 0 && col < 10 && parent.getBoard()[row][col].isAccessible() && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    //System.out.println(p + " can move");
+                    return true;
+                }
+                col = p.getColPos() + 1;
+                if (col >= 0 && col < 10 && parent.getBoard()[row][col].isAccessible() && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    //System.out.println(p + " can move");
+                    return true;
                 }
             }
         }

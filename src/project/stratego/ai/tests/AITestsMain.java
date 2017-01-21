@@ -10,7 +10,7 @@ public class AITestsMain {
     private static final boolean REAL_TESTS = false;
     private static final int REP_PER_CONFIG = 1;
 
-    private static final int numberGames = 50;
+    private static final int numberGames = 20;
     private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;

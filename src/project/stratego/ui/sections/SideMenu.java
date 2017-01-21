@@ -133,9 +133,12 @@ public class SideMenu extends Pane {
 
         Button saveGameButton = new Button("Save game");
         saveGameButton.setOnAction((ActionEvent e) -> {
-            String filePath = gameStateChooser.showSaveDialog(parent).getPath();
-            if (filePath != null) {
-                ViewComManager.getInstance().requestSaveGame(filePath);
+            File file = gameStateChooser.showSaveDialog(parent);
+            if (file != null) {
+                String filePath = file.getPath();
+                if (filePath != null) {
+                    ViewComManager.getInstance().requestSaveGame(filePath);
+                }
             }
         });
         saveGameButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");

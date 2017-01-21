@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public class Star2MinimaxAI extends AbstractAI {
 
     private static final boolean DEBUG = true;
+    private static final boolean DEBUG_MIN = false;
+    private static final boolean DEBUG_STAR2_MAX = false;
 
     private int nodeCounter = 0;
 
@@ -86,7 +88,7 @@ public class Star2MinimaxAI extends AbstractAI {
         long total = System.currentTimeMillis();
 
         ArrayList<AIMove> testList = new ArrayList<>();
-        testList.add(legalMoves.get(0));
+        testList.add(legalMoves.get(2));
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
@@ -100,8 +102,8 @@ public class Star2MinimaxAI extends AbstractAI {
                 gameState.undoLastMove();
             }
             if (DEBUG) {
-                System.out.println("\n" + m);
-                System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s");
+                System.out.println(m);
+                System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s\n");
             }
             if (currentValue > maxValue) {
                 maxValue = currentValue;
@@ -124,6 +126,7 @@ public class Star2MinimaxAI extends AbstractAI {
 
     private double alphaBetaMax(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
         if (currentDepth == maxDepth || state.isGameOver()) {
+            nodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
@@ -148,16 +151,28 @@ public class Star2MinimaxAI extends AbstractAI {
 
     private double alphaBetaMin(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
         if (currentDepth == maxDepth || state.isGameOver()) {
+            nodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
         // generate moves for MIN player
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, 1 - playerIndex);
+        if (DEBUG_MIN) {
+            System.out.println("Number of legal moves at depth " + currentDepth + " (MIN) where alphaValue = " + alphaValue + " and betaValue = " + betaValue);
+            for (AIMove m : legalMoves) {
+                System.out.println(m);
+            }
+            System.out.println();
+        }
+
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
             if (m.isChanceMove()) {
                 betaValue = Math.min(betaValue, (currentValue = star2Max(currentDepth, state, m, alphaValue, betaValue)));
+                if (DEBUG_MIN) {
+                    System.out.println("Value for " + m + ": " + currentValue + ", betaValue = " + betaValue + "\n");
+                }
             } else {
                 state.applyMove(m);
                 betaValue = Math.min(betaValue, (currentValue = alphaBetaMax(currentDepth + 1, state, alphaValue, betaValue)));
@@ -180,6 +195,9 @@ public class Star2MinimaxAI extends AbstractAI {
         double relevantProbabilitiesSum = 0.0;
         double tempProbability;
         for (int i = 0; i < PieceType.values().length - 1; i++) {
+            if (DEBUG_STAR2_MAX) {
+                System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
+            }
             if ((i > 1) && (tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantIndeces[nrChanceEvents] = i;
                 relevantProbabilities[nrChanceEvents] = tempProbability;
@@ -198,6 +216,7 @@ public class Star2MinimaxAI extends AbstractAI {
         double probDifference = 1.0; // Y
         double probEstimateSum = 0.0; // Z
         double lowerBound = (alphaValue - (probDifference - relevantProbabilities[0]) * evalUpperBound) / relevantProbabilities[0]; // A = (alpha - U) / P(i)
+        //double lowerBound = alphaValue - probDifference * evalUpperBound; // A = (alpha - U) / P(i)
         double upperBound; // B
         double nextLowerBound = Math.max(lowerBound, evalLowerBound); // AX = max(A, L)
         double nextUpperBound; // BX
@@ -208,14 +227,18 @@ public class Star2MinimaxAI extends AbstractAI {
         for (int i = 0; i < nrChanceEvents; i++) {
             probDifference -= relevantProbabilities[i];
             // only the upper bound B is updated because the next "layer" of nodes are MAX nodes -> can only tighten the upper bound
-            upperBound = (betaValue - probEstimateSum - evalUpperBound * probDifference) / relevantProbabilities[i]; // (beta - X(i) - U * Y(i)) / P(i)
+            upperBound = (betaValue - probEstimateSum - evalLowerBound * probDifference) / relevantProbabilities[i]; // (beta - X(i) - L * Y(i)) / P(i)
             nextUpperBound = Math.min(upperBound, evalUpperBound); // BX = min(B, U)
 
             state.assignPieceType(unknownPiece, PieceType.values()[relevantIndeces[i]]);
             state.applyMove(chanceMove);
-            probedValues[i] = probe(currentDepth, state, nextLowerBound, nextUpperBound); // W(i) = PROBE(S(i), AX, BX)
+            probedValues[i] = probe(currentDepth + 1, state, nextLowerBound, nextUpperBound); // W(i) = PROBE(S(i), AX, BX)
             state.undoLastMove();
             state.undoLastAssignment();
+
+            if (DEBUG_STAR2_MAX) {
+                System.out.println("Probed value for assignment " + PieceType.values()[relevantIndeces[i]] + " at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + "): " + probedValues[i]);
+            }
 
             if (probedValues[i] >= upperBound) {
                 return betaValue;
@@ -293,7 +316,8 @@ public class Star2MinimaxAI extends AbstractAI {
         double probDifference = 1.0; // Y
         double probEstimateSum = 0.0; // Z
         double lowerBound; // A
-        double upperBound = (betaValue - probDifference * evalLowerBound) / relevantProbabilities[0]; // B
+        double upperBound = (betaValue - (probDifference - relevantProbabilities[0]) * evalLowerBound) / relevantProbabilities[0]; // B
+        //double upperBound = betaValue - probDifference * evalLowerBound; // B
         double nextLowerBound; // AX
         double nextUpperBound = Math.min(upperBound, evalUpperBound); // BX
 
@@ -364,7 +388,7 @@ public class Star2MinimaxAI extends AbstractAI {
         // generate moves (children) for MAX if currentDepth is even, for MIN if currentDepth is odd
         // order by how promising they are
         boolean maxPlayersTurn = currentDepth % 2 == 0;
-        AIMove probedMove = orderMoves(generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex)).get(0);
+        AIMove probedMove = orderMoves(state, generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex)).get(0);
         // get best one's value
         double probedValue;
         // now need to get the value of the opposite player's node which is the probed child

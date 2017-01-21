@@ -13,12 +13,14 @@ public class ExpectiMinimaxAI extends AbstractAI {
 
     private static String debugString = "";
 
-    private static final boolean DEBUG = true;
-    private static final boolean DEBUG_2 = false;
+    private static final boolean DEBUG = false;
+    private static final boolean DEBUG_MIN = false;
+    private static final boolean DEBUG_MAX = false;
+    private static final boolean DEBUG_EXP = false;
 
     private int nodeCounter = 0;
 
-    private int maxDepth = 2;
+    private int maxDepth = 4;
 
     public ExpectiMinimaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);
@@ -64,8 +66,8 @@ public class ExpectiMinimaxAI extends AbstractAI {
         long before;
         long total = System.currentTimeMillis();
 
-        ArrayList<AIMove> testList = new ArrayList<>(3);
-        testList.add(legalMoves.get(0));
+        //ArrayList<AIMove> testList = new ArrayList<>(3);
+        //testList.add(legalMoves.get(2));
         //testList.add(legalMoves.get(1));
         //testList.add(legalMoves.get(2));
 
@@ -81,7 +83,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 gameState.undoLastMove();
             }
             if (DEBUG) {
-                System.out.println("\n" + m);
+                System.out.println(m);
                 System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s\n");
             }
             if (currentValue > maxValue) {
@@ -120,7 +122,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
         double maxValue = -Double.MAX_VALUE;
         double currentValue;
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
-        if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+        if (DEBUG_MIN && (currentDepth == 1 || currentDepth == 2)) {
             System.out.println("\nNumber of legal moves for this node at depth " + currentDepth + ": " + legalMoves.size());
             for (Move m : legalMoves) {
                 System.out.println(m);
@@ -142,7 +144,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 state.undoLastMove();
                 //state.checkDebugDepthThreeCondition(8);
             }
-            if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+            if (DEBUG_MIN && (currentDepth == 1 || currentDepth == 2)) {
                 System.out.println("value for " + m + ": " + currentValue);
             }
             if (currentValue > maxValue) {
@@ -163,7 +165,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
         double maxValue = -Double.MAX_VALUE;
         double currentValue;
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
-        if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+        if (DEBUG_MAX && (currentDepth == 1 || currentDepth == 2)) {
             System.out.println("\nNumber of legal moves for this node at depth " + currentDepth + ": " + legalMoves.size());
             for (Move m : legalMoves) {
                 System.out.println(m);
@@ -182,7 +184,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 currentValue = minSearch(currentDepth + 1, state);
                 state.undoLastMove();
             }
-            if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+            if (DEBUG_MAX && (currentDepth == 1 || currentDepth == 2)) {
                 System.out.println("value for " + m + ": " + currentValue);
             }
             if (currentValue > maxValue) {
@@ -203,7 +205,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
         double minValue = Double.MAX_VALUE;
         double currentValue;
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
-        if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+        if (DEBUG_MIN && (currentDepth == 1 || currentDepth == 2)) {
             System.out.println("\nNumber of legal moves for this node at depth " + currentDepth + ": " + legalMoves.size());
             for (Move m : legalMoves) {
                 System.out.println(m);
@@ -219,10 +221,10 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 currentValue = expectimaxSearch(currentDepth + 1, state, m);
             } else {
                 state.applyMove(m);
-                currentValue = minSearch(currentDepth + 1, state);
+                currentValue = maxSearch(currentDepth + 1, state);
                 state.undoLastMove();
             }
-            if (DEBUG_2 && (currentDepth == 1 || currentDepth == 2)) {
+            if (DEBUG_MIN && currentDepth == 1) {
                 System.out.println("value for " + m + ": " + currentValue);
             }
             if (currentValue < minValue) {
@@ -243,14 +245,14 @@ public class ExpectiMinimaxAI extends AbstractAI {
         // sum over all possible scenarios arising from chanceMove
         double relevantProbabilitiesSum = 0.0;
         for (int i = 0; i < PieceType.values().length - 1; i++) {
-            if (DEBUG_2 && currentDepth == 2) {
+            if (DEBUG_EXP && currentDepth == 2) {
                 System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
             }
             if ((currentDepth % 2 == 1 || i > 1) && (prevProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantProbabilitiesSum += prevProbability;
                 state.assignPieceType(unknownPiece, PieceType.values()[i]);
                 state.applyMove(chanceMove);
-                if (DEBUG_2 && currentDepth == 1) {
+                if (DEBUG_EXP && currentDepth == 1) {
                     state.printBoard();
                 }
                 if (currentDepth % 2 == 1) {
@@ -262,11 +264,11 @@ public class ExpectiMinimaxAI extends AbstractAI {
                 state.undoLastAssignment();
             }
         }
-        if (DEBUG_2 && currentDepth == 2) {
+        if (DEBUG_EXP && currentDepth == 2) {
             System.out.println("sum = " + sum + ", relevantProbabilitiesSum = " + relevantProbabilitiesSum);
         }
         sum /= relevantProbabilitiesSum;
-        if (DEBUG_2 && currentDepth == 2) {
+        if (DEBUG_EXP && currentDepth == 2) {
             System.out.println("sum after = " + sum);
         }
         return sum;

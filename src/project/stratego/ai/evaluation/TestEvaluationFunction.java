@@ -21,7 +21,6 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
                 allPiecesSum += PieceType.pieceQuantity[i] * PieceType.pieceLvlMap.get(PieceType.values()[i]);
             }
         }
-        System.out.println("Piece sum: " + allPiecesSum);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
         double opponentSum = allPiecesSum;
         for (Piece p : gameState.getPlayer(1 - gameState.getPlayerIndex()).getDeadPieces()) {
             if (Math.abs(gameState.getProbability(p, p.getType()) - 1.0) < EnhancedGameState.PROB_EPSILON) {
-
+                opponentSum -= PieceType.pieceLvlMap.get(p.getType());
             } else {
                 for (int i = 0; !found && i < PieceType.values().length - 1; i++) {
                     if (Math.abs(gameState.getProbability(p, i) - 1.0) < EnhancedGameState.PROB_EPSILON) {
@@ -85,8 +84,8 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
         }
 
         if (opponentSum != 0) {
-            double randomFactor = Math.random() * 0.05;
-            return (ownSum / opponentSum) /*+ randomFactor*/;
+            double randomFactor = Math.random() * 0.001;
+            return (ownSum / opponentSum) + randomFactor;
         }
         return 1000.0;
     }

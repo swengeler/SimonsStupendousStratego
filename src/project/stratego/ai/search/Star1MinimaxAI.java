@@ -121,6 +121,7 @@ public class Star1MinimaxAI extends AbstractAI {
 
     private double alphaBetaMax(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
         if (currentDepth == maxDepth || state.isGameOver()) {
+            nodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
@@ -145,6 +146,7 @@ public class Star1MinimaxAI extends AbstractAI {
 
     private double alphaBetaMin(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
         if (currentDepth == maxDepth || state.isGameOver()) {
+            nodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
@@ -187,8 +189,8 @@ public class Star1MinimaxAI extends AbstractAI {
             relevantProbabilities[i] /= relevantProbabilitiesSum;
         }
 
-        double probValueSum = 0.0; // X
-        double probDifference = 1.0 - relevantProbabilities[0]; // Y
+        double probValueSum = 0.0; // X(1)
+        double probDifference = 1.0; // Y(0)
         double lowerBound; // A
         double upperBound; // B
         double nextLowerBound; // AX
@@ -198,6 +200,9 @@ public class Star1MinimaxAI extends AbstractAI {
         double currentValue;
 
         for (int i = 0; i < nrChanceEvents; i++) {
+            // update Y values used to update the bounds below
+            probDifference -= relevantProbabilities[i];
+
             // update lower bound and upper bound (A and B)
             lowerBound = (alphaValue - probValueSum - evalUpperBound * probDifference) / relevantProbabilities[i];
             upperBound = (betaValue - probValueSum - evalLowerBound * probDifference) / relevantProbabilities[i];
@@ -224,7 +229,6 @@ public class Star1MinimaxAI extends AbstractAI {
             weightedValueSum += relevantProbabilities[i] * currentValue;
             // update X and Y values used to update the bounds at the start of the loop
             probValueSum += relevantProbabilities[i] * currentValue;
-            probDifference -= relevantProbabilities[i];
         }
         return weightedValueSum;
     }

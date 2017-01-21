@@ -391,19 +391,6 @@ public class EnhancedGameState extends GameState {
         super.copySetup(state, playerIndex);
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
             probabilitiesMap = new HashMap<>(40);
-            double[] initProbabilities = new double[PieceType.values().length - 1];
-            /*for (int i = 0; i < initProbabilities.length; i++) {
-                initProbabilities[i] = ((double) PieceType.pieceQuantity[i]) / getPlayer(playerIndex).getActivePieces().size();
-            }
-            for (Piece p : getPlayer(playerIndex).getActivePieces()) {
-                probabilitiesMap.put(p, initProbabilities.clone());
-                if (playerIndex == PlayerType.NORTH.ordinal() && p.getRowPos() > 1) {
-                    probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
-                } else if (playerIndex == PlayerType.SOUTH.ordinal() && p.getRowPos() < 8) {
-                    probabilitiesMap.get(p)[PieceType.FLAG.ordinal()] = 0.005;
-                }
-            }
-            updateProbabilities();*/
             try (BufferedReader br = new BufferedReader(new FileReader("res\\mirroredprobs.txt"))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {
                     probabilitiesMap.put(p, new double[PieceType.values().length - 1]);
@@ -421,7 +408,7 @@ public class EnhancedGameState extends GameState {
                         probabilitiesMap.get(board[actualRow][actualCol].getOccupyingPiece())[PieceType.valueOf(array[0]).ordinal()] = Double.parseDouble(array[1].trim());
                     }
                 }
-                System.out.println("Probabilities initialised, opponent has " + getPlayer(1 - playerIndex).getActivePieces().size() + " pieces");
+                //System.out.println("Probabilities initialised, opponent has " + getPlayer(1 - playerIndex).getActivePieces().size() + " pieces");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -454,11 +441,12 @@ public class EnhancedGameState extends GameState {
         }
     }
 
-    public void interpretEncodedBoard(String encodedBoard) {
-        super.interpretEncodedBoard(encodedBoard);
-        // make probability table for opponent
-        probabilitiesMap = new HashMap<>(40);
-        double[] initProbabilities = new double[PieceType.values().length - 1];
+    public void interpretEncodedSetup(String encodedSetup, int playerIndex) {
+        super.interpretEncodedSetup(encodedSetup, playerIndex);
+
+        if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
+            probabilitiesMap = new HashMap<>(40);
+            double[] initProbabilities = new double[PieceType.values().length - 1];
             /*for (int i = 0; i < initProbabilities.length; i++) {
                 initProbabilities[i] = ((double) PieceType.pieceQuantity[i]) / getPlayer(playerIndex).getActivePieces().size();
             }
@@ -471,6 +459,35 @@ public class EnhancedGameState extends GameState {
                 }
             }
             updateProbabilities();*/
+            try (BufferedReader br = new BufferedReader(new FileReader("res\\mirroredprobs.txt"))) {
+                for (Piece p : getPlayer(playerIndex).getActivePieces()) {
+                    probabilitiesMap.put(p, new double[PieceType.values().length - 1]);
+                }
+                String line;
+                int readRow = 0, readCol = 0, actualRow = 0, actualCol = 0;
+                while ((line = br.readLine()) != null) {
+                    if (line.length() != 0 && line.charAt(0) == '(') {
+                        readRow = Integer.parseInt(line.charAt(1) + "");
+                        readCol = Integer.parseInt(line.charAt(3) + "");
+                    } else if (line.length() != 0 && !line.startsWith(" ")) {
+                        String[] array = line.split(":");
+                        actualRow = playerIndex == PlayerType.NORTH.ordinal() ? 9 - readRow : readRow;
+                        actualCol = playerIndex == PlayerType.NORTH.ordinal() ? 9 - readCol : readCol;
+                        probabilitiesMap.get(board[actualRow][actualCol].getOccupyingPiece())[PieceType.valueOf(array[0]).ordinal()] = Double.parseDouble(array[1].trim());
+                    }
+                }
+                //System.out.println("Probabilities initialised, opponent has " + getPlayer(1 - playerIndex).getActivePieces().size() + " pieces");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+   /* public void interpretEncodedBoard(String encodedBoard) {
+        super.interpretEncodedBoard(encodedBoard);
+        // make probability table for opponent
+        probabilitiesMap = new HashMap<>(40);
+        double[] initProbabilities = new double[PieceType.values().length - 1];
         try (BufferedReader br = new BufferedReader(new FileReader("res\\savefile.txt"))) {
             for (Piece p : getPlayer(1 - playerIndex).getActivePieces()) {
                 probabilitiesMap.put(p, new double[PieceType.values().length - 1]);
@@ -491,7 +508,7 @@ public class EnhancedGameState extends GameState {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public int getPlayerIndex() {
         return playerIndex;

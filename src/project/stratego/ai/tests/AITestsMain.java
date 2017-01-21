@@ -3,8 +3,12 @@ package project.stratego.ai.tests;
 import project.stratego.control.managers.AIComManager;
 import project.stratego.control.managers.ModelComManager;
 
+import java.io.*;
+
 public class AITestsMain {
 
+    private static final boolean REAL_TESTS = true;
+    private static final int REP_PER_CONFIG = 1;
 
     private static final int numberGames = 100;
     private static int counter = 0;
@@ -37,16 +41,58 @@ public class AITestsMain {
 
     public static void main(String[] args) {
 
-        long before;
-        for (counter = 0; counter < numberGames; counter++) {
-            System.out.println("\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
-            System.out.println("RUN NUMBER " + (counter + 1));
-            System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-            ModelComManager.getInstance().configureAIMatch();
-            //ExpectiMinimaxAI.maxDepth = expectimaxMaxDepth;
-            before = System.currentTimeMillis();
-            AIComManager.getInstance().runAutomaticAIMatch();
-            System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");
+        if (REAL_TESTS) {
+            File directory = new File("res\\setups");
+            String[] setups = null;
+            if (directory.listFiles() != null) {
+                setups = new String[directory.listFiles().length];
+                int c = 0;
+                for (File f : directory.listFiles()) {
+                    try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+                        setups[c] = br.readLine();
+                        System.out.println("Setup registered: " + f.getName());
+                        c++;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (setups != null) {
+                long before;
+                counter = 0;
+                for (int i = 0; i < REP_PER_CONFIG; i++) {
+                    for (int j = 0; j < setups.length; j++) {
+                        for (int k = 0; k < setups.length; k++) {
+                            System.out.println("\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+                            System.out.println("RUN NUMBER " + (counter + 1) + " (with setups " + j + " and " + k + ")");
+                            System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
+                            ModelComManager.getInstance().configureAIMatch(setups[j], setups[k]);
+                            before = System.currentTimeMillis();
+                            AIComManager.getInstance().runAutomaticAIMatch();
+                            System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");
+                            counter++;
+                        }
+                    }
+                }
+            } else {
+                System.out.println("No files");
+                System.exit(1);
+            }
+        } else {
+            String testSetup = "7-3-3-6-3-7-4-11-3-7-6-5-1-2-10-3-8-8-9-3-5-1-5-8-9-6-1-6-7-5-3-4-1-3-4-1-0-1-4-4\n";
+
+            long before;
+            for (counter = 0; counter < numberGames; counter++) {
+                System.out.println("\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+                System.out.println("RUN NUMBER " + (counter + 1));
+                System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
+                ModelComManager.getInstance().configureAIMatch(testSetup, testSetup);
+                //ExpectiMinimaxAI.maxDepth = expectimaxMaxDepth;
+                before = System.currentTimeMillis();
+                AIComManager.getInstance().runAutomaticAIMatch();
+                System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");
+            }
         }
 
         System.out.println("\n-----------------------------------------------------------");

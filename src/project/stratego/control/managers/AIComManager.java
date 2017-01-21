@@ -34,6 +34,14 @@ public class AIComManager {
     private boolean aiMatchRunning;
     private Move lastMove;
 
+    public AbstractAI getPrimaryAI() {
+        return primaryAI;
+    }
+
+    public AbstractAI getSecondaryAI() {
+        return secondaryAI;
+    }
+
     void configureMultiPlayer() {
         gameMode = GameMode.MULTIPLAYER;
         aiMatchRunning = false;
@@ -168,7 +176,7 @@ public class AIComManager {
         }*/
     }
 
-    public void tryBoardSetup(GameState state) {
+    void tryBoardSetup(GameState state) {
         if (gameLoaded) {
             return;
         }
@@ -183,7 +191,19 @@ public class AIComManager {
         }
     }
 
-    public void tryNextMove(Move move) {
+    void tryBoardSetup(GameState state, String setupNorth, String setupSouth) {
+        if (gameLoaded || gameMode == GameMode.SINGLEPLAYER) {
+            return;
+        }
+        if (gameMode == GameMode.AIMATCH || gameMode == GameMode.AISHOWMATCH) {
+            primaryAI.interpretAndCopyEncodedSetup(state, primaryAI.getPlayerIndex() == PlayerType.NORTH.ordinal() ? setupNorth : setupSouth);
+            secondaryAI.interpretAndCopyEncodedSetup(state, secondaryAI.getPlayerIndex() == PlayerType.NORTH.ordinal() ? setupNorth : setupSouth);
+            primaryAI.copyOpponentSetup(state);
+            secondaryAI.copyOpponentSetup(state);
+        }
+    }
+
+    void tryNextMove(Move move) {
         if (gameLoaded) {
             return;
         }
@@ -196,7 +216,7 @@ public class AIComManager {
         }
     }
 
-    public void tryLoadGame(String gameEncoding) {
+    void tryLoadGame(String gameEncoding) {
         if (gameMode == GameMode.MULTIPLAYER) {
             return;
         }
@@ -208,7 +228,7 @@ public class AIComManager {
 
     }
 
-    public void advanceAIMatch() {
+    void advanceAIMatch() {
         if (gameMode != GameMode.AISHOWMATCH) {
             return;
         }

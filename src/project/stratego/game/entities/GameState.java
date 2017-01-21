@@ -184,6 +184,24 @@ public class GameState {
         }
     }
 
+    public void interpretEncodedSetup(String encodedSetup, int playerIndex) {
+        boardSetup();
+
+        String[] pieceIndexStrings = encodedSetup.split("-");
+        if (pieceIndexStrings.length != 40) {
+            System.out.println("Something wrong with the loaded setup.");
+            System.exit(1);
+        }
+        int[] pieceIndexIntegers = new int[40];
+        Piece temp;
+        for (int i = 0; i < pieceIndexStrings.length; i++) {
+            pieceIndexIntegers[i] = Integer.parseInt(pieceIndexStrings[i]);
+            temp = new Piece(PieceType.values()[pieceIndexIntegers[i]], PlayerType.values()[playerIndex]);
+            getPlayer(playerIndex).getActivePieces().add(temp);
+            board[playerIndex == PlayerType.NORTH.ordinal() ? 3 - i / 10 : 6 + i / 10][playerIndex == PlayerType.NORTH.ordinal() ? 9 - i % 10 : i % 10].setOccupyingPiece(temp);
+        }
+    }
+
     /**
      * A method that can be used to load an initial gamestate stored as the players' setups in the form of Strings.
      * The resulting GameState object can then be used for starting a game with those setups, using the move history,

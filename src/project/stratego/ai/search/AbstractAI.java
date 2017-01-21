@@ -17,18 +17,11 @@ public abstract class AbstractAI {
     protected int playerIndex;
     protected EnhancedGameState gameState;
     protected AbstractEvaluationFunction evaluationFunction;
-    protected SetupMaker setupMaker;
 
     protected AbstractAI(int playerIndex) {
         this.playerIndex = playerIndex;
         gameState = new EnhancedGameState(playerIndex);
         evaluationFunction = new TestEvaluationFunction(playerIndex);
-        setupMaker = new SetupMaker() {
-            @Override
-            public void makeBoardSetup(GameState state, int playerIndex) {
-                // something something
-            }
-        };
     }
 
     public abstract Move getNextMove(Move lastOpponentMove);
@@ -39,6 +32,11 @@ public abstract class AbstractAI {
                 "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
                 "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
         gameState.interpretAndCopySetup(example1);
+        inGameState.copySetup(gameState, playerIndex);
+    }
+
+    public void interpretAndCopyEncodedSetup(GameState inGameState, String setup) {
+        gameState.interpretEncodedSetup(setup, playerIndex);
         inGameState.copySetup(gameState, playerIndex);
     }
 
@@ -66,14 +64,35 @@ public abstract class AbstractAI {
 
     public void copyOpponentSetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
-        System.out.println("Test for probabilities: ");
     }
 
     public void applyMove(Move move) {
         gameState.applyMove(move);
     }
 
-    protected ArrayList<AIMove> orderMoves(ArrayList<AIMove> legalMoves) {
+    protected ArrayList<AIMove> orderMoves(EnhancedGameState state, ArrayList<AIMove> legalMoves) {
+        // move captures flag? -> opponent's piece has flag "revealed"
+        // move wins
+        // move attacking unknown piece
+        // move towards opponent's piece (maybe differentiate between known/unknown
+        // -> towards means withing x range forward
+        // move sideways (same)
+        // move back (same)
+        // attacking move with loss
+        ArrayList<Integer> scores = new ArrayList<>(legalMoves.size());
+        int movePlayerIndex = legalMoves.get(0).getPlayerIndex();
+        Piece encounteredPiece, movingPiece;
+        for (AIMove m : legalMoves) {
+            movingPiece = state.getBoardArray()[m.getOrRow()][m.getOrCol()].getOccupyingPiece();
+            encounteredPiece = state.getBoardArray()[m.getDestRow()][m.getDestCol()].getOccupyingPiece();
+            if (encounteredPiece == null) {
+                // moving towards a position with adjacent opponents pieces
+            }
+
+            if (movePlayerIndex != playerIndex && state.getBoardArray()[m.getDestRow()][m.getDestCol()].getOccupyingPiece().getType() == PieceType.FLAG) {
+
+            }
+        }
         return legalMoves;
     }
 
@@ -85,10 +104,11 @@ public abstract class AbstractAI {
         for (Piece p : state.getPlayer(playerIndex).getActivePieces()) {
             // check for unmovable pieces
             if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
-                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) + state.getProbability(p, PieceType.FLAG) - 1.0) > 10 * EnhancedGameState.PROB_EPSILON))) {
+                    (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) + state.getProbability(p, PieceType.FLAG) - 1.0) > 2 * EnhancedGameState.PROB_EPSILON))) {
                 int moveRadius = 1;                             // ^ this here shit, who comes up with that
                 // scouts can move more squares than the other pieces
                 if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) < /*2 * */EnhancedGameState.PROB_EPSILON) {
+                    // state.getProbability(p, PieceType.SCOUT) > EnhancedGameState.PROB_EPSILON instead to be more accurate
                     moveRadius = 9;
                 }
                 // loop through the positions around the piece and check whether they can be moved there
@@ -114,44 +134,7 @@ public abstract class AbstractAI {
                     }
                 }
             }
-        }/*
-        Piece p;
-        for (int bRow = 0; bRow < GameState.BOARD_SIZE; bRow++) {
-            for (int bCol = 0; bCol < GameState.BOARD_SIZE; bCol++) {
-                //System.out.println("Piece: " + state.getBoardArray()[bRow][bCol].getOccupyingPiece() + ", condition: " + (state.getBoardArray()[bRow][bCol].getOccupyingPiece().getPlayerType().ordinal() == playerIndex));
-                if (state.getBoardArray()[bRow][bCol].getOccupyingPiece() != null && state.getBoardArray()[bRow][bCol].getOccupyingPiece().getPlayerType().ordinal() == playerIndex) {
-                    p = state.getBoardArray()[bRow][bCol].getOccupyingPiece();
-                    //System.out.println("Selected for possible moves: " + p);
-                    if ((playerIndex == state.getPlayerIndex() && p.getType() != PieceType.BOMB && p.getType() != PieceType.FLAG) ||
-                            (playerIndex != state.getPlayerIndex() && (Math.abs(state.getProbability(p, PieceType.BOMB) - 1.0) > EnhancedGameState.PROB_EPSILON || Math.abs(state.getProbability(p, PieceType.FLAG) - 1.0) > EnhancedGameState.PROB_EPSILON))) {
-                        int moveRadius = 1;
-                        // scouts can move more squares than the other pieces
-                        if ((playerIndex == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT) - 1.0) <= EnhancedGameState.PROB_EPSILON) {
-                            moveRadius = 9;
-                        }
-                        // loop through the positions around the piece and check whether they can be moved there
-                        for (int row = -moveRadius; row <= moveRadius; row++) {
-                            destRow = p.getRowPos() + row;
-                            for (int col = -moveRadius; col <= moveRadius; col++) {
-                                destCol = p.getColPos() + col;
-                                // check whether the given piece can move to the target position
-                                if (!(row == 0 && col == 0) && checkMovePossible(state, p, destRow, destCol)) {
-                                    // add legal move to list and also specify whether it will induce a chance event
-                                    if (state.getBoardArray()[destRow][destCol].getOccupyingPiece() != null) {
-                                        // either different playerIndex from root (initPlayerIndex) AND piece to be moved is not revealed AND position to be moved to is taken by root player
-                                        chanceEvent = playerIndex != this.playerIndex && !p.isRevealed(); // last check not necessary because of the if-statement checking for null; move would not be possible anyway if position was occupied by own piece
-                                        // OR same playerIndex as root (initPlayerIndex) AND position to be moved to is taken by opponent's unrevealed piece
-                                        chanceEvent = chanceEvent || (playerIndex == this.playerIndex && !state.getBoardArray()[destRow][destCol].getOccupyingPiece().isRevealed());
-                                    }
-                                    legalMoves.add(new AIMove(playerIndex, p.getRowPos(), p.getColPos(), destRow, destCol, chanceEvent));
-                                    chanceEvent = false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
+        }
         return legalMoves;
     }
 

@@ -1,11 +1,13 @@
 package project.stratego.ai.mcts.gameSystems;
 
+import java.util.ArrayList;
+
 import project.stratego.ai.mcts.abstractGameComponents.Player;
 import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
 import project.stratego.ai.mcts.gameObjects.PieceType;
 import project.stratego.ai.mcts.gameObjects.StrategoPiece;
 
-import java.util.ArrayList;
+
 
 public class CheckVictorySystem extends MoveSystem {
 
@@ -30,16 +32,16 @@ public class CheckVictorySystem extends MoveSystem {
 			if (testPiece.getPieceType() != PieceType.BOMB && testPiece.getPieceType() != PieceType.FLAG) {
 
 
-			if (checkIfLegalToMove(aGame, testPiece.getYPos(), testPiece.getXPos() + 1)) {
+			if (checkIfLegalToMove(aGame, testPiece.getyPos(), testPiece.getxPos() + 1)) {
 				return true;
 			}
-			if (checkIfLegalToMove(aGame, testPiece.getYPos(), testPiece.getXPos() - 1)) {
+			if (checkIfLegalToMove(aGame, testPiece.getyPos(), testPiece.getxPos() - 1)) {
 				return true;
 			}
-			if (checkIfLegalToMove(aGame, testPiece.getYPos() - 1, testPiece.getXPos())) {
+			if (checkIfLegalToMove(aGame, testPiece.getyPos() - 1, testPiece.getxPos())) {
 				return true;
 			}
-			if (checkIfLegalToMove(aGame, testPiece.getYPos() + 1, testPiece.getXPos())) {
+			if (checkIfLegalToMove(aGame, testPiece.getyPos() + 1, testPiece.getxPos())) {
 				return true;
 			}
 			}

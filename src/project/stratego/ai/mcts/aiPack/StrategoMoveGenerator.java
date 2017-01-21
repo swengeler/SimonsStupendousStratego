@@ -1,5 +1,7 @@
 package project.stratego.ai.mcts.aiPack;
 
+import java.util.ArrayList;
+
 import project.stratego.ai.mcts.abstractGameComponents.StrategoGame;
 import project.stratego.ai.mcts.abstractSearchComponents.MoveGenerator;
 import project.stratego.ai.mcts.events.StrategoAbstractEvent;
@@ -7,8 +9,6 @@ import project.stratego.ai.mcts.events.StrategoMoveEvent;
 import project.stratego.ai.mcts.gameLogic.SystemsManager;
 import project.stratego.ai.mcts.gameObjects.PieceType;
 import project.stratego.ai.mcts.gameObjects.StrategoPiece;
-
-import java.util.ArrayList;
 
 public class StrategoMoveGenerator extends MoveGenerator<StrategoGame, StrategoAbstractEvent> {
 
@@ -21,11 +21,12 @@ public class StrategoMoveGenerator extends MoveGenerator<StrategoGame, StrategoA
 
 	@Override
 	public ArrayList<StrategoAbstractEvent> generateAvailiableMoves(StrategoGame state) {
+		state.fixPiecePlacement(state);
 		ArrayList<StrategoAbstractEvent> allMovesList = new ArrayList<StrategoAbstractEvent>();
 		ArrayList<StrategoPiece> pieceList= state.getActivePlayerObj().getInGamePieces();
 		for (int i=0;i<pieceList.size();i++){
 			StrategoPiece piece = pieceList.get(i);
-			if (state.getBoard().getBoardStracture()[piece.getYPos()][piece.getXPos()] == null) {
+			if (state.getBoard().getBoardStracture()[piece.getyPos()][piece.getxPos()] == null) {
 				System.out.println("VERY BAD!");
 			}
 			ArrayList<StrategoMoveEvent> onePieceList = generateAvailiableMoves(piece, state);
@@ -53,21 +54,21 @@ public class StrategoMoveGenerator extends MoveGenerator<StrategoGame, StrategoA
 		if (aPiece.getPieceType() == PieceType.BOMB || aPiece.getPieceType() == PieceType.FLAG) {
 			return moveList;
 		}
-		int targetX = aPiece.getXPos() + 1;
-		int targetY = aPiece.getYPos();
-		StrategoMoveEvent move1 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
+		int targetX = aPiece.getxPos() + 1;
+		int targetY = aPiece.getyPos();
+		StrategoMoveEvent move1 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move1, aState);
-		targetX = aPiece.getXPos() - 1;
-		targetY = aPiece.getYPos();
-		StrategoMoveEvent move2 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
+		targetX = aPiece.getxPos() - 1;
+		targetY = aPiece.getyPos();
+		StrategoMoveEvent move2 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move2, aState);
-		targetX = aPiece.getXPos();
-		targetY = aPiece.getYPos() + 1;
-		StrategoMoveEvent move3 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
+		targetX = aPiece.getxPos();
+		targetY = aPiece.getyPos() + 1;
+		StrategoMoveEvent move3 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move3, aState);
-		targetX = aPiece.getXPos();
-		targetY = aPiece.getYPos() - 1;
-		StrategoMoveEvent move4 = new StrategoMoveEvent(aPiece.getXPos(), aPiece.getYPos(), targetX, targetY);
+		targetX = aPiece.getxPos();
+		targetY = aPiece.getyPos() - 1;
+		StrategoMoveEvent move4 = new StrategoMoveEvent(aPiece.getxPos(), aPiece.getyPos(), targetX, targetY);
 		addValidMovesOnly(moveList, move4, aState);
 
 
@@ -84,15 +85,15 @@ public class StrategoMoveGenerator extends MoveGenerator<StrategoGame, StrategoA
 
 	public boolean checkIfMoveValid(StrategoMoveEvent event, StrategoGame aState) {
 
-		if (!systemManager.getMoveSystem().checkIfInsideBoard(event.getDestX(), event.getDestY(), aState)) {
+		if (!systemManager.getMoveSystem().checkIfInsideBoard(event.getdX(), event.getdY(), aState)) {
 			return false;
 		}
-		// System.out.println(event.getDestX() + "    dx dy   " + event.getDestY());
-		if (systemManager.getMoveSystem().checkIfLake(aState, event.getDestX(), event.getDestY())) {
+		// System.out.println(event.getdX() + "    dx dy   " + event.getdY());
+		if (systemManager.getMoveSystem().checkIfLake(aState, event.getdX(), event.getdY())) {
 			return false;
 		}
-		if (!systemManager.getMoveSystem().checkTileFree(aState, event.getDestX(), event.getDestY())) {
-			if (!systemManager.getMoveSystem().checkValidOwnerships(aState, event.getDestX(), event.getDestY())) {
+		if (!systemManager.getMoveSystem().checkTileFree(aState, event.getdX(), event.getdY())) {
+			if (!systemManager.getMoveSystem().checkValidOwnerships(aState, event.getdX(), event.getdY())) {
 				return false;
 			}
 		}

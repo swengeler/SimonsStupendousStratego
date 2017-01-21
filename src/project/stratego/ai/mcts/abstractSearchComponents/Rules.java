@@ -11,7 +11,7 @@ public  abstract class Rules<State extends SearchState> {
 
 	public abstract int getScoreValue(TreeNode<State, ?> aNode, int referance);
 
-	public abstract int getScoreValue(State state, int referance);
+	public abstract double getScoreValue(State state, int referance);
 
 }
 

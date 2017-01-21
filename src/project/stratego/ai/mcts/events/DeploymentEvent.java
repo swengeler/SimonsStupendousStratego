@@ -4,6 +4,8 @@ import project.stratego.ai.mcts.gameObjects.PieceType;
 
 public class DeploymentEvent extends StrategoAbstractEvent {
 
+
+
 	private PieceType pieceType;
 
 	private int xCoord;

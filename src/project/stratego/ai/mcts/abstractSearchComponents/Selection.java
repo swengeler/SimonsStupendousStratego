@@ -1,8 +1,10 @@
 package project.stratego.ai.mcts.abstractSearchComponents;
 
-import project.stratego.ai.mcts.abstractDefinitions.*;
-
 import java.util.ArrayList;
+
+import project.stratego.ai.mcts.abstractDefinitions.AbstractAction;
+import project.stratego.ai.mcts.abstractDefinitions.SearchState;
+import project.stratego.ai.mcts.abstractDefinitions.TreeNode;
 
 public class Selection<State extends SearchState, Action extends AbstractAction<State>> {
 	
@@ -24,7 +26,7 @@ public class Selection<State extends SearchState, Action extends AbstractAction<
 		// uct attempt
 		TreeNode<State, Action> tempNode = null;
 		double selectionReferance = 0;
-		int tottalWins = 1;
+		double tottalWins = 1;
 		// System.out.println(selectionReferance);
 		// System.out.println(tottalWins);
 		for (int k = 0; k < childrenList.size(); k++) {

@@ -400,7 +400,7 @@ public class EnhancedGameState extends GameState {
         super.copySetup(state, playerIndex);
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
             probabilitiesMap = new HashMap<>(40);
-            try (BufferedReader br = new BufferedReader(new FileReader("res\\mirroredprobs.txt"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/mirroredprobs.txt")))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {
                     probabilitiesMap.put(p, new double[PieceType.numberTypes]);
                 }
@@ -452,7 +452,7 @@ public class EnhancedGameState extends GameState {
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
             probabilitiesMap = new HashMap<>(40);
             double[] initProbabilities = new double[PieceType.numberTypes];
-            try (BufferedReader br = new BufferedReader(new FileReader("res\\mirroredprobs.txt"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("mirroredprobs.txt")))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {
                     probabilitiesMap.put(p, new double[PieceType.numberTypes]);
                 }

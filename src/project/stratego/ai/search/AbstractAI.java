@@ -83,7 +83,7 @@ public abstract class AbstractAI {
         // 6. any other normal move +-0
         // 7. move away, i.e. 5. holds in other direction -1
         // 8. attack piece with sure loss -100
-        int[] scores = new int[legalMoves.size()];
+        double[] scores = new double[legalMoves.size()];
         Piece encounteredPiece, movingPiece;
         int counter = 0;
         for (AIMove m : legalMoves) {
@@ -104,10 +104,10 @@ public abstract class AbstractAI {
                                 movingPiece.getType() == PieceType.SPY && state.getProbabilityRevealedType(encounteredPiece) == PieceType.MARSHAL ||
                                 PieceType.pieceLvlMap.get(movingPiece.getType()) > PieceType.pieceLvlMap.get(state.getProbabilityRevealedType(encounteredPiece))) {
                             // win attack
-                            scores[counter] = 100;
+                            scores[counter] = 100 + (state.getProbabilityRevealedType(encounteredPiece) == PieceType.BOMB ? 4.5 : PieceType.pieceLvlMap.get(state.getProbabilityRevealedType(encounteredPiece)));
                         } else {
                             // lose attack
-                            scores[counter] = -100;
+                            scores[counter] = -100 + PieceType.pieceLvlMap.get(movingPiece.getType());
                         }
                     } else {
                         // attack unknown piece
@@ -143,10 +143,10 @@ public abstract class AbstractAI {
                                 encounteredPiece.getType() == PieceType.MARSHAL && state.getProbabilityRevealedType(movingPiece) == PieceType.SPY ||
                                 PieceType.pieceLvlMap.get(encounteredPiece.getType()) < PieceType.pieceLvlMap.get(state.getProbabilityRevealedType(movingPiece))) {
                             // win attack
-                            scores[counter] = 100;
+                            scores[counter] = 100 + (encounteredPiece.getType() == PieceType.BOMB ? 4.5 : PieceType.pieceLvlMap.get(encounteredPiece.getType()));
                         } else {
                             // lose attack
-                            scores[counter] = -100;
+                            scores[counter] = -100 + PieceType.pieceLvlMap.get(movingPiece.getType());
                         }
                     } else {
                         // attack unknown piece
@@ -172,7 +172,8 @@ public abstract class AbstractAI {
         }
 
         // sort moves by score
-        int minIndex, tempScore;
+        int minIndex;
+        double tempScore;
         for (int i = 0; i < legalMoves.size() - 1; i++) {
             minIndex = i;
             for (int j = minIndex + 1; j < legalMoves.size(); j++) {

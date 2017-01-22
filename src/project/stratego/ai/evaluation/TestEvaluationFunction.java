@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class TestEvaluationFunction extends AbstractEvaluationFunction {
 
-    private static final boolean randomElement = false;
+    private static final boolean randomElement = true;
 
     private double allPiecesSum = 0.0;
 
@@ -87,7 +87,7 @@ public class TestEvaluationFunction extends AbstractEvaluationFunction {
 
         if (opponentSum != 0) {
             if (randomElement) {
-                double randomFactor = Math.random() * 0.001;
+                double randomFactor = Math.random() * 0.0005;
                 return (ownSum / opponentSum) + randomFactor;
             } else {
                 return (ownSum / opponentSum);

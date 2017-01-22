@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="SimonsStupendousStratego:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java" line="106" />
+    <bookmark url="file://$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java" line="241" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="9e65971a-fd72-41f1-9777-3bb2ed39e962" name="Default" comment="">
+    <list default="true" id="9e65971a-fd72-41f1-9777-3bb2ed39e962" name="Default" comment="Tests almost ready">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/Star1UniformMinimaxAI.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/evaluation/TestEvaluationFunction.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/evaluation/TestEvaluationFunction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoPlaythrough.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoPlaythrough.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiMinimaxAI.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiMinimaxAI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/IterativeDeepeningExpectimaxAI.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/search/IterativeDeepeningExpectimaxAI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/MonteCarloTreeSearchAI.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/search/MonteCarloTreeSearchAI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/RandomAI.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/search/RandomAI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/Star1MinimaxAI.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/search/Star1MinimaxAI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/search/Star2MinimaxAI.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/search/Star2MinimaxAI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/utils/EnhancedGameState.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/utils/EnhancedGameState.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ai/utils/ProbabilisticMoveManager.java" afterPath="$PROJECT_DIR$/src/project/stratego/ai/utils/ProbabilisticMoveManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/control/managers/AIComManager.java" afterPath="$PROJECT_DIR$/src/project/stratego/control/managers/AIComManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java" afterPath="$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/game/entities/GameState.java" afterPath="$PROJECT_DIR$/src/project/stratego/game/entities/GameState.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/game/moves/DiscreteMoveManager.java" afterPath="$PROJECT_DIR$/src/project/stratego/game/moves/DiscreteMoveManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/game/logic/PlayingLogic.java" afterPath="$PROJECT_DIR$/src/project/stratego/game/logic/PlayingLogic.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ui/components/BoardArea.java" afterPath="$PROJECT_DIR$/src/project/stratego/ui/components/BoardArea.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/project/stratego/ui/sections/SideMenu.java" afterPath="$PROJECT_DIR$/src/project/stratego/ui/sections/SideMenu.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,12 +46,73 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="ExpectiMinimaxAI.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiMinimaxAI.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="20" column="36" lean-forward="false" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#937#938#0" expanded="false" />
+                <element signature="e#971#972#0" expanded="false" />
+                <element signature="e#1148#1149#0" expanded="false" />
+                <element signature="e#1195#1196#0" expanded="false" />
+                <element signature="e#1249#1250#0" expanded="false" />
+                <element signature="e#1303#1304#0" expanded="false" />
+                <element signature="e#1372#1373#0" expanded="false" />
+                <element signature="e#1432#1433#0" expanded="false" />
+                <element signature="method#expectimaxSearch#0;class#ExpectiMinimaxAI#0" expanded="false" />
+                <element signature="e#13135#13136#0" expanded="false" />
+                <element signature="e#13173#13174#0" expanded="false" />
+                <element signature="e#13214#13215#0" expanded="false" />
+                <element signature="e#13254#13255#0" expanded="false" />
+                <element signature="e#13295#13296#0" expanded="false" />
+                <element signature="e#13335#13336#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ModelComManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1615">
+              <caret line="108" column="9" lean-forward="false" selection-start-line="108" selection-start-column="9" selection-end-line="108" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="AIComManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/AIComManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="195" column="0" lean-forward="false" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+            <state relative-caret-position="6239">
+              <caret line="387" column="89" lean-forward="false" selection-start-line="387" selection-start-column="72" selection-end-line="387" selection-end-column="89" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StrategoGame.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/stratego/game/StrategoGame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="782">
+              <caret line="63" column="19" lean-forward="false" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#859#860#0" expanded="false" />
+                <element signature="e#888#889#0" expanded="false" />
+                <element signature="e#941#942#0" expanded="false" />
+                <element signature="e#987#988#0" expanded="false" />
+                <element signature="e#1030#1031#0" expanded="false" />
+                <element signature="e#1064#1065#0" expanded="false" />
+                <element signature="e#1103#1104#0" expanded="false" />
+                <element signature="e#1151#1152#0" expanded="false" />
+                <element signature="e#1604#1605#0" expanded="false" />
+                <element signature="e#1636#1637#0" expanded="false" />
+                <element signature="e#1675#1676#0" expanded="false" />
+                <element signature="e#1707#1708#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -45,12 +120,12 @@
       <file leaf-file-name="Star1MinimaxAI.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/Star1MinimaxAI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1666">
-              <caret line="189" column="33" lean-forward="false" selection-start-line="189" selection-start-column="33" selection-end-line="189" selection-end-column="33" />
+            <state relative-caret-position="340">
+              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#837#838#0" expanded="true" />
-                <element signature="e#871#872#0" expanded="true" />
+                <element signature="method#alphaBetaMax#0;class#Star1MinimaxAI#0" expanded="false" />
+                <element signature="method#alphaBetaMin#0;class#Star1MinimaxAI#0" expanded="false" />
+                <element signature="method#star1Minimax#0;class#Star1MinimaxAI#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -60,71 +135,54 @@
         <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/Star2MinimaxAI.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="374">
-              <caret line="28" column="38" lean-forward="true" selection-start-line="28" selection-start-column="38" selection-end-line="28" selection-end-column="38" />
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
               <folding>
-                <element signature="e#890#891#0" expanded="true" />
-                <element signature="e#924#925#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#897#898#0" expanded="false" />
+                <element signature="e#931#932#0" expanded="false" />
+                <element signature="e#1106#1107#0" expanded="false" />
+                <element signature="e#1153#1154#0" expanded="false" />
+                <element signature="e#1207#1208#0" expanded="false" />
+                <element signature="e#1261#1262#0" expanded="false" />
+                <element signature="e#1330#1331#0" expanded="false" />
+                <element signature="e#1390#1391#0" expanded="false" />
+                <element signature="e#1695#1696#0" expanded="false" />
+                <element signature="e#1743#1744#0" expanded="false" />
+                <element signature="e#2152#2153#0" expanded="false" />
+                <element signature="e#2189#2190#0" expanded="false" />
+                <element signature="method#alphaBetaMax#0;class#Star2MinimaxAI#0" expanded="false" />
+                <element signature="method#alphaBetaMin#0;class#Star2MinimaxAI#0" expanded="false" />
+                <element signature="method#star2Max#0;class#Star2MinimaxAI#0" expanded="false" />
+                <element signature="method#star2Min#0;class#Star2MinimaxAI#0" expanded="false" />
+                <element signature="method#probe#0;class#Star2MinimaxAI#0" expanded="false" />
+                <element signature="e#24304#24305#0" expanded="false" />
+                <element signature="e#24342#24343#0" expanded="false" />
+                <element signature="e#24383#24384#0" expanded="false" />
+                <element signature="e#24423#24424#0" expanded="false" />
+                <element signature="e#24464#24465#0" expanded="false" />
+                <element signature="e#24504#24505#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AbstractAI.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java">
+      <file leaf-file-name="AITestsMain.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="57" column="32" lean-forward="false" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameState.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/stratego/game/entities/GameState.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-462">
-              <caret line="89" column="12" lean-forward="false" selection-start-line="89" selection-start-column="12" selection-end-line="89" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EnhancedGameState.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/utils/EnhancedGameState.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-431">
-              <caret line="172" column="38" lean-forward="false" selection-start-line="172" selection-start-column="38" selection-end-line="172" selection-end-column="38" />
+            <state relative-caret-position="205">
+              <caret line="87" column="34" lean-forward="false" selection-start-line="87" selection-start-column="34" selection-end-line="87" selection-end-column="34" />
               <folding>
-                <element signature="method#undoLastMove#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#copySetup#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#interpretAndCopySetup#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#getProbability#1;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#getProbabilityRevealedType#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#probabilityRevealed#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#assignPieceType#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#checkDebugCondition#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#checkDebugDepthThreeCondition#0;class#EnhancedGameState#0" expanded="false" />
-                <element signature="method#checkBombDebugCondition#0;class#EnhancedGameState#0" expanded="false" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ModelComManager.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java">
+      <file leaf-file-name="InGameView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/project/stratego/ui/sections/InGameView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="266" column="0" lean-forward="true" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MoveManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/project/stratego/game/moves/MoveManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="78">
-              <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+            <state relative-caret-position="68">
+              <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -152,8 +210,13 @@
       <find>ordermove</find>
       <find>interpret</find>
       <find>requestlo</find>
+      <find>requestplayerready</find>
+      <find>won</find>
+      <find>\n-</find>
+      <find>requestconf</find>
     </findStrings>
     <replaceStrings>
+      <replace>\n</replace>
       <replace>expectimax</replace>
     </replaceStrings>
   </component>
@@ -184,24 +247,27 @@
         <option value="$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoMCTSPerformer.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractGameComponents/StrategoGame.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/ai/mcts/events/StrategoMoveEvent.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/ai/search/MonteCarloTreeSearchAI.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoPlaythrough.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractSearchComponents/MCTSPerformer.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/game/logic/PlayingLogic.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/ai/evaluation/TestEvaluationFunction.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/game/moves/DiscreteMoveManager.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/ai/search/IterativeDeepeningExpectimaxAI.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiMinimaxAI.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/ai/utils/ProbabilisticMoveManager.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/game/moves/MoveManager.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/game/entities/GameState.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/ai/utils/EnhancedGameState.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ui/sections/SideMenu.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ui/components/BoardArea.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/evaluation/TestEvaluationFunction.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/game/logic/PlayingLogic.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoPlaythrough.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/control/managers/AIComManager.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/search/RandomAI.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/search/MonteCarloTreeSearchAI.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/ai/search/Star2MinimaxAI.java" />
         <option value="$PROJECT_DIR$/src/project/stratego/ai/search/Star1MinimaxAI.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/control/managers/AIComManager.java" />
-        <option value="$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiMinimaxAI.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/utils/EnhancedGameState.java" />
+        <option value="$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java" />
       </list>
     </option>
   </component>
@@ -226,6 +292,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -266,15 +333,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stratego" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ai" />
+              <option name="myItemId" value="res" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -288,37 +347,77 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
+              <option name="myItemId" value="res" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="stratego" />
+              <option name="myItemId" value="setups" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SimonsStupendousStratego" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SimonsStupendousStratego" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ai" />
+              <option name="myItemId" value="out" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SimonsStupendousStratego" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SimonsStupendousStratego" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="search" />
+              <option name="myItemId" value="out" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="artifacts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SimonsStupendousStratego_jar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="SearchEverywhereHistoryKey" value="moveman&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/game/moves/MoveManager.java&#10;model&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/control/managers/ModelComManager.java&#10;probab&#9;PSI&#9;JAVA://project.stratego.ai.utils.ProbabilisticMoveManager&#10;movem&#9;PSI&#9;JAVA://project.stratego.game.moves.MoveManager&#10;enha&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/utils/EnhancedGameState.java&#10;boardset&#9;PSI&#9;JAVA://project.stratego.ai.search.AbstractAI#makeBoardSetup&#10;disc&#9;PSI&#9;JAVA://project.stratego.game.moves.DiscreteMoveManager&#10;testeva&#9;PSI&#9;JAVA://project.stratego.ai.evaluation.TestEvaluationFunction&#10;piect&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/game/utils/PieceType.java&#10;ordermove&#9;PSI&#9;JAVA://project.stratego.ai.search.AbstractAI#orderMoves&#10;abst&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/search/AbstractAI.java&#10;abstra&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/mcts/abstractDefinitions/AbstractAction.java&#10;playingl&#9;PSI&#9;JAVA://project.stratego.game.logic.PlayingLogic&#10;enhan&#9;PSI&#9;JAVA://project.stratego.ai.utils.EnhancedGameState&#10;aite&#9;PSI&#9;JAVA://project.stratego.ai.tests.AITestsMain&#10;aicom&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/control/managers/AIComManager.java&#10;modelcom&#9;PSI&#9;JAVA://project.stratego.control.managers.ModelComManager" />
+    <property name="project.structure.side.proportion" value="0.20574713" />
+    <property name="SearchEverywhereHistoryKey" value="enhan&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/utils/EnhancedGameState.java&#10;aicom&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/control/managers/AIComManager.java&#10;ordermo&#9;PSI&#9;JAVA://project.stratego.ai.search.AbstractAI#orderMoves&#10;star&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/search/Star2MinimaxAI.java&#10;piecet&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/game/utils/PieceType.java&#10;exp&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/search/ExpectiMinimaxAI.java&#10;playing&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/game/logic/PlayingLogic.java&#10;aitest&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/tests/AITestsMain.java&#10;testeva&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/evaluation/TestEvaluationFunction.java&#10;boardare&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ui/components/BoardArea.java&#10;sidemen&#9;PSI&#9;JAVA://project.stratego.ui.sections.SideMenu&#10;moveman&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/game/moves/MoveManager.java&#10;model&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/control/managers/ModelComManager.java&#10;probab&#9;PSI&#9;JAVA://project.stratego.ai.utils.ProbabilisticMoveManager&#10;movem&#9;PSI&#9;JAVA://project.stratego.game.moves.MoveManager&#10;enha&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/utils/EnhancedGameState.java&#10;boardset&#9;PSI&#9;JAVA://project.stratego.ai.search.AbstractAI#makeBoardSetup&#10;disc&#9;PSI&#9;JAVA://project.stratego.game.moves.DiscreteMoveManager&#10;piect&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/game/utils/PieceType.java&#10;ordermove&#9;PSI&#9;JAVA://project.stratego.ai.search.AbstractAI#orderMoves&#10;abst&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/search/AbstractAI.java&#10;abstra&#9;FILE&#9;file://E:/Simon/Documents/Google Drive/University Material/Project 2.1/SimonsStupendousStratego/src/project/stratego/ai/mcts/abstractDefinitions/AbstractAction.java&#10;playingl&#9;PSI&#9;JAVA://project.stratego.game.logic.PlayingLogic&#10;aite&#9;PSI&#9;JAVA://project.stratego.ai.tests.AITestsMain&#10;modelcom&#9;PSI&#9;JAVA://project.stratego.control.managers.ModelComManager" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.smartKeys" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../And Again" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="simonsstupendousstratego" />
   </component>
-  <component name="RunManager" selected="Application.StrategoMain">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Simon\Documents\Google Drive\University Material\Project 2.1\SimonsStupendousStratego\src\project\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Simon\Documents\Google Drive\University Material\Project 2.1\SimonsStupendousStratego\src\project\resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.AITestsMain">
     <configuration default="false" name="StrategoMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -569,8 +668,8 @@
     </list>
     <recent_temporary>
       <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Application.StrategoMain" />
-        <item index="1" class="java.lang.String" itemvalue="Application.AITestsMain" />
+        <item index="0" class="java.lang.String" itemvalue="Application.AITestsMain" />
+        <item index="1" class="java.lang.String" itemvalue="Application.StrategoMain" />
       </list>
     </recent_temporary>
   </component>
@@ -609,7 +708,14 @@
       <option name="project" value="LOCAL" />
       <updated>1485042736217</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Better AI configuration">
+      <created>1485092437717</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1485092437717</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -623,7 +729,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1873" height="1096" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32917964" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -634,16 +740,16 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.100726895" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3032191" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32917964" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32917964" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21014893" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21235521" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32917964" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498621" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -652,6 +758,7 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Dynamic Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -680,7 +787,8 @@
     <MESSAGE value="Bug with game ending condition fixed" />
     <MESSAGE value="Move ordering and &quot;opponent modelling&quot;&#10;Implemented move ordering with very simple criteria for ordering (also probably not very efficient). Also added the opponent modelling extra bit that changes values based on moves made towards or away from revealed pieces. Also made some preparations for hopefully enabling more dynamic adaptation of AI properties (i.e. not a different class just to have iterative deepening, control whether move ordering is applied and so on)." />
     <MESSAGE value="Some more quick changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some more quick changes" />
+    <MESSAGE value="Better AI configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="Better AI configuration" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -693,49 +801,7 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/game/moves/MoveResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/game/utils/PlayerType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/GameMode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/events/StrategoEventType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/gameObjects/TerrainType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiNegamaxAI.java" />
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractSearchComponents/MoveGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="7" column="22" lean-forward="false" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoMCTSSelection.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -807,13 +873,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoMCTSPerformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="7" lean-forward="false" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractGameComponents/PieceHierarchyData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -856,25 +915,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/MonteCarloTreeSearchAI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractSearchComponents/Playthrough.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoPlaythrough.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="32" column="57" lean-forward="false" selection-start-line="32" selection-start-column="57" selection-end-line="32" selection-end-column="57" />
         </state>
       </provider>
     </entry>
@@ -885,29 +929,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractSearchComponents/MCTSPerformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="16" column="43" lean-forward="false" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="5" lean-forward="true" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/game/logic/PlayingLogic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="126" column="20" lean-forward="false" selection-start-line="126" selection-start-column="20" selection-end-line="126" selection-end-column="20" />
-          <folding>
-            <element signature="e#7601#7602#0" expanded="false" />
-            <element signature="e#7628#7629#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -925,32 +951,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/game/utils/PieceType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="39" lean-forward="false" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/evaluation/TestEvaluationFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1496">
-          <caret line="92" column="45" lean-forward="false" selection-start-line="92" selection-start-column="45" selection-end-line="92" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="12" column="45" lean-forward="false" selection-start-line="12" selection-start-column="45" selection-end-line="12" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/game/moves/DiscreteMoveManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -959,27 +959,6 @@
             <element signature="imports" expanded="false" />
             <element signature="e#288#289#0" expanded="false" />
             <element signature="e#316#317#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/IterativeDeepeningExpectimaxAI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="22" column="4" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="23" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiMinimaxAI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#876#877#0" expanded="true" />
-            <element signature="e#910#911#0" expanded="true" />
-            <element signature="e#1438#1439#0" expanded="true" />
-            <element signature="e#1496#1497#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1000,14 +979,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ui/components/BoardArea.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/game/moves/MoveManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="78">
@@ -1024,44 +995,234 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java">
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractSearchComponents/MCTSPerformer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="57" column="32" lean-forward="false" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
+        <state relative-caret-position="118">
+          <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/abstractSearchComponents/MoveGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="82">
+          <caret line="9" column="68" lean-forward="false" selection-start-line="9" selection-start-column="68" selection-end-line="9" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoMCTSPerformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/game/logic/PlayingLogic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="407">
+          <caret line="111" column="44" lean-forward="false" selection-start-line="111" selection-start-column="44" selection-end-line="111" selection-end-column="44" />
+          <folding>
+            <element signature="e#7482#7483#0" expanded="false" />
+            <element signature="e#7579#7580#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ui/sections/SideMenu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/Star1MinimaxAI.java">
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/evaluation/TestEvaluationFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1666">
-          <caret line="189" column="33" lean-forward="false" selection-start-line="189" selection-start-column="33" selection-end-line="189" selection-end-column="33" />
+        <state relative-caret-position="1445">
+          <caret line="89" column="60" lean-forward="false" selection-start-line="89" selection-start-column="60" selection-end-line="89" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ui/components/BoardArea.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="39" lean-forward="false" selection-start-line="0" selection-start-column="39" selection-end-line="0" selection-end-column="39" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#837#838#0" expanded="true" />
-            <element signature="e#871#872#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#16743#16744#0" expanded="false" />
+            <element signature="e#16811#16812#0" expanded="false" />
+            <element signature="e#16847#16848#0" expanded="false" />
+            <element signature="e#16876#16877#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/game/utils/PieceType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="52" lean-forward="false" selection-start-line="12" selection-start-column="52" selection-end-line="12" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/game/StrategoGame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="63" column="19" lean-forward="false" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#859#860#0" expanded="false" />
+            <element signature="e#888#889#0" expanded="false" />
+            <element signature="e#941#942#0" expanded="false" />
+            <element signature="e#987#988#0" expanded="false" />
+            <element signature="e#1030#1031#0" expanded="false" />
+            <element signature="e#1064#1065#0" expanded="false" />
+            <element signature="e#1103#1104#0" expanded="false" />
+            <element signature="e#1151#1152#0" expanded="false" />
+            <element signature="e#1604#1605#0" expanded="false" />
+            <element signature="e#1636#1637#0" expanded="false" />
+            <element signature="e#1675#1676#0" expanded="false" />
+            <element signature="e#1707#1708#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/Star1UniformMinimaxAI.java" />
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/mcts/aiPack/StrategoPlaythrough.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="43" column="17" lean-forward="false" selection-start-line="43" selection-start-column="17" selection-end-line="43" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/AbstractAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="101" column="49" lean-forward="true" selection-start-line="101" selection-start-column="49" selection-end-line="101" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/IterativeDeepeningExpectimaxAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="22" column="4" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="23" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/AIComManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6239">
+          <caret line="387" column="89" lean-forward="false" selection-start-line="387" selection-start-column="72" selection-end-line="387" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/RandomAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="34" column="24" lean-forward="true" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/MonteCarloTreeSearchAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="44" column="53" lean-forward="false" selection-start-line="44" selection-start-column="53" selection-end-line="44" selection-end-column="53" />
+          <caret line="44" column="57" lean-forward="false" selection-start-line="44" selection-start-column="57" selection-end-line="44" selection-end-column="57" />
+          <caret line="44" column="61" lean-forward="false" selection-start-line="44" selection-start-column="61" selection-end-line="44" selection-end-column="61" />
+          <caret line="44" column="98" lean-forward="false" selection-start-line="44" selection-start-column="98" selection-end-line="44" selection-end-column="98" />
+          <caret line="44" column="102" lean-forward="false" selection-start-line="44" selection-start-column="102" selection-end-line="44" selection-end-column="102" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1615">
+          <caret line="108" column="9" lean-forward="false" selection-start-line="108" selection-start-column="9" selection-end-line="108" selection-end-column="9" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/Star2MinimaxAI.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
-          <caret line="28" column="38" lean-forward="true" selection-start-line="28" selection-start-column="38" selection-end-line="28" selection-end-column="38" />
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding>
-            <element signature="e#890#891#0" expanded="true" />
-            <element signature="e#924#925#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#897#898#0" expanded="false" />
+            <element signature="e#931#932#0" expanded="false" />
+            <element signature="e#1106#1107#0" expanded="false" />
+            <element signature="e#1153#1154#0" expanded="false" />
+            <element signature="e#1207#1208#0" expanded="false" />
+            <element signature="e#1261#1262#0" expanded="false" />
+            <element signature="e#1330#1331#0" expanded="false" />
+            <element signature="e#1390#1391#0" expanded="false" />
+            <element signature="e#1695#1696#0" expanded="false" />
+            <element signature="e#1743#1744#0" expanded="false" />
+            <element signature="e#2152#2153#0" expanded="false" />
+            <element signature="e#2189#2190#0" expanded="false" />
+            <element signature="method#alphaBetaMax#0;class#Star2MinimaxAI#0" expanded="false" />
+            <element signature="method#alphaBetaMin#0;class#Star2MinimaxAI#0" expanded="false" />
+            <element signature="method#star2Max#0;class#Star2MinimaxAI#0" expanded="false" />
+            <element signature="method#star2Min#0;class#Star2MinimaxAI#0" expanded="false" />
+            <element signature="method#probe#0;class#Star2MinimaxAI#0" expanded="false" />
+            <element signature="e#24304#24305#0" expanded="false" />
+            <element signature="e#24342#24343#0" expanded="false" />
+            <element signature="e#24383#24384#0" expanded="false" />
+            <element signature="e#24423#24424#0" expanded="false" />
+            <element signature="e#24464#24465#0" expanded="false" />
+            <element signature="e#24504#24505#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/Star1MinimaxAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="method#alphaBetaMax#0;class#Star1MinimaxAI#0" expanded="false" />
+            <element signature="method#alphaBetaMin#0;class#Star1MinimaxAI#0" expanded="false" />
+            <element signature="method#star1Minimax#0;class#Star1MinimaxAI#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/search/ExpectiMinimaxAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="20" column="36" lean-forward="false" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#937#938#0" expanded="false" />
+            <element signature="e#971#972#0" expanded="false" />
+            <element signature="e#1148#1149#0" expanded="false" />
+            <element signature="e#1195#1196#0" expanded="false" />
+            <element signature="e#1249#1250#0" expanded="false" />
+            <element signature="e#1303#1304#0" expanded="false" />
+            <element signature="e#1372#1373#0" expanded="false" />
+            <element signature="e#1432#1433#0" expanded="false" />
+            <element signature="method#expectimaxSearch#0;class#ExpectiMinimaxAI#0" expanded="false" />
+            <element signature="e#13135#13136#0" expanded="false" />
+            <element signature="e#13173#13174#0" expanded="false" />
+            <element signature="e#13214#13215#0" expanded="false" />
+            <element signature="e#13254#13255#0" expanded="false" />
+            <element signature="e#13295#13296#0" expanded="false" />
+            <element signature="e#13335#13336#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/utils/EnhancedGameState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-431">
-          <caret line="172" column="38" lean-forward="false" selection-start-line="172" selection-start-column="38" selection-end-line="172" selection-end-column="38" />
+        <state relative-caret-position="243">
+          <caret line="454" column="127" lean-forward="false" selection-start-line="454" selection-start-column="127" selection-end-line="454" selection-end-column="127" />
           <folding>
             <element signature="method#undoLastMove#0;class#EnhancedGameState#0" expanded="false" />
-            <element signature="method#copySetup#0;class#EnhancedGameState#0" expanded="false" />
             <element signature="method#interpretAndCopySetup#0;class#EnhancedGameState#0" expanded="false" />
             <element signature="method#getProbability#1;class#EnhancedGameState#0" expanded="false" />
             <element signature="method#getProbabilityRevealedType#0;class#EnhancedGameState#0" expanded="false" />
@@ -1074,19 +1235,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/AIComManager.java">
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ui/sections/InGameView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="195" column="0" lean-forward="false" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+        <state relative-caret-position="68">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/project/stratego/control/managers/ModelComManager.java">
+    <entry file="file://$PROJECT_DIR$/src/project/stratego/ai/tests/AITestsMain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="266" column="0" lean-forward="true" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="205">
+          <caret line="87" column="34" lean-forward="false" selection-start-line="87" selection-start-column="34" selection-end-line="87" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1096,11 +1259,11 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>SimonsStupendousStratego:jar2</last-edited>
+          <last-edited>SimonsStupendousStratego:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.20574713" />
                 <option value="0.5" />
               </list>
             </option>
@@ -1148,7 +1311,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.20574713" />
                 <option value="0.6" />
               </list>
             </option>

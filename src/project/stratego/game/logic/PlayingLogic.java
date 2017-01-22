@@ -9,8 +9,6 @@ import project.stratego.game.entities.Player;
 import project.stratego.game.moves.*;
 import project.stratego.game.utils.*;
 
-import java.util.LinkedList;
-
 public class PlayingLogic extends GameLogic {
 
     private Player currentPlayer, currentOpponent;
@@ -104,16 +102,14 @@ public class PlayingLogic extends GameLogic {
             System.out.println("checkPlayerHasFlag(currentOpponent) = " + checkPlayerHasFlag(currentOpponent));
             System.out.println("checkPlayerCanMove(currentOpponent) = " + checkPlayerCanMove(currentOpponent));*/
 
-
             Player winningPlayer = checkPlayerHasFlag(currentOpponent) ? (checkPlayerCanMove(currentOpponent) ? currentOpponent : currentPlayer) : currentPlayer;
             boolean winByFlag = !checkPlayerHasFlag(winningPlayer == playerNorth ? playerSouth : playerNorth);
             System.out.println("Winning player: " + winningPlayer.getType() + ", win by " + (winByFlag ? "flag capture" : "piece elimination"));
-            if (!winByFlag) {
-                for (Piece p : (winningPlayer == playerNorth ? playerSouth : playerNorth).getActivePieces()) {
-                    System.out.println(p);
-                }
+            boolean tie = checkIfTie();
+            if (!winByFlag && tie) {
+                System.out.println("Actually a tie");
             }
-            AITestsMain.addWin(winningPlayer.getType().ordinal(), winByFlag);
+            AITestsMain.addResult(tie ? -1 : winningPlayer.getType().ordinal(), winByFlag);
             ModelComManager.getInstance().sendGameOver(parent.getGameID(), currentPlayer.getType().ordinal());
             AIComManager.getInstance().gameOver(parent);
         }
@@ -123,8 +119,8 @@ public class PlayingLogic extends GameLogic {
         return !checkPlayerHasFlag(currentOpponent) || !checkPlayerHasFlag(currentPlayer) || !checkPlayerCanMove(currentOpponent) || !checkPlayerCanMove(currentPlayer);
     }
 
-    private boolean checkOpponentFlagUnreachable(Player player) {
-        return true;
+    private boolean checkIfTie() {
+        return !checkPlayerCanMove(currentPlayer) && !checkPlayerCanMove(currentOpponent);
     }
 
     private boolean checkPlayerCanMove(Player player) {

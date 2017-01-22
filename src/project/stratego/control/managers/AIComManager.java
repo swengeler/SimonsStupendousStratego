@@ -5,7 +5,6 @@ import project.stratego.ai.evaluation.TestEvaluationFunction;
 import project.stratego.ai.search.*;
 import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.AIMove;
-import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
@@ -24,7 +23,7 @@ public class AIComManager {
     }
 
     private AIComManager() {
-        setPrimaryAI("expectinegamax", 1);
+        setPrimaryAI("expectinegamax");
     }
 
     private AbstractAI primaryAI, secondaryAI;
@@ -65,11 +64,11 @@ public class AIComManager {
         this.gameLoaded = gameLoaded;
     }
 
-    void setPrimaryAI(String aiType, int playerIndex) {
+    void setPrimaryAI(String aiType) {
         if (aiType.startsWith("random")) {
-            primaryAI = new RandomAI(playerIndex);
+            primaryAI = new RandomAI(PlayerType.SOUTH.ordinal());
         } else if (aiType.startsWith("expectimax")) {
-            primaryAI = new ExpectiMinimaxAI(playerIndex);
+            primaryAI = new ExpectiMinimaxAI(PlayerType.SOUTH.ordinal());
             ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -88,9 +87,9 @@ public class AIComManager {
                 expectiMinimaxAI.setOpponentModelling(false);
             }
         } else if (aiType.startsWith("mcts")) {
-            primaryAI = new MonteCarloTreeSearchAI(playerIndex);
+            primaryAI = new MonteCarloTreeSearchAI(PlayerType.SOUTH.ordinal());
         } else if (aiType.startsWith("star1")) {
-            primaryAI = new Star1MinimaxAI(playerIndex);
+            primaryAI = new Star1MinimaxAI(PlayerType.SOUTH.ordinal());
             Star1MinimaxAI expectiMinimaxAI = (Star1MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -115,7 +114,7 @@ public class AIComManager {
                 expectiMinimaxAI.setMoveOrdering(false);
             }
         } else if (aiType.startsWith("star2")) {
-            primaryAI = new Star2MinimaxAI(playerIndex);
+            primaryAI = new Star2MinimaxAI(PlayerType.SOUTH.ordinal());
             Star2MinimaxAI expectiMinimaxAI = (Star2MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -145,15 +144,15 @@ public class AIComManager {
             if (parts.length > 1) {
                 timeLimitMillis = Long.parseLong(parts[1]);
             }
-            primaryAI = new IterativeDeepeningExpectimaxAI(playerIndex, timeLimitMillis);
+            primaryAI = new IterativeDeepeningExpectimaxAI(PlayerType.SOUTH.ordinal(), timeLimitMillis);
         }
     }
 
-    void setSecondaryAI(String aiType, int playerIndex) {
+    void setSecondaryAI(String aiType) {
         if (aiType.startsWith("random")) {
-            secondaryAI = new RandomAI(playerIndex);
+            secondaryAI = new RandomAI(PlayerType.NORTH.ordinal());
         } else if (aiType.startsWith("expectimax")) {
-            secondaryAI = new ExpectiMinimaxAI(playerIndex);
+            secondaryAI = new ExpectiMinimaxAI(PlayerType.NORTH.ordinal());
             ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -172,9 +171,9 @@ public class AIComManager {
                 expectiMinimaxAI.setOpponentModelling(false);
             }
         } else if (aiType.startsWith("mcts")) {
-            secondaryAI = new MonteCarloTreeSearchAI(playerIndex);
+            secondaryAI = new MonteCarloTreeSearchAI(PlayerType.NORTH.ordinal());
         } else if (aiType.startsWith("star1")) {
-            secondaryAI = new Star1MinimaxAI(playerIndex);
+            secondaryAI = new Star1MinimaxAI(PlayerType.NORTH.ordinal());
             Star1MinimaxAI expectiMinimaxAI = (Star1MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -199,7 +198,7 @@ public class AIComManager {
                 expectiMinimaxAI.setMoveOrdering(false);
             }
         } else if (aiType.startsWith("star2")) {
-            secondaryAI = new Star2MinimaxAI(playerIndex);
+            secondaryAI = new Star2MinimaxAI(PlayerType.NORTH.ordinal());
             Star2MinimaxAI expectiMinimaxAI = (Star2MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -229,7 +228,7 @@ public class AIComManager {
             if (parts.length > 1) {
                 timeLimitMillis = Long.parseLong(parts[1]);
             }
-            secondaryAI = new IterativeDeepeningExpectimaxAI(playerIndex, timeLimitMillis);
+            secondaryAI = new IterativeDeepeningExpectimaxAI(PlayerType.NORTH.ordinal(), timeLimitMillis);
         }
     }
 
@@ -330,13 +329,13 @@ public class AIComManager {
 
         if (!aiMatchRunning) {
             aiMatchRunning = true;
-            lastMove = findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
+            lastMove = getAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
             //System.out.println("First " + lastMove);
             ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), lastMove.getOrRow(), lastMove.getOrCol());
             ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), lastMove.getDestRow(), lastMove.getDestCol());
-            findAI(PlayerType.NORTH.ordinal()).applyMove(new Move(lastMove));
+            getAI(PlayerType.NORTH.ordinal()).applyMove(new Move(lastMove));
         } else {
-            AbstractAI currentAI = findAI(1 - lastMove.getPlayerIndex());
+            AbstractAI currentAI = getAI(1 - lastMove.getPlayerIndex());
             Move nextMove = currentAI.getNextMove(new Move(lastMove));
             //System.out.println(nextMove);
 
@@ -361,11 +360,11 @@ public class AIComManager {
 
         aiMatchRunning = true;
         System.out.println("Start of AI match");
-        Move firstMove = findAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
+        Move firstMove = getAI(PlayerType.NORTH.ordinal()).getNextMove(new AIMove(0, -1, -1, -1, -1, false));
         //System.out.println("AI (NORTH) does first " + firstMove);
         ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), firstMove.getOrRow(), firstMove.getOrCol());
         ModelComManager.getInstance().requestBoardTileSelected(-1, PlayerType.NORTH.ordinal(), firstMove.getDestRow(), firstMove.getDestCol());
-        findAI(PlayerType.NORTH.ordinal()).applyMove(new Move(firstMove));
+        getAI(PlayerType.NORTH.ordinal()).applyMove(new Move(firstMove));
 
         AbstractAI currentAI = secondaryAI;
         Move lastMove = firstMove;
@@ -386,7 +385,7 @@ public class AIComManager {
             // apply last move made by other AI to current AI and thereby get the following move from the current AI
             nextMove = currentAI.getNextMove(new Move(lastMove));
 
-            AITestsMain.addMoveSearchTime(currentAI.getPlayerIndex(), System.nanoTime() - beforeTwo);
+            //AITestsMain.addMoveSearchTime(currentAI.getPlayerIndex(), System.nanoTime() - beforeTwo);
 
             //System.out.println("In AIComManager: " + nextMove);
 
@@ -405,14 +404,14 @@ public class AIComManager {
         AITestsMain.addPlayTime(System.currentTimeMillis() - beforeOne);
         //AITestsMain.addNodesSearched(((ExpectiMinimaxAI) primaryAI).getLeafNodeCounter());
         AITestsMain.addNumberMoves(moveCounter);
-        //AITestsMain.addWin(primaryAI.getPlayerWonIndex());
+        //AITestsMain.addResult(primaryAI.getPlayerWonIndex());
     }
 
     public void reset() {
-        setPrimaryAI("expectinegamax", 1);
+        setPrimaryAI("expectinegamax");
     }
 
-    private AbstractAI findAI(int playerIndex) {
+    public AbstractAI getAI(int playerIndex) {
         if (playerIndex == primaryAI.getPlayerIndex()) {
             return primaryAI;
         } else if (playerIndex == secondaryAI.getPlayerIndex()) {

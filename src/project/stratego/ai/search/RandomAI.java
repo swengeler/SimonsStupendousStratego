@@ -1,5 +1,6 @@
 package project.stratego.ai.search;
 
+import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.AIMove;
 import project.stratego.control.managers.ModelComManager;
 import project.stratego.game.entities.GameState;
@@ -23,6 +24,7 @@ public class RandomAI extends AbstractAI {
         gameState.applyMove(lastOpponentMove);
         //System.out.println("Apply: " + lastOpponentMove);
         //gameState.printBoard();
+        long testTotal = System.nanoTime();
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         int randIndex = (int) (Math.random() * legalMoves.size());
         //System.out.println("------------------------------------------------------------------------------------\n");
@@ -30,18 +32,8 @@ public class RandomAI extends AbstractAI {
             gameState.printBoard();
             System.exit(1);
         }
+        AITestsMain.addMoveStatistics(playerIndex, -1, -1, -1, (System.nanoTime() - testTotal), -1, -1);
         return legalMoves.get(randIndex);
-    }
-
-    @Override
-    public void makeBoardSetup(GameState inGameState) {
-        //ModelComManager.getInstance().requestAutoDeploy(-1, playerIndex);
-        String example1 = "SCOUT MINER BOMB SCOUT MINER BOMB FLAG BOMB MINER MINER " +
-                "SERGEANT BOMB SERGEANT MAJOR COLONEL LIEUTENANT BOMB LIEUTENANT CAPTAIN SERGEANT " +
-                "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
-                "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
-        gameState.interpretAndCopySetup(example1);
-        inGameState.copySetup(gameState, playerIndex);
     }
 
 }

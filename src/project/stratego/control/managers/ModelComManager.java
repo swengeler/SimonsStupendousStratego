@@ -11,6 +11,12 @@ import java.util.ArrayList;
 
 public class ModelComManager {
 
+    public void printCurrentMatchUpBoard() {
+        if (gameMode == GameMode.AIMATCH) {
+            findGame(-1).getGameState().printBoard();
+        }
+    }
+
     private static ModelComManager instance;
 
     public static ModelComManager getInstance() {
@@ -79,20 +85,28 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureSinglePlayer();
-        AIComManager.getInstance().setPrimaryAI("star1 3 i 500 -o -m", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("star1 3 i 500 -o -m");
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
     }
 
-    public void configureAIMatch(String setupNorth, String setupSouth) {
+    public void configureAIMatch(String setupNorth, String setupSouth, String aiNorthConfig, String aiSouthConfig) {
         System.out.println("Switched to AIMATCH in ViewComManager");
         gameMode = GameMode.AIMATCH;
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIMatch();
-        AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("expectimax 3 -i 0 -o", PlayerType.SOUTH.ordinal());
+        if (aiNorthConfig == null) {
+            AIComManager.getInstance().setSecondaryAI("random");
+        } else {
+            AIComManager.getInstance().setSecondaryAI(aiNorthConfig);
+        }
+        if (aiSouthConfig == null) {
+            AIComManager.getInstance().setPrimaryAI("expectimax 1 -i 250 -o");
+        } else {
+            AIComManager.getInstance().setPrimaryAI(aiSouthConfig);
+        }
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState(), setupNorth, setupSouth);
         //findGame(-1).getGameState().printBoard();
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
@@ -105,9 +119,9 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIShowMatch();
-        AIComManager.getInstance().setSecondaryAI("star1 0 i 750 -o m", PlayerType.NORTH.ordinal());
+        AIComManager.getInstance().setSecondaryAI("star1 0 i 750 -o m");
         //AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("mcts", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("mcts");
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.NORTH.ordinal());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
@@ -225,15 +239,15 @@ public class ModelComManager {
         System.out.println("Gamemode: " + gameMode);
         if (gameMode == GameMode.SINGLEPLAYER) {
             AIComManager.getInstance().configureSinglePlayer();
-            AIComManager.getInstance().setPrimaryAI("star1 3 -i 500 -o m", PlayerType.SOUTH.ordinal());
+            AIComManager.getInstance().setPrimaryAI("star1 3 -i 500 -o m");
         } else {
             if (gameMode == GameMode.AISHOWMATCH) {
                 AIComManager.getInstance().configureAIShowMatch();
             } else if (gameMode == GameMode.AIMATCH) {
                 AIComManager.getInstance().configureAIMatch();
             }
-            AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-            AIComManager.getInstance().setPrimaryAI("expectimax", PlayerType.SOUTH.ordinal());
+            AIComManager.getInstance().setSecondaryAI("random");
+            AIComManager.getInstance().setPrimaryAI("expectimax");
         }
         AIComManager.getInstance().tryLoadGame(gameEncoding);
         AIComManager.getInstance().setGameLoaded(false);
@@ -263,8 +277,26 @@ public class ModelComManager {
         }
     }
 
-    public void requestConfigureAI(int playerIndex) {
+    public void requestConfigureAI(int playerIndex, String aiConfig) {
+        if (gameMode == GameMode.MULTIPLAYER || findGame(-1).gameRunning()) {
+            return;
+        }
+        if (playerIndex == PlayerType.SOUTH.ordinal()) {
+            AIComManager.getInstance().setPrimaryAI(aiConfig);
+        } else if (playerIndex == PlayerType.NORTH.ordinal()) {
+            AIComManager.getInstance().setSecondaryAI(aiConfig);
+        }
+    }
 
+    public void requestConfigureAIEval(int playerIndex, String aiEvalConfig) {
+        if (gameMode == GameMode.MULTIPLAYER || findGame(-1).gameRunning()) {
+            return;
+        }
+        if (playerIndex == PlayerType.SOUTH.ordinal()) {
+            AIComManager.getInstance().setPrimaryAIEval(aiEvalConfig);
+        } else if (playerIndex == PlayerType.NORTH.ordinal()) {
+            AIComManager.getInstance().setSecondaryAIEval(aiEvalConfig);
+        }
     }
 
     public void requestConfigureSetup(int playerIndex) {

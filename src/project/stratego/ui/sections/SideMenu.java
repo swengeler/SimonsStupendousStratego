@@ -40,7 +40,7 @@ public class SideMenu extends Pane {
         makeSinglePlayerMenu();
         makeShowMatchMenu();
         makeMultiPlayerMenu();
-        makeSpecialFeaturesMenu();
+        //makeSpecialFeaturesMenu();
         makeHelpMenu();
         configureChangeListener();
         getChildren().add(menu);

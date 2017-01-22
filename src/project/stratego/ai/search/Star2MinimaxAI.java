@@ -1,5 +1,6 @@
 package project.stratego.ai.search;
 
+import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.*;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.moves.Move;
@@ -26,7 +27,6 @@ public class Star2MinimaxAI extends AbstractAI {
     private boolean timeLimitReached;
 
     private boolean moveOrdering;
-    private boolean opponentModelling;
 
     public Star2MinimaxAI(int playerIndex) {
         super(playerIndex);
@@ -50,7 +50,11 @@ public class Star2MinimaxAI extends AbstractAI {
     }
 
     public void setOpponentModelling(boolean opponentModelling) {
-        this.opponentModelling = opponentModelling;
+        if (opponentModelling) {
+            gameState.setOpponentModellingEnabled(true);
+        } else {
+            gameState.setOpponentModellingEnabled(false);
+        }
     }
 
     public void setMoveOrdering(boolean moveOrdering) {
@@ -62,8 +66,9 @@ public class Star2MinimaxAI extends AbstractAI {
         gameState.applyMove(lastOpponentMove);
         if (iterativeDeepening) {
             currentStartTimeMillis = System.currentTimeMillis();
-            currentMaxDepth = 2;
+            currentMaxDepth = 1;
             timeLimitReached = false;
+            bestMoveDepth = 1;
         }
         return star2MinimaxSearch();
     }
@@ -103,9 +108,7 @@ public class Star2MinimaxAI extends AbstractAI {
         long before;
         long total = System.currentTimeMillis();
 
-        ArrayList<AIMove> testList = new ArrayList<>();
-        testList.add(legalMoves.get(2));
-
+        long testTotal = System.nanoTime();
         if (iterativeDeepening) {
             while (!timeLimitReached) {
                 // loop through all moves and find the one with the highest expecti-negamax value
@@ -155,6 +158,8 @@ public class Star2MinimaxAI extends AbstractAI {
                 }
             }
         }
+
+        AITestsMain.addMoveStatistics(playerIndex, leafNodeCounter, minMaxNodeCounter, chanceNodeCounter, (System.nanoTime() - testTotal), currentMaxDepth, bestMoveDepth);
 
         if (DEBUG) {
             System.out.println("------------------------------------------------------------------------------------\nBest move:");
@@ -481,6 +486,7 @@ public class Star2MinimaxAI extends AbstractAI {
 
     private double probe(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
         if (currentDepth == currentMaxDepth || state.isGameOver()) {
+            leafNodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
@@ -512,6 +518,8 @@ public class Star2MinimaxAI extends AbstractAI {
     private int leafNodeCounter = 0;
     private int chanceNodeCounter = 0;
     private int minMaxNodeCounter = 0;
+
+    private int bestMoveDepth;
 
     public int getLeafNodeCounter() {
         return leafNodeCounter;

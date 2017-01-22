@@ -13,7 +13,7 @@ public class BoardArea extends Pane {
 
     public static final double TILE_SPACING = 1;
 
-    private static final double DURATION_MULTIPLIER = 0.8;
+    private static final double DURATION_MULTIPLIER = 0.3;
     //private static final double DURATION_MULTIPLIER = 0.01;
 
     private Group northDeploymentArea;

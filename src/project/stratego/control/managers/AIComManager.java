@@ -5,6 +5,7 @@ import project.stratego.ai.evaluation.TestEvaluationFunction;
 import project.stratego.ai.search.*;
 import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.AIMove;
+import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
@@ -67,31 +68,77 @@ public class AIComManager {
     void setPrimaryAI(String aiType, int playerIndex) {
         if (aiType.startsWith("random")) {
             primaryAI = new RandomAI(playerIndex);
-        } else if (aiType.startsWith("expectinegamax")) {
+        } else if (aiType.startsWith("expectimax")) {
+            primaryAI = new ExpectiMinimaxAI(playerIndex);
+            ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
-            int maxDepth;
-            if (parts.length > 1) {
-                maxDepth = Integer.parseInt(parts[1]);
-            } else {
-                maxDepth = 2;
+            if (parts[2].equals("i")) {
+                // iterative deepening enables, so depth does not matter
+                expectiMinimaxAI.setIterativeDeepening(true);
+                expectiMinimaxAI.setTimeLimit(Long.parseLong(parts[3]));
+            } else if (parts[2].equals("-i")) {
+                // iterative deepening disabled, so depth has to be read out
+                expectiMinimaxAI.setIterativeDeepening(false);
+                expectiMinimaxAI.setMaxDepth(Integer.parseInt(parts[1]));
             }
-            primaryAI = new ExpectiMinimaxAI(playerIndex, maxDepth);
+            // opponent modelling does not influence the other two parameters
+            if (parts[4].equals("o")) {
+                expectiMinimaxAI.setOpponentModelling(true);
+            } else if (parts[4].equals("-o")) {
+                expectiMinimaxAI.setOpponentModelling(false);
+            }
         } else if (aiType.startsWith("mcts")) {
             primaryAI = new MonteCarloTreeSearchAI(playerIndex);
         } else if (aiType.startsWith("star1")) {
+            primaryAI = new Star1MinimaxAI(playerIndex);
+            Star1MinimaxAI expectiMinimaxAI = (Star1MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
-            int maxDepth = 2;
-            if (parts.length > 1) {
-                maxDepth = Integer.parseInt(parts[1]);
+            if (parts[2].equals("i")) {
+                // iterative deepening enables, so depth does not matter
+                expectiMinimaxAI.setIterativeDeepening(true);
+                expectiMinimaxAI.setTimeLimit(Long.parseLong(parts[3]));
+            } else if (parts[2].equals("-i")) {
+                // iterative deepening disabled, so depth has to be read out
+                expectiMinimaxAI.setIterativeDeepening(false);
+                expectiMinimaxAI.setMaxDepth(Integer.parseInt(parts[1]));
             }
-            primaryAI = new Star1MinimaxAI(playerIndex, maxDepth);
+            // opponent modelling does not influence the other two parameters
+            if (parts[4].equals("o")) {
+                expectiMinimaxAI.setOpponentModelling(true);
+            } else if (parts[4].equals("-o")) {
+                expectiMinimaxAI.setOpponentModelling(false);
+            }
+            // same for move ordering
+            if (parts[5].equals("m")) {
+                expectiMinimaxAI.setMoveOrdering(true);
+            } else if (parts[5].equals("-m")) {
+                expectiMinimaxAI.setMoveOrdering(false);
+            }
         } else if (aiType.startsWith("star2")) {
+            primaryAI = new Star2MinimaxAI(playerIndex);
+            Star2MinimaxAI expectiMinimaxAI = (Star2MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
-            int maxDepth = 2;
-            if (parts.length > 1) {
-                maxDepth = Integer.parseInt(parts[1]);
+            if (parts[2].equals("i")) {
+                // iterative deepening enables, so depth does not matter
+                expectiMinimaxAI.setIterativeDeepening(true);
+                expectiMinimaxAI.setTimeLimit(Long.parseLong(parts[3]));
+            } else if (parts[2].equals("-i")) {
+                // iterative deepening disabled, so depth has to be read out
+                expectiMinimaxAI.setIterativeDeepening(false);
+                expectiMinimaxAI.setMaxDepth(Integer.parseInt(parts[1]));
             }
-            primaryAI = new Star2MinimaxAI(playerIndex, maxDepth);
+            // opponent modelling does not influence the other two parameters
+            if (parts[4].equals("o")) {
+                expectiMinimaxAI.setOpponentModelling(true);
+            } else if (parts[4].equals("-o")) {
+                expectiMinimaxAI.setOpponentModelling(false);
+            }
+            // same for move ordering
+            if (parts[5].equals("m")) {
+                expectiMinimaxAI.setMoveOrdering(true);
+            } else if (parts[5].equals("-m")) {
+                expectiMinimaxAI.setMoveOrdering(false);
+            }
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;
@@ -105,38 +152,84 @@ public class AIComManager {
     void setSecondaryAI(String aiType, int playerIndex) {
         if (aiType.startsWith("random")) {
             secondaryAI = new RandomAI(playerIndex);
-        } else if (aiType.startsWith("expectinegamax")) {
+        } else if (aiType.startsWith("expectimax")) {
+            secondaryAI = new ExpectiMinimaxAI(playerIndex);
+            ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
-            int maxDepth;
-            if (parts.length > 1) {
-                maxDepth = Integer.parseInt(parts[1]);
-            } else {
-                maxDepth = 2;
+            if (parts[2].equals("i")) {
+                // iterative deepening enables, so depth does not matter
+                expectiMinimaxAI.setIterativeDeepening(true);
+                expectiMinimaxAI.setTimeLimit(Long.parseLong(parts[3]));
+            } else if (parts[2].equals("-i")) {
+                // iterative deepening disabled, so depth has to be read out
+                expectiMinimaxAI.setIterativeDeepening(false);
+                expectiMinimaxAI.setMaxDepth(Integer.parseInt(parts[1]));
             }
-            secondaryAI = new ExpectiMinimaxAI(playerIndex, maxDepth);
+            // opponent modelling does not influence the other two parameters
+            if (parts[4].equals("o")) {
+                expectiMinimaxAI.setOpponentModelling(true);
+            } else if (parts[4].equals("-o")) {
+                expectiMinimaxAI.setOpponentModelling(false);
+            }
         } else if (aiType.startsWith("mcts")) {
             secondaryAI = new MonteCarloTreeSearchAI(playerIndex);
         } else if (aiType.startsWith("star1")) {
+            secondaryAI = new Star1MinimaxAI(playerIndex);
+            Star1MinimaxAI expectiMinimaxAI = (Star1MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
-            int maxDepth = 2;
-            if (parts.length > 1) {
-                maxDepth = Integer.parseInt(parts[1]);
+            if (parts[2].equals("i")) {
+                // iterative deepening enables, so depth does not matter
+                expectiMinimaxAI.setIterativeDeepening(true);
+                expectiMinimaxAI.setTimeLimit(Long.parseLong(parts[3]));
+            } else if (parts[2].equals("-i")) {
+                // iterative deepening disabled, so depth has to be read out
+                expectiMinimaxAI.setIterativeDeepening(false);
+                expectiMinimaxAI.setMaxDepth(Integer.parseInt(parts[1]));
             }
-            secondaryAI = new Star1MinimaxAI(playerIndex, maxDepth);
+            // opponent modelling does not influence the other two parameters
+            if (parts[4].equals("o")) {
+                expectiMinimaxAI.setOpponentModelling(true);
+            } else if (parts[4].equals("-o")) {
+                expectiMinimaxAI.setOpponentModelling(false);
+            }
+            // same for move ordering
+            if (parts[5].equals("m")) {
+                expectiMinimaxAI.setMoveOrdering(true);
+            } else if (parts[5].equals("-m")) {
+                expectiMinimaxAI.setMoveOrdering(false);
+            }
         } else if (aiType.startsWith("star2")) {
+            secondaryAI = new Star2MinimaxAI(playerIndex);
+            Star2MinimaxAI expectiMinimaxAI = (Star2MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
-            int maxDepth = 2;
-            if (parts.length > 1) {
-                maxDepth = Integer.parseInt(parts[1]);
+            if (parts[2].equals("i")) {
+                // iterative deepening enables, so depth does not matter
+                expectiMinimaxAI.setIterativeDeepening(true);
+                expectiMinimaxAI.setTimeLimit(Long.parseLong(parts[3]));
+            } else if (parts[2].equals("-i")) {
+                // iterative deepening disabled, so depth has to be read out
+                expectiMinimaxAI.setIterativeDeepening(false);
+                expectiMinimaxAI.setMaxDepth(Integer.parseInt(parts[1]));
             }
-            secondaryAI = new Star2MinimaxAI(playerIndex, maxDepth);
+            // opponent modelling does not influence the other two parameters
+            if (parts[4].equals("o")) {
+                expectiMinimaxAI.setOpponentModelling(true);
+            } else if (parts[4].equals("-o")) {
+                expectiMinimaxAI.setOpponentModelling(false);
+            }
+            // same for move ordering
+            if (parts[5].equals("m")) {
+                expectiMinimaxAI.setMoveOrdering(true);
+            } else if (parts[5].equals("-m")) {
+                expectiMinimaxAI.setMoveOrdering(false);
+            }
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
             long timeLimitMillis = 3000;
             if (parts.length > 1) {
                 timeLimitMillis = Long.parseLong(parts[1]);
             }
-            primaryAI = new IterativeDeepeningExpectimaxAI(playerIndex, timeLimitMillis);
+            secondaryAI = new IterativeDeepeningExpectimaxAI(playerIndex, timeLimitMillis);
         }
     }
 
@@ -222,6 +315,8 @@ public class AIComManager {
         }
         primaryAI.loadGame(gameEncoding);
         System.out.println("GAME LOADED");
+        primaryAI.getEnhancedGameState().printProbabilitiesTable();
+        primaryAI.getEnhancedGameState().printBoardAssignment();
         if (gameMode != GameMode.SINGLEPLAYER) {
             secondaryAI.loadGame(gameEncoding);
         }

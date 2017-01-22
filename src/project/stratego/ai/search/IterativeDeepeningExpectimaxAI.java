@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class IterativeDeepeningExpectimaxAI extends AbstractAI {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private int nodeCounter = 0;
 
@@ -20,7 +20,7 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
 
     private int currentMaxDepth;
 
-    private boolean iterativeDeepening = true;
+    private boolean iterativeDeepening = false;
     private boolean timeLimitReached;
 
     public IterativeDeepeningExpectimaxAI(int playerIndex, long timeLimitMillis) {
@@ -36,7 +36,7 @@ public class IterativeDeepeningExpectimaxAI extends AbstractAI {
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
         currentStartTimeMillis = System.currentTimeMillis();
-        currentMaxDepth = 1;
+        currentMaxDepth = 2;
         timeLimitReached = false;
         return expectiNegamaxSearch();
     }

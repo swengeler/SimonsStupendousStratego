@@ -52,7 +52,9 @@ public abstract class AbstractAI {
 
     public void loadGame(String gameEncoding) {
         String[] encodings = gameEncoding.split("\n");
-        gameState.interpretEncodedBoard(encodings[0]);
+        String[] setups = encodings[0].split("_");
+        gameState.interpretEncodedSetup(setups[0], PlayerType.NORTH.ordinal());
+        gameState.interpretEncodedSetup(setups[1], PlayerType.SOUTH.ordinal());
         gameState.interpretEncodedMoves(encodings[1]);
     }
 
@@ -91,16 +93,16 @@ public abstract class AbstractAI {
                 // moves are for the AI itself
                 if (encounteredPiece != null) {
                     // attacking opponent's piece
-                    if (gameState.probabilityRevealed(encounteredPiece)) {
-                        if (Math.abs(gameState.getProbability(encounteredPiece, 0) - 1.0) < EnhancedGameState.PROB_EPSILON) {
+                    if (state.probabilityRevealed(encounteredPiece)) {
+                        if (Math.abs(state.getProbability(encounteredPiece, 0) - 1.0) < EnhancedGameState.PROB_EPSILON) {
                             // game-winning move
                             scores[counter] = 1000;
-                        } else if (movingPiece.getType() == gameState.getProbabilityRevealedType(encounteredPiece)) {
+                        } else if (movingPiece.getType() == state.getProbabilityRevealedType(encounteredPiece)) {
                             // eliminate piece and yourself
                             scores[counter] = 20;
-                        } else if (movingPiece.getType() == PieceType.MINER && gameState.getProbabilityRevealedType(encounteredPiece) == PieceType.BOMB ||
-                                movingPiece.getType() == PieceType.SPY && gameState.getProbabilityRevealedType(encounteredPiece) == PieceType.MARSHAL ||
-                                PieceType.pieceLvlMap.get(movingPiece.getType()) > PieceType.pieceLvlMap.get(gameState.getProbabilityRevealedType(encounteredPiece))) {
+                        } else if (movingPiece.getType() == PieceType.MINER && state.getProbabilityRevealedType(encounteredPiece) == PieceType.BOMB ||
+                                movingPiece.getType() == PieceType.SPY && state.getProbabilityRevealedType(encounteredPiece) == PieceType.MARSHAL ||
+                                PieceType.pieceLvlMap.get(movingPiece.getType()) > PieceType.pieceLvlMap.get(state.getProbabilityRevealedType(encounteredPiece))) {
                             // win attack
                             scores[counter] = 100;
                         } else {
@@ -130,16 +132,16 @@ public abstract class AbstractAI {
                 // moves are for the opponent
                 if (encounteredPiece != null) {
                     // attacking opponent's piece
-                    if (gameState.probabilityRevealed(movingPiece)) {
+                    if (state.probabilityRevealed(movingPiece)) {
                         if (encounteredPiece.getType() == PieceType.FLAG) {
                             // game-winning move
                             scores[counter] = 1000;
-                        } else if (encounteredPiece.getType() == gameState.getProbabilityRevealedType(movingPiece)) {
+                        } else if (encounteredPiece.getType() == state.getProbabilityRevealedType(movingPiece)) {
                             // eliminate piece and yourself
                             scores[counter] = 20;
-                        } else if (encounteredPiece.getType() == PieceType.BOMB && gameState.getProbabilityRevealedType(movingPiece) == PieceType.MINER ||
-                                encounteredPiece.getType() == PieceType.MARSHAL && gameState.getProbabilityRevealedType(movingPiece) == PieceType.SPY ||
-                                PieceType.pieceLvlMap.get(encounteredPiece.getType()) < PieceType.pieceLvlMap.get(gameState.getProbabilityRevealedType(movingPiece))) {
+                        } else if (encounteredPiece.getType() == PieceType.BOMB && state.getProbabilityRevealedType(movingPiece) == PieceType.MINER ||
+                                encounteredPiece.getType() == PieceType.MARSHAL && state.getProbabilityRevealedType(movingPiece) == PieceType.SPY ||
+                                PieceType.pieceLvlMap.get(encounteredPiece.getType()) < PieceType.pieceLvlMap.get(state.getProbabilityRevealedType(movingPiece))) {
                             // win attack
                             scores[counter] = 100;
                         } else {

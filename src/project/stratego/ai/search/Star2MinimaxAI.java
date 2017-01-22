@@ -1,9 +1,6 @@
 package project.stratego.ai.search;
 
-import project.stratego.ai.setup.SetupMaker;
-import project.stratego.ai.utils.AIMove;
-import project.stratego.ai.utils.EnhancedGameState;
-import project.stratego.game.entities.GameState;
+import project.stratego.ai.utils.*;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PieceType;
@@ -17,44 +14,58 @@ public class Star2MinimaxAI extends AbstractAI {
     private static final boolean DEBUG_MIN = false;
     private static final boolean DEBUG_STAR2_MAX = false;
 
-    private int maxDepth = 2;
+    private int currentMaxDepth = 3;
 
     private double evalUpperBound = 2.0;
     private double evalLowerBound = 0.0;
 
+    private long timeLimitMillis = 1000;
+    private long currentStartTimeMillis;
+
     private boolean iterativeDeepening;
     private boolean timeLimitReached;
-    private boolean moveOrdering = true;
+
+    private boolean moveOrdering;
+    private boolean opponentModelling;
+
+    public Star2MinimaxAI(int playerIndex) {
+        super(playerIndex);
+    }
 
     public Star2MinimaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);
-        this.maxDepth = maxDepth;
+        currentMaxDepth = maxDepth;
+    }
+
+    public void setMaxDepth(int maxDepth) {
+        this.currentMaxDepth = maxDepth;
+    }
+
+    public void setTimeLimit(long timeLimitMillis) {
+        this.timeLimitMillis = timeLimitMillis;
+    }
+
+    public void setIterativeDeepening(boolean iterativeDeepening) {
+        this.iterativeDeepening = iterativeDeepening;
+    }
+
+    public void setOpponentModelling(boolean opponentModelling) {
+        this.opponentModelling = opponentModelling;
+    }
+
+    public void setMoveOrdering(boolean moveOrdering) {
+        this.moveOrdering = moveOrdering;
     }
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
+        if (iterativeDeepening) {
+            currentStartTimeMillis = System.currentTimeMillis();
+            currentMaxDepth = 2;
+            timeLimitReached = false;
+        }
         return star2MinimaxSearch();
-    }
-
-    @Override
-    public void makeBoardSetup(GameState inGameState) {
-        SetupMaker setupMaker = new SetupMaker() {
-            @Override
-            public void makeBoardSetup(GameState state, int playerIndex) {
-                // something something
-            }
-        };
-        String example1 = "SCOUT MINER BOMB SCOUT MINER BOMB FLAG BOMB MINER MINER " +
-                "SERGEANT BOMB SERGEANT MAJOR COLONEL LIEUTENANT BOMB LIEUTENANT CAPTAIN SERGEANT " +
-                "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
-                "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
-        gameState.interpretAndCopySetup(example1);
-        inGameState.copySetup(gameState, playerIndex);
-    }
-
-    public void setMaxDepth(int maxDepth) {
-        this.maxDepth = maxDepth;
     }
 
     public void applyMove(Move move) {
@@ -64,7 +75,7 @@ public class Star2MinimaxAI extends AbstractAI {
     private Move star2MinimaxSearch() {
         if (DEBUG) {
             System.out.println("\n------------------------------------------------------------------------------------");
-            System.out.println("EXPECTIMAX search for " + (playerIndex == PlayerType.NORTH.ordinal() ? "NORTH:" : "SOUTH:"));
+            System.out.println("STAR2 search for " + (playerIndex == PlayerType.NORTH.ordinal() ? "NORTH:" : "SOUTH:"));
             System.out.println("------------------------------------------------------------------------------------\n");
         }
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
@@ -95,24 +106,53 @@ public class Star2MinimaxAI extends AbstractAI {
         ArrayList<AIMove> testList = new ArrayList<>();
         testList.add(legalMoves.get(2));
 
-        // loop through all moves and find the one with the highest expecti-negamax value
-        for (AIMove m : legalMoves) {
-            before = System.currentTimeMillis();
-            if (m.isChanceMove()) {
-                // do expectimax evaluation
-                currentValue = star2Min(0, gameState, m, -Double.MAX_VALUE, Double.MAX_VALUE);
-            } else {
-                gameState.applyMove(m);
-                currentValue = alphaBetaMin(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
-                gameState.undoLastMove();
+        if (iterativeDeepening) {
+            while (!timeLimitReached) {
+                // loop through all moves and find the one with the highest expecti-negamax value
+                for (AIMove m : legalMoves) {
+                    if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                        timeLimitReached = true;
+                        break;
+                    }
+                    before = System.currentTimeMillis();
+                    if (m.isChanceMove()) {
+                        // do expectimax evaluation
+                        currentValue = star2Min(0, gameState, m, -Double.MAX_VALUE, Double.MAX_VALUE);
+                    } else {
+                        gameState.applyMove(m);
+                        currentValue = alphaBetaMin(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
+                        gameState.undoLastMove();
+                    }
+                    if (DEBUG) {
+                        System.out.println("\n" + m);
+                        System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s (currentMaxDepth: " + currentMaxDepth + ")");
+                    }
+                    if (currentValue > maxValue && !timeLimitReached) {
+                        maxValue = currentValue;
+                        bestMove = m;
+                    }
+                }
+                currentMaxDepth++;
             }
-            if (DEBUG) {
-                System.out.println(m);
-                System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s\n");
-            }
-            if (currentValue > maxValue) {
-                maxValue = currentValue;
-                bestMove = m;
+        } else {
+            for (AIMove m : legalMoves) {
+                before = System.currentTimeMillis();
+                if (m.isChanceMove()) {
+                    // do expectimax evaluation
+                    currentValue = star2Min(0, gameState, m, -Double.MAX_VALUE, Double.MAX_VALUE);
+                } else {
+                    gameState.applyMove(m);
+                    currentValue = alphaBetaMin(1, gameState, -Double.MAX_VALUE, Double.MAX_VALUE);
+                    gameState.undoLastMove();
+                }
+                if (DEBUG) {
+                    System.out.println(m);
+                    System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s\n");
+                }
+                if (currentValue > maxValue) {
+                    maxValue = currentValue;
+                    bestMove = m;
+                }
             }
         }
 
@@ -120,20 +160,19 @@ public class Star2MinimaxAI extends AbstractAI {
             System.out.println("------------------------------------------------------------------------------------\nBest move:");
             System.out.println(bestMove);
             System.out.println("Max value: " + maxValue);
-            System.out.println("Searched " + nodeCounter + " nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
+            System.out.println("Searched " + leafNodeCounter + " leaf nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
             System.out.println("------------------------------------------------------------------------------------\n");
         }
-
-        //debugStringNextMove();
 
         return bestMove;
     }
 
     private double alphaBetaMax(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
-        if (currentDepth == maxDepth || state.isGameOver()) {
-            nodeCounter++;
+        if (currentDepth == currentMaxDepth || state.isGameOver()) {
+            leafNodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
+        minMaxNodeCounter++;
 
         // generate moves for MAX player
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, playerIndex);
@@ -144,6 +183,10 @@ public class Star2MinimaxAI extends AbstractAI {
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
             if (m.isChanceMove()) {
                 alphaValue = Math.max(alphaValue, (currentValue = star2Min(currentDepth, state, m, alphaValue, betaValue)));
             } else {
@@ -151,7 +194,7 @@ public class Star2MinimaxAI extends AbstractAI {
                 alphaValue = Math.max(alphaValue, (currentValue = alphaBetaMin(currentDepth + 1, state, alphaValue, betaValue)));
                 state.undoLastMove();
             }
-            if (alphaValue >= betaValue) {
+            if (alphaValue >= betaValue && (!iterativeDeepening || !timeLimitReached)) {
                 return alphaValue;
             }
         }
@@ -159,10 +202,11 @@ public class Star2MinimaxAI extends AbstractAI {
     }
 
     private double alphaBetaMin(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
-        if (currentDepth == maxDepth || state.isGameOver()) {
-            nodeCounter++;
+        if (currentDepth == currentMaxDepth || state.isGameOver()) {
+            leafNodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
+        minMaxNodeCounter++;
 
         // generate moves for MIN player
         ArrayList<AIMove> legalMoves = generateLegalMoves(state, 1 - playerIndex);
@@ -177,9 +221,17 @@ public class Star2MinimaxAI extends AbstractAI {
             System.out.println();
         }
 
+        if (moveOrdering) {
+            legalMoves = orderMoves(state, legalMoves);
+        }
+
         double currentValue;
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
             if (m.isChanceMove()) {
                 betaValue = Math.min(betaValue, (currentValue = star2Max(currentDepth, state, m, alphaValue, betaValue)));
                 if (DEBUG_MIN) {
@@ -190,7 +242,7 @@ public class Star2MinimaxAI extends AbstractAI {
                 betaValue = Math.min(betaValue, (currentValue = alphaBetaMax(currentDepth + 1, state, alphaValue, betaValue)));
                 state.undoLastMove();
             }
-            if (betaValue <= alphaValue) {
+            if (betaValue <= alphaValue && (!iterativeDeepening || !timeLimitReached)) {
                 return betaValue;
             }
         }
@@ -198,6 +250,8 @@ public class Star2MinimaxAI extends AbstractAI {
     }
 
     private double star2Max(int currentDepth, EnhancedGameState state, AIMove chanceMove, double alphaValue, double betaValue) {
+        chanceNodeCounter++;
+
         Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
         // determine actual successors (i.e. probability for unknownPiece to be a rank i must be over the threshold
@@ -210,6 +264,12 @@ public class Star2MinimaxAI extends AbstractAI {
             if (DEBUG_STAR2_MAX) {
                 System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
             }
+
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
+
             if ((i > 1) && (tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantIndeces[nrChanceEvents] = i;
                 relevantProbabilities[nrChanceEvents] = tempProbability;
@@ -237,6 +297,11 @@ public class Star2MinimaxAI extends AbstractAI {
         // can ensure that it will be a useful one tighten the bounds
         double[] probedValues = new double[nrChanceEvents]; // W
         for (int i = 0; i < nrChanceEvents; i++) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
+
             probDifference -= relevantProbabilities[i];
             // only the upper bound B is updated because the next "layer" of nodes are MAX nodes -> can only tighten the upper bound
             upperBound = (betaValue - probEstimateSum - evalLowerBound * probDifference) / relevantProbabilities[i]; // (beta - X(i) - L * Y(i)) / P(i)
@@ -266,6 +331,11 @@ public class Star2MinimaxAI extends AbstractAI {
         double currentValue;
 
         for (int i = 0; i < nrChanceEvents; i++) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
+
             // update Y used to update the bounds below
             probDifference -= relevantProbabilities[i]; // Y(i + 1) = Y(i) - P(i), here with special value Y(0) = 1.0
             // the following basically takes out the estimated values which are replaced at the end of the loop with the real ones
@@ -301,6 +371,8 @@ public class Star2MinimaxAI extends AbstractAI {
     }
 
     private double star2Min(int currentDepth, EnhancedGameState state, AIMove chanceMove, double alphaValue, double betaValue) {
+        chanceNodeCounter++;
+
         Piece unknownPiece = state.getBoardArray()[chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestRow() : chanceMove.getOrRow()][chanceMove.getPlayerIndex() == playerIndex ? chanceMove.getDestCol() : chanceMove.getOrCol()].getOccupyingPiece();
 
         // determine actual successors (i.e. probability for unknownPiece to be a rank i must be over the threshold
@@ -310,6 +382,11 @@ public class Star2MinimaxAI extends AbstractAI {
         double relevantProbabilitiesSum = 0.0;
         double tempProbability;
         for (int i = 0; i < PieceType.numberTypes; i++) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
+
             if ((tempProbability = state.getProbability(unknownPiece, i)) > /*0.2 * */EnhancedGameState.PROB_EPSILON) {
                 relevantIndeces[nrChanceEvents] = i;
                 relevantProbabilities[nrChanceEvents] = tempProbability;
@@ -337,6 +414,11 @@ public class Star2MinimaxAI extends AbstractAI {
         // can ensure that it will be a useful one tighten the bounds
         double[] probedValues = new double[nrChanceEvents]; // W
         for (int i = 0; i < nrChanceEvents; i++) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
+
             probDifference -= relevantProbabilities[i];
             // only the lower bound A is updated because the next "layer" of nodes are MIN nodes -> can only tighten the lower bound
             lowerBound = (alphaValue - probEstimateSum - evalUpperBound * probDifference) / relevantProbabilities[i];
@@ -359,6 +441,11 @@ public class Star2MinimaxAI extends AbstractAI {
         double currentValue;
 
         for (int i = 0; i < nrChanceEvents; i++) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
+
             // update Y used to update the bounds below
             probDifference -= relevantProbabilities[i];
             probEstimateSum -= relevantProbabilities[i] * probedValues[i];
@@ -393,14 +480,20 @@ public class Star2MinimaxAI extends AbstractAI {
     }
 
     private double probe(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
-        if (currentDepth == maxDepth || state.isGameOver()) {
+        if (currentDepth == currentMaxDepth || state.isGameOver()) {
             return evaluationFunction.evaluate(state, playerIndex);
         }
 
         // generate moves (children) for MAX if currentDepth is even, for MIN if currentDepth is odd
         // order by how promising they are
         boolean maxPlayersTurn = currentDepth % 2 == 0;
-        AIMove probedMove = orderMoves(state, generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex)).get(0);
+        AIMove probedMove;
+        if (moveOrdering) {
+            probedMove = orderMoves(state, generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex)).get(0);
+        } else {
+            probedMove = generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex).get(0);
+        }
+
         // get best one's value
         double probedValue;
         // now need to get the value of the opposite player's node which is the probed child
@@ -416,10 +509,20 @@ public class Star2MinimaxAI extends AbstractAI {
 
     /* stats */
 
-    private int nodeCounter = 0;
+    private int leafNodeCounter = 0;
+    private int chanceNodeCounter = 0;
+    private int minMaxNodeCounter = 0;
 
-    public int getNodesSearched() {
-        return nodeCounter;
+    public int getLeafNodeCounter() {
+        return leafNodeCounter;
+    }
+
+    public int getChanceNodeCounter() {
+        return chanceNodeCounter;
+    }
+
+    public int getMinMaxNodeCounter() {
+        return minMaxNodeCounter;
     }
 
 }

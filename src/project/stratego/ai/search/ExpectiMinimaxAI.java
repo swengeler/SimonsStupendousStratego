@@ -16,20 +16,49 @@ public class ExpectiMinimaxAI extends AbstractAI {
     private static final boolean DEBUG_MAX = false;
     private static final boolean DEBUG_EXP = false;
 
-    private int maxDepth = 4;
+    private int currentMaxDepth = 2;
+
+    private long timeLimitMillis = 1000;
+    private long currentStartTimeMillis;
+
+    private boolean iterativeDeepening;
+    private boolean timeLimitReached;
+
+    private boolean opponentModelling;
+
+    public ExpectiMinimaxAI(int playerIndex) {
+        super(playerIndex);
+    }
 
     public ExpectiMinimaxAI(int playerIndex, int maxDepth) {
         super(playerIndex);
-        this.maxDepth = maxDepth;
+        currentMaxDepth = maxDepth;
     }
 
     public void setMaxDepth(int maxDepth) {
-        this.maxDepth = maxDepth;
+        this.currentMaxDepth = maxDepth;
+    }
+
+    public void setTimeLimit(long timeLimitMillis) {
+        this.timeLimitMillis = timeLimitMillis;
+    }
+
+    public void setIterativeDeepening(boolean iterativeDeepening) {
+        this.iterativeDeepening = iterativeDeepening;
+    }
+
+    public void setOpponentModelling(boolean opponentModelling) {
+        this.opponentModelling = opponentModelling;
     }
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
         gameState.applyMove(lastOpponentMove);
+        if (iterativeDeepening) {
+            currentStartTimeMillis = System.currentTimeMillis();
+            currentMaxDepth = 2;
+            timeLimitReached = false;
+        }
         Move nextMove = expectiMinimaxSearch();
         return nextMove;
     }
@@ -62,30 +91,54 @@ public class ExpectiMinimaxAI extends AbstractAI {
         long before;
         long total = System.currentTimeMillis();
 
-        //ArrayList<AIMove> testList = new ArrayList<>(3);
-        //testList.add(legalMoves.get(2));
-        //testList.add(legalMoves.get(1));
-        //testList.add(legalMoves.get(2));
-
-        // loop through all moves and find the one with the highest expecti-negamax value
-        for (AIMove m : legalMoves) {
-            before = System.currentTimeMillis();
-            if (m.isChanceMove()) {
-                // do expectimax evaluation
-                currentValue = expectimaxSearch(1, gameState, m);
-            } else {
-                gameState.applyMove(m);
-                //gameState.checkBombDebugCondition(0);
-                currentValue = minSearch(1, gameState);
-                gameState.undoLastMove();
+        if (iterativeDeepening) {
+            while (!timeLimitReached) {
+                // loop through all moves and find the one with the highest expecti-negamax value
+                for (AIMove m : legalMoves) {
+                    if ((System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                        timeLimitReached = true;
+                        break;
+                    }
+                    before = System.currentTimeMillis();
+                    if (m.isChanceMove()) {
+                        // do expectimax evaluation
+                        currentValue = expectimaxSearch(1, gameState, m);
+                    } else {
+                        gameState.applyMove(m);
+                        currentValue = minSearch(1, gameState);
+                        gameState.undoLastMove();
+                    }
+                    if (DEBUG) {
+                        System.out.println("\n" + m);
+                        System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s (currentMaxDepth: " + currentMaxDepth + ")");
+                    }
+                    if (currentValue > maxValue && !timeLimitReached) {
+                        maxValue = currentValue;
+                        bestMove = m;
+                    }
+                }
+                currentMaxDepth++;
             }
-            if (DEBUG) {
-                System.out.println(m);
-                System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s\n");
-            }
-            if (currentValue > maxValue) {
-                maxValue = currentValue;
-                bestMove = m;
+        } else {
+            for (AIMove m : legalMoves) {
+                before = System.currentTimeMillis();
+                if (m.isChanceMove()) {
+                    // do expectimax evaluation
+                    currentValue = expectimaxSearch(1, gameState, m);
+                } else {
+                    gameState.applyMove(m);
+                    //gameState.checkBombDebugCondition(0);
+                    currentValue = minSearch(1, gameState);
+                    gameState.undoLastMove();
+                }
+                if (DEBUG) {
+                    System.out.println(m);
+                    System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s\n");
+                }
+                if (currentValue > maxValue) {
+                    maxValue = currentValue;
+                    bestMove = m;
+                }
             }
         }
 
@@ -93,72 +146,20 @@ public class ExpectiMinimaxAI extends AbstractAI {
             System.out.println("------------------------------------------------------------------------------------\nBest move:");
             System.out.println(bestMove);
             System.out.println("Max value: " + maxValue);
-            System.out.println("Searched " + leafNodeCounter + " nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
+            System.out.println("Searched " + leafNodeCounter + " leaf nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
             System.out.println("------------------------------------------------------------------------------------\n");
         }
-
-        //debugStringNextMove();
 
         return bestMove;
     }
 
-    private double negamaxSearch(int currentDepth, EnhancedGameState state, int parentID) {
-        //System.out.println("PRINTOUT ON LEVEL: 1");
-        //gameState.printProbabilitiesTable();
-        //gameState.printBoard();
-        //addToDebugString(currentDepth, parentID, gameState);
-        int currentNodeCounter = leafNodeCounter;
-        if (currentDepth == maxDepth || state.isGameOver()) {
-            leafNodeCounter++;
-            //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
-            int multiplier = currentDepth % 2 == 0 ? -1 : 1;
-            //int multiplier = 1;
-            return multiplier * evaluationFunction.evaluate(state, playerIndex);
-        }
-
-        double maxValue = -Double.MAX_VALUE;
-        double currentValue;
-        ArrayList<AIMove> legalMoves = generateLegalMoves(state, currentDepth % 2 == 0 ? playerIndex : 1 - playerIndex);
-        if (DEBUG_MIN && (currentDepth == 1 || currentDepth == 2)) {
-            System.out.println("\nNumber of legal moves for this node at depth " + currentDepth + ": " + legalMoves.size());
-            for (Move m : legalMoves) {
-                System.out.println(m);
-            }
-            //state.printBoard();
-            //state.printProbabilitiesTable();
-        }
-
-        // loop through all moves and find the one with the highest expecti-negamax value
-        for (AIMove m : legalMoves) {
-            if (m.isChanceMove()) {
-                // do expectimax evaluation
-                currentValue = expectimaxSearch(currentDepth + 1, state, m);
-            } else {
-                state.applyMove(m);
-                //gameState.checkBombDebugCondition(1);
-                //state.checkDebugDepthThreeCondition(6);
-                currentValue = -negamaxSearch(currentDepth + 1, state, currentNodeCounter);
-                //state.checkDebugDepthThreeCondition(7);
-                state.undoLastMove();
-                //state.checkDebugDepthThreeCondition(8);
-            }
-            if (DEBUG_MIN && (currentDepth == 1 || currentDepth == 2)) {
-                System.out.println("value for " + m + ": " + currentValue);
-            }
-            if (currentValue > maxValue) {
-                maxValue = currentValue;
-            }
-        }
-
-        return maxValue;
-    }
-
     private double maxSearch(int currentDepth, EnhancedGameState state) {
-        if (currentDepth == maxDepth || state.isGameOver()) {
+        if (currentDepth == currentMaxDepth || state.isGameOver()) {
             leafNodeCounter++;
             //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
             return evaluationFunction.evaluate(state, playerIndex);
         }
+        minMaxNodeCounter++;
 
         double maxValue = -Double.MAX_VALUE;
         double currentValue;
@@ -171,10 +172,13 @@ public class ExpectiMinimaxAI extends AbstractAI {
             //state.printBoard();
             //state.printProbabilitiesTable();
         }
-        minMaxNodeCounter++;
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
             if (m.isChanceMove()) {
                 // do expectimax evaluation
                 currentValue = expectimaxSearch(currentDepth + 1, state, m);
@@ -187,7 +191,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
             if (DEBUG_MAX && (currentDepth == 1 || currentDepth == 2)) {
                 System.out.println("value for " + m + ": " + currentValue);
             }
-            if (currentValue > maxValue) {
+            if (currentValue > maxValue && (!iterativeDeepening || !timeLimitReached)) {
                 maxValue = currentValue;
             }
         }
@@ -196,7 +200,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
     }
 
     private double minSearch(int currentDepth, EnhancedGameState state) {
-        if (currentDepth == maxDepth || state.isGameOver()) {
+        if (currentDepth == currentMaxDepth || state.isGameOver()) {
             leafNodeCounter++;
             //System.out.println("Evaluation at depth: " + currentDepth + ", gameOver = " + state.isGameOver());
             return evaluationFunction.evaluate(state, playerIndex);
@@ -217,6 +221,10 @@ public class ExpectiMinimaxAI extends AbstractAI {
 
         // loop through all moves and find the one with the highest expecti-negamax value
         for (AIMove m : legalMoves) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
             if (m.isChanceMove()) {
                 // do expectimax evaluation
                 currentValue = expectimaxSearch(currentDepth + 1, state, m);
@@ -229,7 +237,7 @@ public class ExpectiMinimaxAI extends AbstractAI {
             if (DEBUG_MIN && currentDepth == 1) {
                 System.out.println("value for " + m + ": " + currentValue);
             }
-            if (currentValue < minValue) {
+            if (currentValue < minValue && (!iterativeDeepening || !timeLimitReached)) {
                 minValue = currentValue;
             }
         }
@@ -249,6 +257,10 @@ public class ExpectiMinimaxAI extends AbstractAI {
         // sum over all possible scenarios arising from chanceMove
         double relevantProbabilitiesSum = 0.0;
         for (int i = 0; i < PieceType.numberTypes; i++) {
+            if (iterativeDeepening && (System.currentTimeMillis() - currentStartTimeMillis) >= timeLimitMillis) {
+                timeLimitReached = true;
+                return 0.0;
+            }
             if (DEBUG_EXP && currentDepth == 2) {
                 System.out.println("Probability for piece at (" + unknownPiece.getRowPos() + "|" + unknownPiece.getColPos() + ") to be " + PieceType.values()[i] + ": " + state.getProbability(unknownPiece, i));
             }

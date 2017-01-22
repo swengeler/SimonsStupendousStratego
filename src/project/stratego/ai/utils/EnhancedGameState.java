@@ -23,7 +23,7 @@ public class EnhancedGameState extends GameState {
     private HashMap<Piece, double[]> probabilitiesMap;
     private int[] remainingPieceCount;
 
-    private Stack<MoveInformation> moveInformationStack;
+    public Stack<MoveInformation> moveInformationStack;
     private Stack<AssignmentInformation> assignmentHistory;
     private Stack<Integer> historyIdentifierStack;
 
@@ -51,7 +51,7 @@ public class EnhancedGameState extends GameState {
     @Override
     public void applyMove(Move move) {
         lastUpdated = 0;
-        //printProbabilitiesTable();
+
         if (move.getOrRow() == -1) {
             return;
         }
@@ -449,7 +449,6 @@ public class EnhancedGameState extends GameState {
 
     public void interpretEncodedSetup(String encodedSetup, int playerIndex) {
         super.interpretEncodedSetup(encodedSetup, playerIndex);
-
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
             probabilitiesMap = new HashMap<>(40);
             double[] initProbabilities = new double[PieceType.numberTypes];
@@ -473,6 +472,22 @@ public class EnhancedGameState extends GameState {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void interpretEncodedMoves(String encodedMoves) {
+        // moves encoded as: playerIndex1-orRow1-orCol1-destRow1-destCol1_playerIndex2-orRow2-orCol2-destRow2-destCol2_ ...
+        String[] moves = encodedMoves.split("_");
+        String[] moveCoords;
+        int playerIndex, orRow, orCol, destRow, destCol;
+        for (String move : moves) {
+            moveCoords = move.split("-");
+            playerIndex = Integer.parseInt(moveCoords[0]);
+            orRow = Integer.parseInt(moveCoords[1]);
+            orCol = Integer.parseInt(moveCoords[2]);
+            destRow = Integer.parseInt(moveCoords[3]);
+            destCol = Integer.parseInt(moveCoords[4]);
+            applyMove(new Move(playerIndex, orRow, orCol, destRow, destCol));
         }
     }
 

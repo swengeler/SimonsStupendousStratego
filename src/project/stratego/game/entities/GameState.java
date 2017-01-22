@@ -78,6 +78,19 @@ public class GameState {
         playerSouth = new Player(PlayerType.SOUTH);
     }
 
+    private void boardSetup(int playerIndex) {
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                board[playerIndex == PlayerType.NORTH.ordinal() ? row : 9 - row][col] = new BoardTile(true, playerIndex == PlayerType.NORTH.ordinal() ? row : 9 - row, col);
+            }
+        }
+        if (playerIndex == PlayerType.NORTH.ordinal()) {
+            playerNorth = new Player(PlayerType.NORTH);
+        } else {
+            playerSouth = new Player(PlayerType.SOUTH);
+        }
+    }
+
     public BoardTile[][] getBoardArray() {
         return board;
     }
@@ -185,11 +198,12 @@ public class GameState {
     }
 
     public void interpretEncodedSetup(String encodedSetup, int playerIndex) {
-        boardSetup();
+        boardSetup(playerIndex);
 
         String[] pieceIndexStrings = encodedSetup.split("-");
         if (pieceIndexStrings.length != 40) {
             System.out.println("Something wrong with the loaded setup.");
+            System.out.println(encodedSetup);
             System.exit(1);
         }
         int[] pieceIndexIntegers = new int[40];

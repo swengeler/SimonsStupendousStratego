@@ -79,10 +79,7 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureSinglePlayer();
-        //AIComManager.getInstance().setPrimaryAI("mcts", PlayerType.SOUTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("expectinegamax 3", PlayerType.SOUTH.ordinal());
-        //AIComManager.getInstance().setPrimaryAI("iterdeepexp", PlayerType.SOUTH.ordinal());
-        //AIComManager.getInstance().setPrimaryAI("star2 3", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setPrimaryAI("star1 3 i 500 -o -m", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());
@@ -95,13 +92,7 @@ public class ModelComManager {
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIMatch();
         AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-        //AIComManager.getInstance().setPrimaryAI("random", PlayerType.SOUTH.ordinal());
-        //AIComManager.getInstance().setSecondaryAI("mcts", PlayerType.NORTH.ordinal());
-        //AIComManager.getInstance().setSecondaryAI("expectinegamax 1", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("expectinegamax 3", PlayerType.SOUTH.ordinal());
-        //AIComManager.getInstance().setPrimaryAI("iterdeepexp 2000", PlayerType.SOUTH.ordinal());
-        //AIComManager.getInstance().setPrimaryAIEval("marks");
-        //AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
+        AIComManager.getInstance().setPrimaryAI("expectimax 3 -i 0 -o", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState(), setupNorth, setupSouth);
         //findGame(-1).getGameState().printBoard();
         requestPlayerReady(-1, PlayerType.NORTH.ordinal());
@@ -114,8 +105,8 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureAIShowMatch();
-        AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-        //AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
+        AIComManager.getInstance().setSecondaryAI("star1 0 i 750 -o m", PlayerType.NORTH.ordinal());
+        //AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
         AIComManager.getInstance().setPrimaryAI("mcts", PlayerType.SOUTH.ordinal());
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.NORTH.ordinal());
@@ -234,7 +225,7 @@ public class ModelComManager {
         System.out.println("Gamemode: " + gameMode);
         if (gameMode == GameMode.SINGLEPLAYER) {
             AIComManager.getInstance().configureSinglePlayer();
-            AIComManager.getInstance().setPrimaryAI("expectinegamax 4", PlayerType.SOUTH.ordinal());
+            AIComManager.getInstance().setPrimaryAI("star1 3 -i 500 -o m", PlayerType.SOUTH.ordinal());
         } else {
             if (gameMode == GameMode.AISHOWMATCH) {
                 AIComManager.getInstance().configureAIShowMatch();
@@ -242,7 +233,7 @@ public class ModelComManager {
                 AIComManager.getInstance().configureAIMatch();
             }
             AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-            AIComManager.getInstance().setPrimaryAI("expectinegamax", PlayerType.SOUTH.ordinal());
+            AIComManager.getInstance().setPrimaryAI("expectimax", PlayerType.SOUTH.ordinal());
         }
         AIComManager.getInstance().tryLoadGame(gameEncoding);
         AIComManager.getInstance().setGameLoaded(false);
@@ -272,7 +263,7 @@ public class ModelComManager {
         }
     }
 
-    public void requestConfigureAIType(int playerIndex) {
+    public void requestConfigureAI(int playerIndex) {
 
     }
 

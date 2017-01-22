@@ -16,7 +16,7 @@ public class DiscreteMoveManager extends MoveManager {
         if (attackingPiece.getType() == PieceType.SPY && defendingPiece.getType() == PieceType.MARSHAL) {
             return true;
         } else if (attackingPiece.getType() == PieceType.MARSHAL && defendingPiece.getType() == PieceType.SPY) {
-            return false;
+            return true;
         }
         if (attackingPiece.getType() == PieceType.MINER && defendingPiece.getType() == PieceType.BOMB) {
             return true;

@@ -217,10 +217,10 @@ public class EnhancedGameState extends GameState {
         // if the flag (or the piece which was assumed to be the flag) was captured, set playerWonIndex to the player's
         // index who made the capturing move (note: might be easier to have a new MoveResult GAMEWON in the MoveManager)
         moveInformation.setPreviousPlayerWonIndex(playerWonIndex);
-        if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() == playerIndex && encounteredPiece.getType() == PieceType.FLAG) {
+        if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() == playerIndex && (encounteredPiece.getType() == PieceType.FLAG || !checkPlayerCanMove(getPlayer(playerIndex)))) {
             // current player lost
             playerWonIndex = 1 - playerIndex;
-        } else if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() != playerIndex && (Math.abs(getProbability(encounteredPiece, PieceType.FLAG) - 1.0) < /*2 * */PROB_EPSILON || encounteredPiece.isRevealed() && encounteredPiece.getType() == PieceType.FLAG)) {
+        } else if (encounteredPiece != null && encounteredPiece.getPlayerType().ordinal() != playerIndex && (Math.abs(getProbability(encounteredPiece, PieceType.FLAG) - 1.0) < /*2 * */PROB_EPSILON || (encounteredPiece.isRevealed() && encounteredPiece.getType() == PieceType.FLAG) || !checkPlayerCanMove(getPlayer( 1 - playerIndex)))) {
             // current player won
             playerWonIndex = playerIndex;
         }
@@ -277,6 +277,44 @@ public class EnhancedGameState extends GameState {
             }
         }
 
+    }
+
+    private boolean checkPlayerCanMove(Player player) {
+        for (Piece p : player.getActivePieces()) {
+            if ((p.getType().ordinal() == playerIndex &&  p.getType() != PieceType.FLAG && p.getType() != PieceType.BOMB) || (p.getType().ordinal() != playerIndex && Math.abs(getProbability(p, 0) - 1.0) > PROB_EPSILON && Math.abs(getProbability(p, 1) - 1.0) > PROB_EPSILON)) {
+                int row = p.getRowPos() - 1;
+                int col = p.getColPos();
+                if (row >= 0 && row < 10 && board[row][col].isAccessible() && (board[row][col].getOccupyingPiece() == null || board[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    return true;
+                }
+                row = p.getRowPos() + 1;
+                if (row >= 0 && row < 10 && board[row][col].isAccessible() && (board[row][col].getOccupyingPiece() == null || board[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    //System.out.println(p + " can move");
+                    return true;
+                }
+                row = p.getRowPos();
+                col = p.getColPos() - 1;
+                if (col >= 0 && col < 10 && board[row][col].isAccessible() && (board[row][col].getOccupyingPiece() == null || board[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    //System.out.println(p + " can move");
+                    return true;
+                }
+                col = p.getColPos() + 1;
+                if (col >= 0 && col < 10 && board[row][col].isAccessible() && (board[row][col].getOccupyingPiece() == null || board[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
+                    //System.out.println(p + " can move");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkPlayerHasFlag(Player player) {
+        for (Piece p : player.getActivePieces()) {
+            if ((player.getType().ordinal() == playerIndex && p.getType() == PieceType.FLAG) || (player.getType().ordinal() != playerIndex && Math.abs(getProbability(p, 0) - 1.0) < PROB_EPSILON)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /* new methods for the "enhanced" implementation */
@@ -500,7 +538,7 @@ public class EnhancedGameState extends GameState {
     }
 
     public boolean isGameOver() {
-        return playerWonIndex != -1;
+        return !checkPlayerHasFlag(getPlayer(playerIndex)) || !checkPlayerHasFlag(getPlayer(1 - playerIndex)) || !checkPlayerCanMove(getPlayer(playerIndex)) || !checkPlayerCanMove(getPlayer(1 - playerIndex));
     }
 
     public boolean playerWon() {

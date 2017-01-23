@@ -62,6 +62,10 @@ public class Star1MinimaxAI extends AbstractAI {
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
+        leafNodeCounter = 0;
+        minMaxNodeCounter = 0;
+        chanceNodeCounter = 0;
+        //System.out.println("New move");
         gameState.applyMove(lastOpponentMove);
         if (iterativeDeepening) {
             currentStartTimeMillis = System.currentTimeMillis();
@@ -78,7 +82,7 @@ public class Star1MinimaxAI extends AbstractAI {
             System.out.println("STAR1 search for " + (playerIndex == PlayerType.NORTH.ordinal() ? "NORTH:" : "SOUTH:"));
             System.out.println("------------------------------------------------------------------------------------\n");
         }
-        System.out.println("iterativeDeepening: " + iterativeDeepening);
+        //System.out.println("iterativeDeepening: " + iterativeDeepening);
         ArrayList<AIMove> legalMoves = generateLegalMoves(gameState, playerIndex);
         if (moveOrdering) {
             legalMoves = orderMoves(gameState, legalMoves);

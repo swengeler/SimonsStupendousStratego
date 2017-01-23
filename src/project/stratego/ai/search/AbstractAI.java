@@ -259,7 +259,7 @@ public abstract class AbstractAI {
             return false;
         }
         // check if path to position is blocked by other piece/inaccessible tile
-        if (((p.getPlayerType().ordinal() == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT.ordinal()) - 1.0) < 2* EnhancedGameState.PROB_EPSILON) && !checkScoutPath(state, p, destRow, destCol)) {
+        if (((p.getPlayerType().ordinal() == state.getPlayerIndex() && p.getType() == PieceType.SCOUT) || Math.abs(state.getProbability(p, PieceType.SCOUT.ordinal()) - 1.0) < EnhancedGameState.PROB_EPSILON) && !checkScoutPath(state, p, destRow, destCol)) {
             return false;
         }
         return true;

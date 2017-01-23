@@ -85,7 +85,7 @@ public class ModelComManager {
         activeGames.clear();
         activeGames.add(new StrategoGame(-1));
         AIComManager.getInstance().configureSinglePlayer();
-        AIComManager.getInstance().setPrimaryAI("star1 3 i 500 -o -m");
+        AIComManager.getInstance().setPrimaryAI("star1 2 -i 500 -o m");
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());
         requestPlayerReady(-1, PlayerType.SOUTH.ordinal());

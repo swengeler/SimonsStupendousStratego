@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ExpectiMinimaxAI extends AbstractAI {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final boolean DEBUG_MIN = false;
     private static final boolean DEBUG_MAX = false;
     private static final boolean DEBUG_EXP = false;
@@ -57,6 +57,10 @@ public class ExpectiMinimaxAI extends AbstractAI {
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
+        leafNodeCounter = 0;
+        minMaxNodeCounter = 0;
+        chanceNodeCounter = 0;
+        //System.out.println("New move");
         gameState.applyMove(lastOpponentMove);
         if (iterativeDeepening) {
             currentStartTimeMillis = System.currentTimeMillis();
@@ -89,6 +93,10 @@ public class ExpectiMinimaxAI extends AbstractAI {
             gameState.printBoard();
         }
 
+        if (legalMoves.size() == 0) {
+            gameState.printBoard();
+            System.exit(23);
+        }
         AIMove bestMove = legalMoves.get(0);
         double maxValue = -Double.MAX_VALUE;
         double currentValue;

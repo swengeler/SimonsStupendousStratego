@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Star2MinimaxAI extends AbstractAI {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final boolean DEBUG_MIN = false;
     private static final boolean DEBUG_STAR2_MAX = false;
 
@@ -63,6 +63,10 @@ public class Star2MinimaxAI extends AbstractAI {
 
     @Override
     public Move getNextMove(Move lastOpponentMove) {
+        leafNodeCounter = 0;
+        minMaxNodeCounter = 0;
+        chanceNodeCounter = 0;
+        //System.out.println("New move");
         gameState.applyMove(lastOpponentMove);
         if (iterativeDeepening) {
             currentStartTimeMillis = System.currentTimeMillis();
@@ -131,6 +135,7 @@ public class Star2MinimaxAI extends AbstractAI {
                         System.out.println("Value: " + currentValue + " in " + ((System.currentTimeMillis() - before) / 1000.0) + "s (currentMaxDepth: " + currentMaxDepth + ")");
                     }
                     if (currentValue > maxValue && !timeLimitReached) {
+                        bestMoveDepth = currentMaxDepth;
                         maxValue = currentValue;
                         bestMove = m;
                     }
@@ -493,6 +498,12 @@ public class Star2MinimaxAI extends AbstractAI {
         // generate moves (children) for MAX if currentDepth is even, for MIN if currentDepth is odd
         // order by how promising they are
         boolean maxPlayersTurn = currentDepth % 2 == 0;
+        ArrayList<AIMove> legalMoves = generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex);
+        if (legalMoves.size() == 0) {
+            state.printBoard();
+            System.out.println("Trying to get moves for " + (maxPlayersTurn ? playerIndex : 1 - playerIndex));
+            System.out.println("state.isGameOver() = " + state.isGameOver());
+        }
         AIMove probedMove;
         if (moveOrdering) {
             probedMove = orderMoves(state, generateLegalMoves(state, maxPlayersTurn ? playerIndex : 1 - playerIndex)).get(0);

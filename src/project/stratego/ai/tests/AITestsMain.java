@@ -1,22 +1,18 @@
 package project.stratego.ai.tests;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import project.stratego.control.managers.AIComManager;
 import project.stratego.control.managers.ModelComManager;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class AITestsMain {
 
     private static final boolean REAL_TESTS = false;
     private static int REP_PER_CONFIG = 1;
 
-    private static int numberGames = 1;
+    private static int numberGames = 0;
     private static int counter = 0;
 
     private static int numberMovesMin = Integer.MAX_VALUE;
@@ -36,29 +32,29 @@ public class AITestsMain {
     private static long playTimeMillisAvg = 0;
     private static long playTimeMillisMax = -Long.MAX_VALUE;
 
-    private static int playerOneLeafNodesSearchedMin = Integer.MAX_VALUE;
-    private static int playerOneLeafNodesSearchedAvg = 0;
-    private static int playerOneLeafNodesSearchedMax = -Integer.MAX_VALUE;
+    private static long playerOneLeafNodesSearchedMin = Integer.MAX_VALUE;
+    private static long playerOneLeafNodesSearchedAvg = 0;
+    private static long playerOneLeafNodesSearchedMax = -Integer.MAX_VALUE;
 
-    private static int playerTwoLeafNodesSearchedMin = Integer.MAX_VALUE;
-    private static int playerTwoLeafNodesSearchedAvg = 0;
-    private static int playerTwoLeafNodesSearchedMax = -Integer.MAX_VALUE;
+    private static long playerTwoLeafNodesSearchedMin = Integer.MAX_VALUE;
+    private static long playerTwoLeafNodesSearchedAvg = 0;
+    private static long playerTwoLeafNodesSearchedMax = -Integer.MAX_VALUE;
 
-    private static int playerOneMinMaxNodesSearchedMin = Integer.MAX_VALUE;
-    private static int playerOneMinMaxNodesSearchedAvg = 0;
-    private static int playerOneMinMaxNodesSearchedMax = -Integer.MAX_VALUE;
+    private static long playerOneMinMaxNodesSearchedMin = Integer.MAX_VALUE;
+    private static long playerOneMinMaxNodesSearchedAvg = 0;
+    private static long playerOneMinMaxNodesSearchedMax = -Integer.MAX_VALUE;
 
-    private static int playerTwoMinMaxNodesSearchedMin = Integer.MAX_VALUE;
-    private static int playerTwoMinMaxNodesSearchedAvg = 0;
-    private static int playerTwoMinMaxNodesSearchedMax = -Integer.MAX_VALUE;
+    private static long playerTwoMinMaxNodesSearchedMin = Integer.MAX_VALUE;
+    private static long playerTwoMinMaxNodesSearchedAvg = 0;
+    private static long playerTwoMinMaxNodesSearchedMax = -Integer.MAX_VALUE;
 
-    private static int playerOneChanceNodesSearchedMin = Integer.MAX_VALUE;
-    private static int playerOneChanceNodesSearchedAvg = 0;
-    private static int playerOneChanceNodesSearchedMax = -Integer.MAX_VALUE;
+    private static long playerOneChanceNodesSearchedMin = Integer.MAX_VALUE;
+    private static long playerOneChanceNodesSearchedAvg = 0;
+    private static long playerOneChanceNodesSearchedMax = -Integer.MAX_VALUE;
 
-    private static int playerTwoChanceNodesSearchedMin = Integer.MAX_VALUE;
-    private static int playerTwoChanceNodesSearchedAvg = 0;
-    private static int playerTwoChanceNodesSearchedMax = -Integer.MAX_VALUE;
+    private static long playerTwoChanceNodesSearchedMin = Integer.MAX_VALUE;
+    private static long playerTwoChanceNodesSearchedAvg = 0;
+    private static long playerTwoChanceNodesSearchedMax = -Integer.MAX_VALUE;
 
     private static int playerOneDepthReachedAvg = 0;
     private static int playerTwoDepthReachedAvg = 0;
@@ -74,38 +70,24 @@ public class AITestsMain {
     private static long playerTwoSearchTimeAvg = 0;
     private static long playerTwoSearchTimeMax = -Long.MAX_VALUE;
 
+    private static String aiSpecs;
+
     public static void main(String[] args) {
-
-
-
         Scanner in = new Scanner(System.in);
         System.out.print("Please enter a command:\n");
         String command = in.nextLine();
 
         if (command.equals("real")) {
-            File directory = new File("/src/project/resources/");
 
-            String[] setups = null;
-            if (directory.listFiles() != null) {
-                setups = new String[directory.listFiles().length];
-                int c = 0;
-                for (File f : directory.listFiles()) {
-                    try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-                        setups[c] = br.readLine();
-                        System.out.println("Setup registered: " + f.getName());
-                        c++;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            String[] setups = new String[10];
+            for (int i = 1; i <= 10; i++) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(AITestsMain.class.getResourceAsStream("/setups/recommended_" + i + ".setup")))) {
+                    setups[i - 1] = br.readLine();
+                    System.out.println("Setup " + i + " registered.");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-
-            if (setups == null) {
-                System.out.println("Problem with loading setups, please try again or fix.");
-                return;
-            }
-
-            System.out.println(setups.length + " setup(s) loaded.");
 
             System.out.print("Setups to be used for AI 1 (NORTH):\n");
             command = in.nextLine();
@@ -118,6 +100,10 @@ public class AITestsMain {
             indeces = command.split(" ");
             int lowerIndexTwo = Integer.parseInt(indeces[0]);
             int upperIndexTwo = Integer.parseInt(indeces[1]);
+
+            System.out.print("Number of repetitions:\n");
+            command = in.nextLine();
+            REP_PER_CONFIG = Integer.parseInt(command);
 
             System.out.print("Specify AIs used? (y/n)\n");
             command = in.nextLine();
@@ -136,6 +122,8 @@ public class AITestsMain {
                 }
             }
 
+            aiSpecs = "NORTH SETUPS: " + lowerIndexOne + " to " + upperIndexOne + "\r\nSOUTH SETUPS: " + lowerIndexTwo + " to " + upperIndexTwo + "\r\nNORTH CONFIG: " + configOne + "\r\nSOUTH CONFIG: " + configTwo;
+
             long before;
             counter = 0;
             for (int i = 0; i < REP_PER_CONFIG; i++) {
@@ -149,6 +137,9 @@ public class AITestsMain {
                         AIComManager.getInstance().runAutomaticAIMatch();
                         System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");
                         counter++;
+                        printAllStats();
+                        System.out.println();
+                        numberGames++;
                     }
                 }
             }
@@ -164,11 +155,19 @@ public class AITestsMain {
                 before = System.currentTimeMillis();
                 AIComManager.getInstance().runAutomaticAIMatch();
                 System.out.println("Completed in " + (System.currentTimeMillis() - before) + " ms");
+                printAllStats();
+                System.out.println();
             }
         }
+        System.out.println("\n\n -------- FINAL RESULTS --------");
+        printAllStats();
+        printAllStatsToFile();
+    }
 
+    private static void printAllStats() {
         System.out.println("\n----------------------------------------------------------");
         System.out.println("RESULTS over " + (playerOneWonFlagCapture + playerOneWonNoMovingPieces + playerTwoWonFlagCapture + playerTwoWonNoMovingPieces + ties) + " games:");
+        System.out.println(aiSpecs);
         System.out.println("-----------------------------------------------------------");
         System.out.println("NUMBER OF MOVES:");
         System.out.println("Minimum: " + numberMovesMin);
@@ -256,6 +255,101 @@ public class AITestsMain {
         System.out.println("-----------------------------------------------------------\n");
     }
 
+    private static void printAllStatsToFile() {
+        try (PrintWriter out = new PrintWriter(new File("StrategoTestFinished_" + (new SimpleDateFormat("HH-mm-ss_dd-MM").format(new Date())) + ".txt"))) {
+            out.println("----------------------------------------------------------");
+            out.println("RESULTS over " + (playerOneWonFlagCapture + playerOneWonNoMovingPieces + playerTwoWonFlagCapture + playerTwoWonNoMovingPieces + ties) + " games:");
+            out.println(aiSpecs);
+            out.println("-----------------------------------------------------------");
+            out.println("NUMBER OF MOVES:");
+            out.println("Minimum: " + numberMovesMin);
+            out.println("Average: " + (numberMovesAvg / (double) numberGames));
+            out.println("Maximum: " + numberMovesMax + "\r\n");
+
+            out.println("PLAYER ONE NUMBER OF MOVES:");
+            out.println("Average: " + (playerOneNumberMovesSum / (double) numberGames) + "\r\n");
+
+            out.println("PLAYER TWO NUMBER OF MOVES:");
+            out.println("Average: " + (playerTwoNumberMovesSum / (double) numberGames) + "\r\n");
+
+            out.println("PLAYTIME (MS):");
+            out.println("Minimum: " + playTimeMillisMin);
+            out.println("Average: " + (playTimeMillisAvg / (double) numberGames));
+            out.println("Maximum: " + playTimeMillisMax + "\r\n");
+
+            out.println("PLAYER ONE LEAF NODES SEARCHED:");
+            out.println("Minimum: " + playerOneLeafNodesSearchedMin);
+            out.println("Average: " + (playerOneLeafNodesSearchedAvg / ((double) playerOneNumberMovesSum)));
+            out.println("Maximum: " + playerOneLeafNodesSearchedMax + "\r\n");
+
+            out.println("PLAYER TWO LEAF NODES SEARCHED:");
+            out.println("Minimum: " + playerTwoLeafNodesSearchedMin);
+            out.println("Average: " + (playerTwoLeafNodesSearchedAvg / ((double) playerTwoNumberMovesSum)));
+            out.println("Maximum: " + playerTwoLeafNodesSearchedMax + "\r\n");
+
+            out.println("PLAYER ONE NORMAL NODES SEARCHED:");
+            out.println("Minimum: " + playerOneMinMaxNodesSearchedMin);
+            out.println("Average: " + (playerOneMinMaxNodesSearchedAvg / ((double) playerOneNumberMovesSum)));
+            out.println("Maximum: " + playerOneMinMaxNodesSearchedMax + "\r\n");
+
+            out.println("PLAYER TWO NORMAL NODES SEARCHED:");
+            out.println("Minimum: " + playerTwoMinMaxNodesSearchedMin);
+            out.println("Average: " + (playerTwoMinMaxNodesSearchedAvg / ((double) playerTwoNumberMovesSum)));
+            out.println("Maximum: " + playerTwoMinMaxNodesSearchedMax + "\r\n");
+
+            out.println("PLAYER ONE CHANCE NODES SEARCHED:");
+            out.println("Minimum: " + playerOneChanceNodesSearchedMin);
+            out.println("Average: " + (playerOneChanceNodesSearchedAvg / ((double) playerOneNumberMovesSum)));
+            out.println("Maximum: " + playerOneChanceNodesSearchedMax + "\r\n");
+
+            out.println("PLAYER TWO CHANCE NODES SEARCHED:");
+            out.println("Minimum: " + playerTwoChanceNodesSearchedMin);
+            out.println("Average: " + (playerTwoChanceNodesSearchedAvg / ((double) playerTwoNumberMovesSum)));
+            out.println("Maximum: " + playerTwoChanceNodesSearchedMax + "\r\n");
+
+            out.println("PLAYER ONE TOTAL NODES SEARCHED:");
+            out.println("Average: " + ((playerOneLeafNodesSearchedAvg + playerOneMinMaxNodesSearchedAvg + playerOneChanceNodesSearchedAvg) / ((double) playerOneNumberMovesSum)) + "\r\n");
+
+            out.println("PLAYER TWO TOTAL NODES SEARCHED:");
+            out.println("Average: " + ((playerTwoLeafNodesSearchedAvg + playerTwoMinMaxNodesSearchedAvg + playerTwoChanceNodesSearchedAvg) / ((double) playerTwoNumberMovesSum)) + "\r\n");
+
+            out.println("PLAYER ONE DEPTH REACHED:");
+            out.println("Average: " + (playerOneDepthReachedAvg / ((double) playerOneNumberMovesSum)) + "\r\n");
+
+            out.println("PLAYER TWO DEPTH REACHED:");
+            out.println("Average: " + (playerTwoDepthReachedAvg / ((double) playerTwoNumberMovesSum)) + "\r\n");
+
+            out.println("PLAYER ONE BEST MOVE DEPTH:");
+            out.println("Average: " + (playerOneBestMoveDepthAvg / ((double) playerOneNumberMovesSum)) + "\r\n");
+
+            out.println("PLAYER TWO BEST MOVE DEPTH:");
+            out.println("Average: " + (playerTwoBestMoveDepthAvg / ((double) playerTwoNumberMovesSum)) + "\r\n");
+
+            out.println("PLAYER ONE SEARCH TIME PER MOVE:");
+            out.println("Minimum: " + playerOneSearchTimeMin);
+            out.println("Average: " + (playerOneSearchTimeAvg / ((double) playerOneNumberMovesSum)));
+            out.println("Maximum: " + playerOneSearchTimeMax + "\r\n");
+
+            out.println("PLAYER TWO SEARCH TIME PER MOVE:");
+            out.println("Minimum: " + playerTwoSearchTimeMin);
+            out.println("Average: " + (playerTwoSearchTimeAvg / ((double) playerTwoNumberMovesSum)));
+            out.println("Maximum: " + playerTwoSearchTimeMax + "\r\n");
+
+            out.println("WINS BY FLAG CAPTURE:");
+            out.println("Player 1: " + playerOneWonFlagCapture);
+            out.println("Player 2: " + playerTwoWonFlagCapture + "\r\n");
+
+            out.println("WINS BY PIECE CAPTURE");
+            out.println("Player 1: " + playerOneWonNoMovingPieces);
+            out.println("Player 2: " + playerTwoWonNoMovingPieces + "\r\n");
+
+            out.println("ties: " + ties);
+            out.println("-----------------------------------------------------------");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void addNumberMoves(int numberMoves) {
         if (numberMoves < numberMovesMin) {
             numberMovesMin = numberMoves;
@@ -310,7 +404,7 @@ public class AITestsMain {
             playerOneLeafNodesSearchedAvg += leafNodesSearched;
             // normal intermediate nodes
             if (minMaxNodesSearched < playerOneMinMaxNodesSearchedMin) {
-                playerOneMinMaxNodesSearchedMin = leafNodesSearched;
+                playerOneMinMaxNodesSearchedMin = minMaxNodesSearched;
             }
             if (minMaxNodesSearched > playerOneMinMaxNodesSearchedMax) {
                 playerOneMinMaxNodesSearchedMax = minMaxNodesSearched;
@@ -347,7 +441,7 @@ public class AITestsMain {
             playerTwoLeafNodesSearchedAvg += leafNodesSearched;
             // normal intermediate nodes
             if (minMaxNodesSearched < playerTwoMinMaxNodesSearchedMin) {
-                playerTwoMinMaxNodesSearchedMin = leafNodesSearched;
+                playerTwoMinMaxNodesSearchedMin = minMaxNodesSearched;
             }
             if (minMaxNodesSearched > playerTwoMinMaxNodesSearchedMax) {
                 playerTwoMinMaxNodesSearchedMax = minMaxNodesSearched;
@@ -370,16 +464,6 @@ public class AITestsMain {
             }
             playerTwoSearchTimeAvg += searchTimeNanos;
         }
-    }
-
-    public static void addNodesSearched(int nodesSearched) {
-        if (nodesSearched < playerTwoLeafNodesSearchedMin) {
-            playerTwoLeafNodesSearchedMin = nodesSearched;
-        }
-        if (nodesSearched > playerTwoLeafNodesSearchedMax) {
-            playerTwoLeafNodesSearchedMax = nodesSearched;
-        }
-        playerTwoLeafNodesSearchedAvg += nodesSearched;
     }
 
     public static void addMoveSearchTime(int playerIndex, long searchtimeNanos) {

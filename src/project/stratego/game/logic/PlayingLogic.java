@@ -136,7 +136,7 @@ public class PlayingLogic extends GameLogic {
                     //System.out.println(p + " can move");
                     return true;
                 }
-                row = 0;
+                row = p.getRowPos();
                 col = p.getColPos() - 1;
                 if (col >= 0 && col < 10 && parent.getBoard()[row][col].isAccessible() && (parent.getBoard()[row][col].getOccupyingPiece() == null || parent.getBoard()[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {
                     //System.out.println(p + " can move");

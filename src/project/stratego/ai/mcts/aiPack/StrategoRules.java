@@ -27,6 +27,10 @@ public class StrategoRules extends Rules<StrategoGame> {
 			return true;
 		}
 
+		if (aNode.getChildrenList().size() == 0) {
+			return true;
+		}
+
 		return false;
 	}
 

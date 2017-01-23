@@ -15,17 +15,12 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
     @Override
 
 
-
     public double evaluate(EnhancedGameState gameState, int playerType) {
         if (gameState.isGameOver() && gameState.playerWon()) {
             return 1000.0;
         } else if (gameState.isGameOver()) {
             return -1000.0;
         }
-
-
-
-
 
 
         // estimated value of position based on observed elements
@@ -35,25 +30,25 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         // pointers for the Arraylists
         ArrayList<Piece> opponentPieces = gameState.getPlayer(1 - gameState.getPlayerIndex()).getActivePieces();
         ArrayList<Piece> ownPieces = gameState.getPlayer(gameState.getPlayerIndex()).getActivePieces();
-        ArrayList<Piece> enemyGraveyard = gameState.getPlayer(1 - gameState.getPlayerIndex()).getDeadPieces()  ;
-        ArrayList<Piece> ownGraveyard = gameState.getPlayer(gameState.getPlayerIndex()).getDeadPieces() ;
+        ArrayList<Piece> enemyGraveyard = gameState.getPlayer(1 - gameState.getPlayerIndex()).getDeadPieces();
+        ArrayList<Piece> ownGraveyard = gameState.getPlayer(gameState.getPlayerIndex()).getDeadPieces();
 
         // game state set variables
         double opponentInfoWeight = 0.01 * opponentPieces.size();
         double ownInfoWeight = 0.01 * ownPieces.size();
         double opponentMoveWeight = 0.1;
-        double ownMoveWeight =  0.1;
+        double ownMoveWeight = 0.1;
         double materialWeight = 1.0;
         // rank values, flag is index 0, spy is 1, scout 2 etc bomb is 11
-        double[] rankValues = {1000.0, 35.0, 8.0, 25.0, 16.0, 24.0, 30.0, 55.0, 70.0, 90.0, 100.0, 50.0  };
+        double[] rankValues = {1000.0, 35.0, 8.0, 25.0, 16.0, 24.0, 30.0, 55.0, 70.0, 90.0, 100.0, 50.0};
         // value of board tile positions
         double[] rowValues = {0.001, 0.01, 0.1, 0.2, 0.4, 0.5, 0.6, 0.1, 0.01, 0.001};
-        double[] colValues = {3.5, 4.0, 3.0, 3.0, 4.0, 4.0, 3.0, 3.0,  4.0, 3.5};
+        double[] colValues = {3.5, 4.0, 3.0, 3.0, 4.0, 4.0, 3.0, 3.0, 4.0, 3.5};
 
         // marshall death status
         boolean deadOppMarsh = false;
         // enemyGraveyard.contains(PieceType.MARSHAL);
-        boolean deadOwnMarsh =  false;
+        boolean deadOwnMarsh = false;
         // ownGraveyard.contains(PieceType.MARSHAL);
         boolean deadOppSpy = false;
         boolean deadOwnSpy = false;
@@ -64,42 +59,36 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         int enemyMiners = 5;
         int enemyScouts = 8;
 
-        for(Piece p:ownGraveyard){
-            if(p.getType() == PieceType.SCOUT){
+        for (Piece p : ownGraveyard) {
+            if (p.getType() == PieceType.SCOUT) {
                 ownScouts--;
             }
-            if(p.getType() == PieceType.MINER){
+            if (p.getType() == PieceType.MINER) {
                 ownMiners--;
             }
-            if(p.getType() == PieceType.MARSHAL){
-            deadOwnMarsh = true;
+            if (p.getType() == PieceType.MARSHAL) {
+                deadOwnMarsh = true;
             }
 
-            if(p.getType() == PieceType.SPY){
-            deadOwnSpy = true;
+            if (p.getType() == PieceType.SPY) {
+                deadOwnSpy = true;
             }
         }
 
-        for(Piece p:enemyGraveyard){
-            if(p.getType() == PieceType.SCOUT){
+        for (Piece p : enemyGraveyard) {
+            if (p.getType() == PieceType.SCOUT) {
                 enemyScouts--;
             }
-            if(p.getType() == PieceType.MINER){
+            if (p.getType() == PieceType.MINER) {
                 enemyMiners--;
             }
-            if(p.getType() == PieceType.MARSHAL){
+            if (p.getType() == PieceType.MARSHAL) {
                 deadOppMarsh = true;
             }
-            if(p.getType() == PieceType.SPY){
+            if (p.getType() == PieceType.SPY) {
                 deadOppSpy = true;
             }
         }
-
-
-
-
-
-
 
 
         // iterate over opponent's pieces
@@ -141,8 +130,8 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
                 double scoutValue = rankValues[2];
                 // If 1-3 scouts exist, score them higher. With this: 20, 40, 60
 
-                if(enemyScouts < 4){
-                    scoutValue = (4-enemyScouts)*20;
+                if (enemyScouts < 4) {
+                    scoutValue = (4 - enemyScouts) * 20;
                 }
                 scoutValue = infoEnemy(p, scoutValue, opponentInfoWeight);
                 ownSum -= scoutValue;
@@ -153,13 +142,13 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
                 // miner value 25, plus 5 per lost miner
                 double minerValue = rankValues[3];
-                if(enemyMiners < 5){
+                if (enemyMiners < 5) {
                     minerValue = (10 - enemyMiners) * 5;
                 }
-                
+
                 minerValue = infoEnemy(p, minerValue, opponentInfoWeight);
                 ownSum -= minerValue;
-                
+
 
                 // Miner threat
 
@@ -170,9 +159,7 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
                 ownSum -= pieceValue;
                 // Marshall threat
 
-            }
-
-            else {
+            } else {
                 // for ranks 4 to 9
                 int rank = PieceType.pieceLvlMap.get(p.getType());
                 double pieceValue = rankValues[rank];
@@ -217,10 +204,10 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
         // iterate over own giving tile value
         for (Piece p : gameState.getPlayer(gameState.getPlayerIndex()).getActivePieces()) {
-            
-            
+
+
             // ownSum += (rowValues[p.getRowPos()] * colValues[p.getColPos()] * rankValues[(PieceType.pieceLvlMap.get(p.getType()))]  );
-            
+
             if (p.getType() == PieceType.BOMB) {
                 // Bomb threat check - miners only *******
 
@@ -250,8 +237,8 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
                 double scoutValue = rankValues[2];
                 // If 1-3 scouts exist, score them higher. With this: 20, 40, 60
 
-                if(ownScouts < 4){
-                    scoutValue = (4-ownScouts)*20;
+                if (ownScouts < 4) {
+                    scoutValue = (4 - ownScouts) * 20;
                 }
                 ownSum += scoutValue;
 
@@ -261,10 +248,10 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
                 // miner value 25, plus 5 per lost miner
                 double minerValue = rankValues[3];
-                if(ownMiners < 5){
+                if (ownMiners < 5) {
                     minerValue = (10 - ownMiners) * 5;
                 }
-                
+
 
                 // Miner threat
 
@@ -275,9 +262,7 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
                 ownSum += pieceValue;
                 // Marshall threat
 
-            }
-
-            else {
+            } else {
                 // for ranks 4 to 9
                 int rank = PieceType.pieceLvlMap.get(p.getType());
                 double pieceValue = rankValues[rank];
@@ -289,13 +274,13 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
             }
         }
-       // add random score
+        // add random score
         ownSum += Math.random();
-        
-         
+
+
         // sanity check, shouldn't be needed
-        while(Math.abs(ownSum) > 1000){
-        ownSum = ownSum * 0.95;
+        while (Math.abs(ownSum) > 1000) {
+            ownSum = ownSum * 0.95;
         }
 
 
@@ -305,16 +290,14 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
     }
     // value adjustment for own pieces, should reduce moving unmoved pieces 
 
-    public double infoOwn(Piece p, double pieceValue, double infoValue){
+    public double infoOwn(Piece p, double pieceValue, double infoValue) {
 
 
         double result = 0.0;
-        if(p.isRevealed()){
-            result = pieceValue * (1- infoValue);
+        if (p.isRevealed()) {
+            result = pieceValue * (1 - infoValue);
             return result;
-        }
-
-        else if(p.isMoveRevealed()){
+        } else if (p.isMoveRevealed()) {
             result = pieceValue * 0.1;
             return result;
         }
@@ -322,16 +305,16 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
     }
     // value reduction of enemy. Can't use isMoveRevealed as it would give away hidden information
 
-    public double infoEnemy(Piece p, double pieceValue, double infoValue){
+    public double infoEnemy(Piece p, double pieceValue, double infoValue) {
 
         double result = 0.0;
 
-        if(p.isRevealed()){
+        if (p.isRevealed()) {
             result = pieceValue * (1 - infoValue);
             return result;
         }
 
-               
+
         return pieceValue;
     }
 
@@ -339,19 +322,14 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
     // threat gen
     // returns distance to nearest piece that can capture it
-    public int enemyThreat(Piece p){
+    public int enemyThreat(Piece p) {
         int row = p.getRowPos();
         int col = p.getColPos();
         int distance = 0;
-        
-        
-        
-    
-    
-    
+
+        return 0;
     }
-    
-    
 
 }
+
 

@@ -6,21 +6,28 @@ import javafx.geometry.*;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import project.stratego.control.managers.ViewComManager;
 import project.stratego.ui.utils.Messages;
-
-import java.awt.*;
 
 public class Configurator extends Stage {
 
     private int mode;
 
     private VBox layout;
+
+    private String aiType = "random";
+    private String iterDeep = "-i";
+    private String moveOrdering = "-m";
+
+    private int maxDepth = 1;
+    private int timeLimit = 500;
 
     public Configurator(int mode) {
         this.mode = mode;
@@ -71,14 +78,19 @@ public class Configurator extends Stage {
         secondSection.getChildren().add(pruningMethod);
         VBox.setMargin(pruningMethod, insets);
         ToggleGroup toggleGroup1 = new ToggleGroup();
+        RadioButton none = new RadioButton("None");
         RadioButton star1 = new RadioButton("STAR1");
         RadioButton star2 = new RadioButton("STAR2");
+        none.setToggleGroup(toggleGroup1);
         star1.setToggleGroup(toggleGroup1);
         star2.setToggleGroup(toggleGroup1);
+        secondSection.getChildren().add(none);
         secondSection.getChildren().add(star1);
         secondSection.getChildren().add(star2);
+        VBox.setMargin(none, insets);
         VBox.setMargin(star1, insets);
         VBox.setMargin(star2, insets);
+        none.selectedProperty().setValue(true);
         sections.add(secondSection, 2, 0);
 
         Separator vertSeparator2 = new Separator();
@@ -92,13 +104,14 @@ public class Configurator extends Stage {
         VBox.setMargin(evaluationFunction, insets);
         ToggleGroup toggleGroup2 = new ToggleGroup();
         RadioButton naiveEval = new RadioButton("Naive");
-        RadioButton marksEval = new RadioButton("Mark's");
+        RadioButton marksEval = new RadioButton("Vincible");
         naiveEval.setToggleGroup(toggleGroup2);
         marksEval.setToggleGroup(toggleGroup2);
         thirdSection.getChildren().add(naiveEval);
         thirdSection.getChildren().add(marksEval);
         VBox.setMargin(naiveEval, insets);
         VBox.setMargin(marksEval, insets);
+        naiveEval.selectedProperty().setValue(true);
         sections.add(thirdSection, 4, 0);
 
         Separator vertSeparator3 = new Separator();
@@ -125,7 +138,6 @@ public class Configurator extends Stage {
         depthLimitBox.getSelectionModel().selectFirst();
         fourthSection.getChildren().add(depthLimitBox);
         VBox.setMargin(depthLimitBox, insets);
-        depthLimit.setOnAction(e -> depthLimitBox.setDisable(false));
 
         RadioButton iterDeep = new RadioButton("Time limit");
         iterDeep.setToggleGroup(toggleGroup3);
@@ -141,8 +153,74 @@ public class Configurator extends Stage {
             iterDeepBox.setDisable(false);
             depthLimitBox.setDisable(true);
         });
+        depthLimit.setOnAction(e -> {
+            depthLimitBox.setDisable(false);
+            iterDeepBox.setDisable(true);
+        });
 
         sections.add(fourthSection, 6, 0);
+
+        Button okButton = new Button("Ok");
+        okButton.setOnAction(e -> {
+            setAiType(none.selectedProperty().getValue() ? "expectimax" : (star1.selectedProperty().getValue() ? "star1" : "star2"));
+            setIterDeep(iterDeep.selectedProperty().getValue() ? "i" : "-i");
+            setMaxDepth((Integer) depthLimitBox.getValue());
+            setTimeLimit((Integer) iterDeepBox.getValue());
+            setMoveOrdering(moveOrdering.selectedProperty().getValue() ? "m" : "-m");
+            if (aiType.equals("random") || aiType.equals("mcts")) {
+                ViewComManager.getInstance().requestConfigureAI(aiType);
+            } else if (aiType.equals("expectimax")) {
+                ViewComManager.getInstance().requestConfigureAI(aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o");
+            } else {
+                ViewComManager.getInstance().requestConfigureAI(aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o " + this.moveOrdering);
+            }
+            close();
+        });
+        VBox.setMargin(okButton, new Insets(5, 10, 5, 80));
+        firstSection.getChildren().add(okButton);
+
+        star1.setDisable(true);
+        star2.setDisable(true);
+        naiveEval.setDisable(true);
+        marksEval.setDisable(true);
+        moveOrdering.setDisable(true);
+        depthLimit.setDisable(true);
+        depthLimitBox.setDisable(true);
+        iterDeep.setDisable(true);
+        iterDeepBox.setDisable(true);
+        searchMethodBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Expectimax")) {
+                setAiType(none.selectedProperty().getValue() ? "expectimax" : (star1.selectedProperty().getValue() ? "star1" : "star2"));
+                setIterDeep(iterDeep.selectedProperty().getValue() ? "i" : "-i");
+                setMaxDepth((Integer) depthLimitBox.getValue());
+                setTimeLimit((Integer) iterDeepBox.getValue());
+                setMoveOrdering(moveOrdering.selectedProperty().getValue() ? "m" : "-m");
+                star1.setDisable(false);
+                star2.setDisable(false);
+                naiveEval.setDisable(false);
+                marksEval.setDisable(false);
+                moveOrdering.setDisable(false);
+                depthLimit.setDisable(false);
+                depthLimitBox.setDisable(false);
+                iterDeep.setDisable(false);
+                iterDeepBox.setDisable(false);
+            } else {
+                if (newValue.equals("Random")) {
+                    setAiType("random");
+                } else if (newValue.equals("MCTS")) {
+                    setAiType("mcts");
+                }
+                star1.setDisable(true);
+                star2.setDisable(true);
+                naiveEval.setDisable(true);
+                marksEval.setDisable(true);
+                moveOrdering.setDisable(true);
+                depthLimit.setDisable(true);
+                depthLimitBox.setDisable(true);
+                iterDeep.setDisable(true);
+                iterDeepBox.setDisable(true);
+            }
+        });
 
         Scene scene = new Scene(sections);
         setScene(scene);
@@ -162,4 +240,23 @@ public class Configurator extends Stage {
         layout.getChildren().add(comboBox);
     }
 
+    private void setAiType(String aiType) {
+        this.aiType = aiType;
+    }
+
+    private void setIterDeep(String iterDeep) {
+        this.iterDeep = iterDeep;
+    }
+
+    private void setMoveOrdering(String moveOrdering) {
+        this.moveOrdering = moveOrdering;
+    }
+
+    private void setMaxDepth(int maxDepth) {
+        this.maxDepth = maxDepth;
+    }
+
+    private void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
 }

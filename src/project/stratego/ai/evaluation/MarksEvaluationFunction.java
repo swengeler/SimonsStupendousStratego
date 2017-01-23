@@ -202,10 +202,10 @@ public class MarksEvaluationFunction extends AbstractEvaluationFunction {
        // Score empty tiles
         
         
-        double result ownSum - opponentSum= 
+        double result = ownSum - opponentSum;
             
         while(Math.abs(result) > 1000){
-        result = result * 0.95;
+            result = result * 0.95;
         }
         
         return result;

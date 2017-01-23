@@ -187,6 +187,13 @@ public class ViewComManager {
         }
     }
 
+    public void requestConfigureAI(String aiConfig) {
+        System.out.println("Configure AI: " + aiConfig);
+        if (!isConnected()) {
+
+        }
+    }
+
     /* Commands from model to view */
 
     public void sendTrayActiveUpdate(int pieceIndex) {

@@ -4,6 +4,7 @@ import project.stratego.ai.evaluation.*;
 import project.stratego.ai.search.*;
 import project.stratego.ai.tests.AITestsMain;
 import project.stratego.ai.utils.AIMove;
+import project.stratego.ai.utils.EnhancedGameState;
 import project.stratego.game.StrategoGame;
 import project.stratego.game.entities.GameState;
 import project.stratego.game.moves.Move;
@@ -64,10 +65,20 @@ public class AIComManager {
     }
 
     void setPrimaryAI(String aiType) {
+        EnhancedGameState temp = null;
+        if (primaryAI != null) {
+            temp = primaryAI.getEnhancedGameState();
+        }
         if (aiType.startsWith("random")) {
             primaryAI = new RandomAI(PlayerType.SOUTH.ordinal());
+            if (temp != null) {
+                primaryAI.setGameState(temp);
+            }
         } else if (aiType.startsWith("expectimax")) {
             primaryAI = new ExpectiMinimaxAI(PlayerType.SOUTH.ordinal());
+            if (temp != null) {
+                primaryAI.setGameState(temp);
+            }
             ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -92,6 +103,9 @@ public class AIComManager {
             primaryAI = new MonteCarloTreeSearchAI(PlayerType.SOUTH.ordinal());
         } else if (aiType.startsWith("star1")) {
             primaryAI = new Star1MinimaxAI(PlayerType.SOUTH.ordinal());
+            if (temp != null) {
+                primaryAI.setGameState(temp);
+            }
             Star1MinimaxAI star1MinimaxAI = (Star1MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -120,6 +134,9 @@ public class AIComManager {
             }
         } else if (aiType.startsWith("star2")) {
             primaryAI = new Star2MinimaxAI(PlayerType.SOUTH.ordinal());
+            if (temp != null) {
+                primaryAI.setGameState(temp);
+            }
             Star2MinimaxAI star2MinimaxAI = (Star2MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -157,10 +174,20 @@ public class AIComManager {
     }
 
     void setSecondaryAI(String aiType) {
+        EnhancedGameState temp = null;
+        if (secondaryAI != null) {
+            temp = secondaryAI.getEnhancedGameState();
+        }
         if (aiType.startsWith("random")) {
             secondaryAI = new RandomAI(PlayerType.NORTH.ordinal());
+            if (temp != null) {
+                secondaryAI.setGameState(temp);
+            }
         } else if (aiType.startsWith("expectimax")) {
             secondaryAI = new ExpectiMinimaxAI(PlayerType.NORTH.ordinal());
+            if (temp != null) {
+                secondaryAI.setGameState(temp);
+            }
             ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -183,8 +210,14 @@ public class AIComManager {
             }
         } else if (aiType.startsWith("mcts")) {
             secondaryAI = new MonteCarloTreeSearchAI(PlayerType.NORTH.ordinal());
+            if (temp != null) {
+                secondaryAI.setGameState(temp);
+            }
         } else if (aiType.startsWith("star1")) {
             secondaryAI = new Star1MinimaxAI(PlayerType.NORTH.ordinal());
+            if (temp != null) {
+                secondaryAI.setGameState(temp);
+            }
             Star1MinimaxAI star1MinimaxAI = (Star1MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {
@@ -213,6 +246,9 @@ public class AIComManager {
             }
         } else if (aiType.startsWith("star2")) {
             secondaryAI = new Star2MinimaxAI(PlayerType.NORTH.ordinal());
+            if (temp != null) {
+                secondaryAI.setGameState(temp);
+            }
             Star2MinimaxAI star2MinimaxAI = (Star2MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
             if (parts[2].equals("i")) {

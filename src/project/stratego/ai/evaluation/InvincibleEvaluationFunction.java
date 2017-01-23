@@ -6,9 +6,9 @@ import project.stratego.game.utils.PieceType;
 
 import java.util.ArrayList;
 
-public class MarksNewEvaluationFunction extends AbstractEvaluationFunction {
+public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
-    public MarksNewEvaluationFunction(int playerIndex) {
+    public InvincibleEvaluationFunction(int playerIndex) {
         super(playerIndex);
     }
 

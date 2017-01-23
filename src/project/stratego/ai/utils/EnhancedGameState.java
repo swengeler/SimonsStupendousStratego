@@ -309,12 +309,12 @@ public class EnhancedGameState extends GameState {
     }
 
     private boolean checkPlayerHasFlag(Player player) {
-        for (Piece p : player.getActivePieces()) {
+        for (Piece p : player.getDeadPieces()) {
             if ((player.getType().ordinal() == playerIndex && p.getType() == PieceType.FLAG) || (player.getType().ordinal() != playerIndex && Math.abs(getProbability(p, 0) - 1.0) < PROB_EPSILON)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /* new methods for the "enhanced" implementation */
@@ -437,7 +437,7 @@ public class EnhancedGameState extends GameState {
     public void copySetup(GameState state, int playerIndex) {
         super.copySetup(state, playerIndex);
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
-            probabilitiesMap = new HashMap<>(40);
+            probabilitiesMap = new HashMap<>(41, 1);
             try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/mirroredprobs.txt")))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {
                     probabilitiesMap.put(p, new double[PieceType.numberTypes]);
@@ -488,7 +488,7 @@ public class EnhancedGameState extends GameState {
     public void interpretEncodedSetup(String encodedSetup, int playerIndex) {
         super.interpretEncodedSetup(encodedSetup, playerIndex);
         if (this.playerIndex != playerIndex && getPlayer(playerIndex).getActivePieces().size() != 0) {
-            probabilitiesMap = new HashMap<>(40);
+            probabilitiesMap = new HashMap<>(41, 1);
             double[] initProbabilities = new double[PieceType.numberTypes];
             try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("mirroredprobs.txt")))) {
                 for (Piece p : getPlayer(playerIndex).getActivePieces()) {

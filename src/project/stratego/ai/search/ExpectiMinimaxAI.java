@@ -133,7 +133,9 @@ public class ExpectiMinimaxAI extends AbstractAI {
                         bestMove = m;
                     }
                 }
-                currentMaxDepth++;
+                if (!timeLimitReached) {
+                    currentMaxDepth++;
+                }
             }
         } else {
             for (AIMove m : legalMoves) {

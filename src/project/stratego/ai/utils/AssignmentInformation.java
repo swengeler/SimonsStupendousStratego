@@ -19,7 +19,7 @@ public class AssignmentInformation {
         for (Piece p : probabilitiesMap.keySet()) {
             previousProbabilities[counter++] = probabilitiesMap.get(p).clone();
         }*/
-        previousProbabilitiesMap = new HashMap<>();
+        previousProbabilitiesMap = new HashMap<>(41, 1);
         for (Piece p : probabilitiesMap.keySet()) {
             previousProbabilitiesMap.put(p.clone(), probabilitiesMap.get(p).clone());
         }

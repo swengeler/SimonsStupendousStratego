@@ -140,7 +140,9 @@ public class Star2MinimaxAI extends AbstractAI {
                         bestMove = m;
                     }
                 }
-                currentMaxDepth++;
+                if (!timeLimitReached) {
+                    currentMaxDepth++;
+                }
             }
         } else {
             for (AIMove m : legalMoves) {

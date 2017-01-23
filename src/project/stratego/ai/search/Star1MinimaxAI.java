@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Star1MinimaxAI extends AbstractAI {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private int currentMaxDepth = 3;
 
@@ -137,7 +137,9 @@ public class Star1MinimaxAI extends AbstractAI {
                         bestMove = m;
                     }
                 }
-                currentMaxDepth++;
+                if (!timeLimitReached) {
+                    currentMaxDepth++;
+                }
             }
         } else {
             for (AIMove m : legalMoves) {
@@ -167,7 +169,7 @@ public class Star1MinimaxAI extends AbstractAI {
             System.out.println("------------------------------------------------------------------------------------\nBest move:");
             System.out.println(bestMove);
             System.out.println("Max value: " + maxValue);
-            System.out.println("Searched " + leafNodeCounter + " leaf nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s.");
+            System.out.println("Searched " + leafNodeCounter + " leaf nodes in " + ((System.currentTimeMillis() - total) / 1000.0) + "s" + (iterativeDeepening ? " with maximum depth " + currentMaxDepth : ""));
             System.out.println("------------------------------------------------------------------------------------\n");
         }
 
@@ -176,6 +178,7 @@ public class Star1MinimaxAI extends AbstractAI {
 
     private double alphaBetaMax(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
         if (currentDepth == currentMaxDepth || state.isGameOver()) {
+            //System.out.println("Evaluation at depth " + currentDepth + " (" + currentMaxDepth + ")");
             leafNodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }
@@ -209,6 +212,7 @@ public class Star1MinimaxAI extends AbstractAI {
 
     private double alphaBetaMin(int currentDepth, EnhancedGameState state, double alphaValue, double betaValue) {
         if (currentDepth == currentMaxDepth || state.isGameOver()) {
+            //System.out.println("Evaluation at depth " + currentDepth);
             leafNodeCounter++;
             return evaluationFunction.evaluate(state, playerIndex);
         }

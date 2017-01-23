@@ -45,10 +45,10 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         double ownMoveWeight =  0.1;
         double materialWeight = 1.0;
         // rank values, flag is index 0, spy is 1, scout 2 etc bomb is 11
-        double[] rankValues = {1000.0, 35.0, 8.0, 25.0, 16.0, 24.0, 30.0, 55.0, 70.0, 90.0, 100.0, 50.0  };
+        double[] rankValues = {1000.0, 35.0, 8.0, 25.0, 16.0, 24.0, 30.0, 50.0, 70.0, 90.0, 100.0, 50.0  };
         // value of board tile positions
-        double[] rowValues = {0.001, 0.01, 0.1, 0.2, 0.4, 0.5, 0.6, 0.1, 0.01, 0.001};
-        double[] colValues = {3.5, 4.0, 3.0, 3.0, 4.0, 4.0, 3.0, 3.0,  4.0, 3.5};
+        double[] rowValues = {0.0, 0.0, 0.0, 0.05, 0.1, 0.1, 0.05, 0.0, 0.0, 0.0};
+        double[] colValues = {4.0, 4.5, 3.0, 3.5, 5.0, 5.0, 3.5, 3.0,  4.0, 3.5};
 
         // marshall death status
         boolean deadOppMarsh = false;
@@ -105,8 +105,31 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         // iterate over opponent's pieces
         for (Piece p : opponentPieces) {
 
-            // score for board position
-            // opponentSum += (rowValues[p.getRowPos()] * colValues[p.getColPos()] * rankValues[(PieceType.pieceLvlMap.get(p.getType()))] );
+            // score for revealed piece. 
+            if(p.isRevealed()){
+                int rank = PieceType.pieceLvlMap.get(p.getType());
+             ownSum -= (rowValues[p.getRowPos()] * colValues[p.getColPos()] * rank );
+                
+              Arraylist<Piece> danger = threatRange(p,6);
+                
+                if(danger.size() > 0){
+               // get nearest own piece that can threaten enemy piece
+                    int distance = 20;
+                    for(Piece q:danger){
+                        if(PieceType.pieceLvlMap.get(q.getType()) > rank){
+                        int tempDistance = Math.abs(p.getRowPos() - q.getRowPos() ) + Math.abs(p.getColPos() - q.getColPos() );
+                        distance = Math.min(distance, tempDistance);
+                        }
+                        
+                    }
+               
+                // reduce position value by threat, reduced over distance    
+                ownSum += rankValues[rank] * (1/distance);  
+                }
+            }
+            else
+               
+                ownSum -= (rowValues[p.getRowPos()] * colValues[p.getColPos()] * 5);
 
 
             // Score for material and info values
@@ -117,6 +140,7 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
             } else if (p.getType() == PieceType.FLAG) {
                 // Flag defence check, normal + scout **********
+                
 
 
             } else if (p.getType() == PieceType.SPY) {
@@ -218,15 +242,23 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         // iterate over own giving tile value
         for (Piece p : gameState.getPlayer(gameState.getPlayerIndex()).getActivePieces()) {
             
-            
-            // ownSum += (rowValues[p.getRowPos()] * colValues[p.getColPos()] * rankValues[(PieceType.pieceLvlMap.get(p.getType()))]  );
+            // position value
+             ownSum += (rowValues[p.getRowPos()] * colValues[p.getColPos()] * PieceType.pieceLvlMap.get(p.getType()) );
             
             if (p.getType() == PieceType.BOMB) {
-                // Bomb threat check - miners only *******
-
+                // Bomb threat check - miners only 
 
             } else if (p.getType() == PieceType.FLAG) {
-                // Flag defence check, normal + scout **********
+                // Flag defence check, normal 
+                
+                // get pieces within 6 moves
+                Arraylist<Piece> danger = threatRange(p,6);
+                if(danger.size() > 0){
+               // get distance to nearest enemy piece 
+                int distance = Math.abs(p.getRowPos() - danger.get(0).getRowPos() ) + Math.abs(p.getColPos() - danger.get(0).getColPos() )
+                // reduce position value by threat, reduced over distance    
+                ownSum -= rankValues[0] * (1/distance);  
+                }
 
 
             } else if (p.getType() == PieceType.SPY) {
@@ -295,12 +327,11 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
          
         // sanity check, shouldn't be needed
         while(Math.abs(ownSum) > 1000){
-        ownSum = ownSum * 0.95;
+        ownSum = ownSum * 0.999;
         }
 
 
-        return ownSum; // *************************************//
-
+        return ownSum; 
 
     }
     // value adjustment for own pieces, should reduce moving unmoved pieces 
@@ -339,16 +370,160 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
     // threat gen
     // returns distance to nearest piece that can capture it
-    public int enemyThreat(Piece p){
+    public ArrayList<Piece> threatRange(Piece p, int range){
+        ArrayList<Piece> result = new ArrayList<Piece>;
         int row = p.getRowPos();
         int col = p.getColPos();
+        int[] dx = {0};
+        int[] dy = {0};
+        
         int distance = 0;
         
+        PlayerType friendly = p.getPlayerType();
+        int rank = PieceType.pieceLvlMap.get(p.getType());
         
         
+        // distance 1
+        distance = 1;
+        if(distance > range){
+            return result;
+            }
+         
+        dx = {1, -1, 0, 0};
+        dy = {0, 0, 1, -1};
+        
+        for(int i =0; i<4; i++){
+            // boundary check
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
+            
+                // check tile temp for enemy piece
+                BoardTile temp = board[row + dx[i]][col + dy[i]];
+                if(temp.getOccupyingPiece().getPlayerType() != friendly ){
+        
+                result.add(temp.getOccupyingPiece());
+                }
+            
+            }
+        
+        }
+        
+        // distance 2
+        distance = 2;
+        if(distance > range){
+        return result;
+        }
+        
+        dx = {2, -2, 0, 0, 1, 1, -1, -1};
+        dy = {0, 0, 2, -2, 1, -1, 1, -1};
+        for(int i =0; i<8; i++){
+            // boundary check
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
+                BoardTile temp = board[row + dx[i]][col + dy[i]];
+                if(temp.getOccupyingPiece().getPlayerType() != friendly ){
+        
+                result.add(temp.getOccupyingPiece());
+                }
+            
+            }
+        
+        }
+        
+        
+        // distance 3
+        
+        distance = 3;
+        if(distance > range){
+        return result;
+        }
+        
+        dx = {3, -3, 0, 0, 2, 2, -2, -2, 1, 1, -1, -1};
+        dy = {0, 0, 3, -3, 1, -1, 1, -1, 2, -2, 2, -2};
+        for(int i =0; i<12; i++){
+            // boundary check
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
+                BoardTile temp = board[row + dx[i]][col + dy[i]];
+                if(temp.getOccupyingPiece().getPlayerType() != friendly ){
+        
+                result.add(temp.getOccupyingPiece());
+                }
+            
+            }
+        
+        }
+        
+        
+        
+        // distance 4
+        
+        distance = 4;
+        if(distance > range){
+        return result;
+        }
+        
+        dx = {4, -4, 0, 0, 3, 3, -3, -3, 1, 1, -1, -1, 2, 2, -2, -2};
+        dy = {0, 0, 4, -4, 1, -1, 1, -1, 3, -3, 3, -3, 2, -2, 2, -2};
+        for(int i =0; i<16; i++){
+            // boundary check
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
+                BoardTile temp = board[row + dx[i]][col + dy[i]];
+                if(temp.getOccupyingPiece().getPlayerType() != friendly ){
+        
+                result.add(temp.getOccupyingPiece());
+                }
+            
+            }
+        
+        }
+        
+       
+        
+        // distance 5
+        
+        distance = 5;
+        if(distance > range){
+        return result;
+        }
+        
+        dx = {5, -5, 0, 0, 4, 4, -4, -4, 1, 1, -1, -1, 3, 3, -3, -3, 2, 2, -2, -2};
+        dy = {0, 0, 5, -5, 1, -1, 1, -1, 4, -4, 4, -4, 2, -2, 2, -2, 3, -3, 3, -3};
+        for(int i =0; i<20; i++){
+            // boundary check
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
+                BoardTile temp = board[row + dx[i]][col + dy[i]];
+                if(temp.getOccupyingPiece().getPlayerType() != friendly ){
+        
+                result.add(temp.getOccupyingPiece());
+                }
+            
+            }
+        
+        } 
     
     
+        
+        // distance 6
+        
+        distance = 6;
+        if(distance > range){
+        return result;
+        }
+        
+        dx = {6, -6, 0, 0, 5, 5, -5, -5, 1, 1, -1, -1, 4, 4, -4, -4, 2, 2, -2, -2, 3, 3, -3, -3};
+        dy = {0, 0, 6, -6, 1, -1, 1, -1, 5, -5, 5, -5, 2, -2, 2, -2, 4, -4, 4, -4, 3, -3, 3, -3};
+        for(int i =0; i<24; i++){
+            // boundary check
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
+                BoardTile temp = board[row + dx[i]][col + dy[i]];
+                if(temp.getOccupyingPiece().getPlayerType() != friendly ){
+        
+                result.add(temp.getOccupyingPiece());
+                }
+            
+            }
+        
+        } 
     
+    return result;
     }
     
     

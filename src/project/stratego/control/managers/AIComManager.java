@@ -72,12 +72,12 @@ public class AIComManager {
         if (aiType.startsWith("random")) {
             primaryAI = new RandomAI(PlayerType.SOUTH.ordinal());
             if (temp != null) {
-                primaryAI.setGameState(temp);
+                primaryAI.copyOwnSetup(temp);
             }
         } else if (aiType.startsWith("expectimax")) {
             primaryAI = new ExpectiMinimaxAI(PlayerType.SOUTH.ordinal());
             if (temp != null) {
-                primaryAI.setGameState(temp);
+                primaryAI.copyOwnSetup(temp);
             }
             ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
@@ -104,7 +104,7 @@ public class AIComManager {
         } else if (aiType.startsWith("star1")) {
             primaryAI = new Star1MinimaxAI(PlayerType.SOUTH.ordinal());
             if (temp != null) {
-                primaryAI.setGameState(temp);
+                primaryAI.copyOwnSetup(temp);
             }
             Star1MinimaxAI star1MinimaxAI = (Star1MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
@@ -135,7 +135,7 @@ public class AIComManager {
         } else if (aiType.startsWith("star2")) {
             primaryAI = new Star2MinimaxAI(PlayerType.SOUTH.ordinal());
             if (temp != null) {
-                primaryAI.setGameState(temp);
+                primaryAI.copyOwnSetup(temp);
             }
             Star2MinimaxAI star2MinimaxAI = (Star2MinimaxAI) primaryAI;
             String[] parts = aiType.split(" ");
@@ -181,12 +181,12 @@ public class AIComManager {
         if (aiType.startsWith("random")) {
             secondaryAI = new RandomAI(PlayerType.NORTH.ordinal());
             if (temp != null) {
-                secondaryAI.setGameState(temp);
+                secondaryAI.copyOwnSetup(temp);
             }
         } else if (aiType.startsWith("expectimax")) {
             secondaryAI = new ExpectiMinimaxAI(PlayerType.NORTH.ordinal());
             if (temp != null) {
-                secondaryAI.setGameState(temp);
+                secondaryAI.copyOwnSetup(temp);
             }
             ExpectiMinimaxAI expectiMinimaxAI = (ExpectiMinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
@@ -211,12 +211,12 @@ public class AIComManager {
         } else if (aiType.startsWith("mcts")) {
             secondaryAI = new MonteCarloTreeSearchAI(PlayerType.NORTH.ordinal());
             if (temp != null) {
-                secondaryAI.setGameState(temp);
+                secondaryAI.copyOwnSetup(temp);
             }
         } else if (aiType.startsWith("star1")) {
             secondaryAI = new Star1MinimaxAI(PlayerType.NORTH.ordinal());
             if (temp != null) {
-                secondaryAI.setGameState(temp);
+                secondaryAI.copyOwnSetup(temp);
             }
             Star1MinimaxAI star1MinimaxAI = (Star1MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");
@@ -247,7 +247,7 @@ public class AIComManager {
         } else if (aiType.startsWith("star2")) {
             secondaryAI = new Star2MinimaxAI(PlayerType.NORTH.ordinal());
             if (temp != null) {
-                secondaryAI.setGameState(temp);
+                secondaryAI.copyOwnSetup(temp);
             }
             Star2MinimaxAI star2MinimaxAI = (Star2MinimaxAI) secondaryAI;
             String[] parts = aiType.split(" ");

@@ -29,6 +29,8 @@ public class Configurator extends Stage {
     private int maxDepth = 1;
     private int timeLimit = 500;
 
+    private boolean expSelected;
+
     public Configurator(int mode) {
         this.mode = mode;
 
@@ -162,25 +164,33 @@ public class Configurator extends Stage {
 
         sections.add(fourthSection, 6, 0);
 
+        none.setOnAction(e -> moveOrdering.setDisable(true));
+        star1.setOnAction(e -> moveOrdering.setDisable(false));
+        star2.setOnAction(e -> moveOrdering.setDisable(false));
+        moveOrdering.setDisable(true);
+
         Button okButton = new Button("Ok");
         okButton.setOnAction(e -> {
-            //setAiType(none.selectedProperty().getValue() ? "expectimax" : (star1.selectedProperty().getValue() ? "star1" : "star2"));
+            if (expSelected) {
+                setAiType(none.selectedProperty().getValue() ? "expectimax" : (star1.selectedProperty().getValue() ? "star1" : "star2"));
+            }
             setIterDeep(iterDeep.selectedProperty().getValue() ? "i" : "-i");
             setMaxDepth((Integer) depthLimitBox.getValue());
             setTimeLimit((Integer) iterDeepBox.getValue());
             setMoveOrdering(moveOrdering.selectedProperty().getValue() ? "m" : "-m");
             if (aiType.equals("random") || aiType.equals("mcts")) {
-                ViewComManager.getInstance().requestConfigureAI(aiType);
+                ViewComManager.getInstance().requestConfigureAI(1, aiType);
             } else if (aiType.equals("expectimax")) {
-                ViewComManager.getInstance().requestConfigureAI(aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o");
+                ViewComManager.getInstance().requestConfigureAI(1, aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o");
             } else {
-                ViewComManager.getInstance().requestConfigureAI(aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o " + this.moveOrdering);
+                ViewComManager.getInstance().requestConfigureAI(1, aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o " + this.moveOrdering);
             }
             close();
         });
         VBox.setMargin(okButton, new Insets(5, 10, 5, 80));
         firstSection.getChildren().add(okButton);
 
+        none.setDisable(true);
         star1.setDisable(true);
         star2.setDisable(true);
         naiveEval.setDisable(true);
@@ -192,21 +202,30 @@ public class Configurator extends Stage {
         iterDeepBox.setDisable(true);
         searchMethodBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("Expectimax")) {
+                expSelected = true;
                 setAiType(none.selectedProperty().getValue() ? "expectimax" : (star1.selectedProperty().getValue() ? "star1" : "star2"));
                 setIterDeep(iterDeep.selectedProperty().getValue() ? "i" : "-i");
                 setMaxDepth((Integer) depthLimitBox.getValue());
                 setTimeLimit((Integer) iterDeepBox.getValue());
                 setMoveOrdering(moveOrdering.selectedProperty().getValue() ? "m" : "-m");
+                none.setDisable(false);
                 star1.setDisable(false);
                 star2.setDisable(false);
                 naiveEval.setDisable(false);
                 marksEval.setDisable(false);
-                moveOrdering.setDisable(false);
+                if (!none.selectedProperty().getValue()) {
+                    moveOrdering.setDisable(false);
+                }
                 depthLimit.setDisable(false);
-                depthLimitBox.setDisable(false);
+                if (depthLimit.selectedProperty().getValue()) {
+                    depthLimitBox.setDisable(false);
+                }
                 iterDeep.setDisable(false);
-                iterDeepBox.setDisable(false);
+                if (iterDeep.selectedProperty().getValue()) {
+                    iterDeepBox.setDisable(false);
+                }
             } else {
+                expSelected = false;
                 if (newValue.equals("Random")) {
                     setAiType("random");
                 } else if (newValue.equals("MCTS")) {

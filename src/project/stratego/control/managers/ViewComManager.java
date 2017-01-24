@@ -187,10 +187,10 @@ public class ViewComManager {
         }
     }
 
-    public void requestConfigureAI(String aiConfig) {
+    public void requestConfigureAI(int playerIndex, String aiConfig) {
         System.out.println("Configure AI: " + aiConfig);
         if (!isConnected()) {
-
+            ModelComManager.getInstance().requestConfigureAI(playerIndex, aiConfig);
         }
     }
 

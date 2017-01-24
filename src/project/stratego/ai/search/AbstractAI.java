@@ -11,6 +11,7 @@ import project.stratego.game.moves.Move;
 import project.stratego.game.utils.PieceType;
 import project.stratego.game.utils.PlayerType;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -33,7 +34,15 @@ public abstract class AbstractAI {
                 "SERGEANT BOMB SERGEANT MAJOR COLONEL LIEUTENANT BOMB LIEUTENANT CAPTAIN SERGEANT " +
                 "LIEUTENANT SERGEANT BOMB SPY GENERAL SCOUT MAJOR MAJOR COLONEL SCOUT " +
                 "CAPTAIN SCOUT SCOUT LIEUTENANT SCOUT CAPTAIN MINER MARSHAL SCOUT CAPTAIN";
-        gameState.interpretAndCopySetup(example1);
+        int index = ((int) (Math.random() * 10)) + 1;
+        String setup = "7-3-3-6-3-7-4-11-3-7-6-5-1-2-10-3-8-8-9-3-5-1-5-8-9-6-1-6-7-5-3-4-1-3-4-1-0-1-4-4\n";
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/setups/recommended_" + index + ".setup")))) {
+            setup = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        gameState.interpretEncodedSetup(setup, playerIndex);
+        //gameState.interpretAndCopySetup(example1);
         inGameState.copySetup(gameState, playerIndex);
     }
 
@@ -68,6 +77,11 @@ public abstract class AbstractAI {
 
     public void copyOpponentSetup(GameState inGameState) {
         gameState.copySetup(inGameState, 1 - playerIndex);
+    }
+
+    public void copyOwnSetup(GameState state) {
+        gameState.copySetup(state, playerIndex);
+        gameState.printBoard();
     }
 
     public void applyMove(Move move) {

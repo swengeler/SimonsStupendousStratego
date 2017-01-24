@@ -41,7 +41,7 @@ public class SideMenu extends Pane {
         makeShowMatchMenu();
         makeMultiPlayerMenu();
         //makeSpecialFeaturesMenu();
-        makeHelpMenu();
+        //makeHelpMenu();
         configureChangeListener();
         getChildren().add(menu);
 
@@ -262,7 +262,7 @@ public class SideMenu extends Pane {
         showMatchMenu = new TitledPane();
         showMatchMenu.setText("AI Show Match");
 
-        Button nextMoveButton = new Button("Next move");
+        Button nextMoveButton = new Button("Play");
         nextMoveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestNextMove());
         nextMoveButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         nextMoveButton.setTextFill(Color.BLACK);

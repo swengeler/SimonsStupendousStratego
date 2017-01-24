@@ -97,7 +97,7 @@ public class AIComManager {
                 expectiMinimaxAI.setOpponentModelling(false);
             }
             if (parts.length > 5 && parts[5].equals("inv")) {
-                expectiMinimaxAI.setEvaluationFunction(new InvincibleEvaluationFunction(expectiMinimaxAI.getPlayerIndex()));
+                expectiMinimaxAI.setEvaluationFunction(new VincibleEvaluationFunction(expectiMinimaxAI.getPlayerIndex()));
             }
         } else if (aiType.startsWith("mcts")) {
             primaryAI = new MonteCarloTreeSearchAI(PlayerType.SOUTH.ordinal());
@@ -130,7 +130,7 @@ public class AIComManager {
                 star1MinimaxAI.setMoveOrdering(false);
             }
             if (parts.length > 6 && parts[6].equals("inv")) {
-                star1MinimaxAI.setEvaluationFunction(new InvincibleEvaluationFunction(star1MinimaxAI.getPlayerIndex()));
+                star1MinimaxAI.setEvaluationFunction(new VincibleEvaluationFunction(star1MinimaxAI.getPlayerIndex()));
             }
         } else if (aiType.startsWith("star2")) {
             primaryAI = new Star2MinimaxAI(PlayerType.SOUTH.ordinal());
@@ -161,7 +161,7 @@ public class AIComManager {
                 star2MinimaxAI.setMoveOrdering(false);
             }
             if (parts.length > 6 && parts[6].equals("inv")) {
-                star2MinimaxAI.setEvaluationFunction(new InvincibleEvaluationFunction(star2MinimaxAI.getPlayerIndex()));
+                star2MinimaxAI.setEvaluationFunction(new VincibleEvaluationFunction(star2MinimaxAI.getPlayerIndex()));
             }
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");
@@ -206,7 +206,7 @@ public class AIComManager {
                 expectiMinimaxAI.setOpponentModelling(false);
             }
             if (parts.length > 5 && parts[5].equals("inv")) {
-                expectiMinimaxAI.setEvaluationFunction(new InvincibleEvaluationFunction(expectiMinimaxAI.getPlayerIndex()));
+                expectiMinimaxAI.setEvaluationFunction(new VincibleEvaluationFunction(expectiMinimaxAI.getPlayerIndex()));
             }
         } else if (aiType.startsWith("mcts")) {
             secondaryAI = new MonteCarloTreeSearchAI(PlayerType.NORTH.ordinal());
@@ -242,7 +242,7 @@ public class AIComManager {
                 star1MinimaxAI.setMoveOrdering(false);
             }
             if (parts.length > 6 && parts[6].equals("inv")) {
-                star1MinimaxAI.setEvaluationFunction(new InvincibleEvaluationFunction(star1MinimaxAI.getPlayerIndex()));
+                star1MinimaxAI.setEvaluationFunction(new VincibleEvaluationFunction(star1MinimaxAI.getPlayerIndex()));
             }
         } else if (aiType.startsWith("star2")) {
             secondaryAI = new Star2MinimaxAI(PlayerType.NORTH.ordinal());
@@ -273,7 +273,7 @@ public class AIComManager {
                 star2MinimaxAI.setMoveOrdering(false);
             }
             if (parts.length > 6 && parts[6].equals("inv")) {
-                star2MinimaxAI.setEvaluationFunction(new InvincibleEvaluationFunction(star2MinimaxAI.getPlayerIndex()));
+                star2MinimaxAI.setEvaluationFunction(new VincibleEvaluationFunction(star2MinimaxAI.getPlayerIndex()));
             }
         } else if (aiType.startsWith("iterdeepexp")) {
             String[] parts = aiType.split(" ");

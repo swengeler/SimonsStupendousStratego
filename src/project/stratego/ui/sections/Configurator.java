@@ -137,6 +137,7 @@ public class Configurator extends Stage {
         depthLimitBox.setDisable(true);
         depthLimitBox.getSelectionModel().selectFirst();
         fourthSection.getChildren().add(depthLimitBox);
+        depthLimit.selectedProperty().setValue(true);
         VBox.setMargin(depthLimitBox, insets);
 
         RadioButton iterDeep = new RadioButton("Time limit");
@@ -149,6 +150,7 @@ public class Configurator extends Stage {
         iterDeepBox.getSelectionModel().selectFirst();
         fourthSection.getChildren().add(iterDeepBox);
         VBox.setMargin(iterDeepBox, insets);
+        iterDeepBox.setDisable(true);
         iterDeep.setOnAction(e -> {
             iterDeepBox.setDisable(false);
             depthLimitBox.setDisable(true);
@@ -162,7 +164,7 @@ public class Configurator extends Stage {
 
         Button okButton = new Button("Ok");
         okButton.setOnAction(e -> {
-            setAiType(none.selectedProperty().getValue() ? "expectimax" : (star1.selectedProperty().getValue() ? "star1" : "star2"));
+            //setAiType(none.selectedProperty().getValue() ? "expectimax" : (star1.selectedProperty().getValue() ? "star1" : "star2"));
             setIterDeep(iterDeep.selectedProperty().getValue() ? "i" : "-i");
             setMaxDepth((Integer) depthLimitBox.getValue());
             setTimeLimit((Integer) iterDeepBox.getValue());

@@ -281,7 +281,7 @@ public class EnhancedGameState extends GameState {
 
     private boolean checkPlayerCanMove(Player player) {
         for (Piece p : player.getActivePieces()) {
-            if ((p.getType().ordinal() == playerIndex &&  p.getType() != PieceType.FLAG && p.getType() != PieceType.BOMB) || (p.getType().ordinal() != playerIndex && Math.abs(getProbability(p, 0) - 1.0) > PROB_EPSILON && Math.abs(getProbability(p, 1) - 1.0) > PROB_EPSILON)) {
+            if ((p.getPlayerType().ordinal() == playerIndex &&  p.getType() != PieceType.FLAG && p.getType() != PieceType.BOMB) || (p.getPlayerType().ordinal() != playerIndex && Math.abs(getProbability(p, 0) - 1.0) > PROB_EPSILON && Math.abs(getProbability(p, 1) - 1.0) > PROB_EPSILON)) {
                 int row = p.getRowPos() - 1;
                 int col = p.getColPos();
                 if (row >= 0 && row < 10 && board[row][col].isAccessible() && (board[row][col].getOccupyingPiece() == null || board[row][col].getOccupyingPiece().getPlayerType() != player.getType())) {

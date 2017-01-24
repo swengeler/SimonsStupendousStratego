@@ -1,14 +1,16 @@
 package project.stratego.ai.evaluation;
 
 import project.stratego.ai.utils.EnhancedGameState;
+import project.stratego.game.entities.BoardTile;
 import project.stratego.game.entities.Piece;
 import project.stratego.game.utils.PieceType;
+import project.stratego.game.utils.PlayerType;
 
 import java.util.ArrayList;
 
-public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
+public class VincibleEvaluationFunction extends AbstractEvaluationFunction {
 
-    public InvincibleEvaluationFunction(int playerIndex) {
+    public VincibleEvaluationFunction(int playerIndex) {
         super(playerIndex);
     }
 
@@ -22,11 +24,6 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         } else if (gameState.isGameOver()) {
             return -1000.0;
         }
-
-
-
-
-
 
         // estimated value of position based on observed elements
         double opponentSum = 0.0;
@@ -110,7 +107,7 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
                 int rank = PieceType.pieceLvlMap.get(p.getType());
              ownSum -= (rowValues[p.getRowPos()] * colValues[p.getColPos()] * rank );
                 
-              Arraylist<Piece> danger = threatRange(p,6);
+              ArrayList<Piece> danger = threatRange(gameState, p,6);
                 
                 if(danger.size() > 0){
                // get nearest own piece that can threaten enemy piece
@@ -252,12 +249,12 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
                 // Flag defence check, normal 
                 
                 // get pieces within 6 moves
-                Arraylist<Piece> danger = threatRange(p,6);
+                ArrayList<Piece> danger = threatRange(gameState, p,6);
                 if(danger.size() > 0){
-               // get distance to nearest enemy piece 
-                int distance = Math.abs(p.getRowPos() - danger.get(0).getRowPos() ) + Math.abs(p.getColPos() - danger.get(0).getColPos() )
-                // reduce position value by threat, reduced over distance    
-                ownSum -= rankValues[0] * (1/distance);  
+                   // get distance to nearest enemy piece
+                    int distance = Math.abs(p.getRowPos() - danger.get(0).getRowPos() ) + Math.abs(p.getColPos() - danger.get(0).getColPos());
+                    // reduce position value by threat, reduced over distance
+                    ownSum -= rankValues[0] * (1/distance);
                 }
 
 
@@ -370,8 +367,8 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
 
     // threat gen
     // returns distance to nearest piece that can capture it
-    public ArrayList<Piece> threatRange(Piece p, int range){
-        ArrayList<Piece> result = new ArrayList<Piece>;
+    public ArrayList<Piece> threatRange(EnhancedGameState gameState, Piece p, int range){
+        ArrayList<Piece> result = new ArrayList<Piece>();
         int row = p.getRowPos();
         int col = p.getColPos();
         int[] dx = {0};
@@ -389,15 +386,15 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
             return result;
             }
          
-        dx = {1, -1, 0, 0};
-        dy = {0, 0, 1, -1};
+        dx = new int[]{1, -1, 0, 0};
+        dy = new int[]{0, 0, 1, -1};
         
         for(int i =0; i<4; i++){
             // boundary check
-            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i] < 10) ){
             
                 // check tile temp for enemy piece
-                BoardTile temp = board[row + dx[i]][col + dy[i]];
+                BoardTile temp = gameState.getBoardArray()[row + dx[i]][col + dy[i]];
                 if(temp.getOccupyingPiece().getPlayerType() != friendly ){
         
                 result.add(temp.getOccupyingPiece());
@@ -413,12 +410,12 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         return result;
         }
         
-        dx = {2, -2, 0, 0, 1, 1, -1, -1};
-        dy = {0, 0, 2, -2, 1, -1, 1, -1};
+        dx = new int[]{2, -2, 0, 0, 1, 1, -1, -1};
+        dy = new int[]{0, 0, 2, -2, 1, -1, 1, -1};
         for(int i =0; i<8; i++){
             // boundary check
-            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
-                BoardTile temp = board[row + dx[i]][col + dy[i]];
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i] < 10) ){
+                BoardTile temp = gameState.getBoardArray()[row + dx[i]][col + dy[i]];
                 if(temp.getOccupyingPiece().getPlayerType() != friendly ){
         
                 result.add(temp.getOccupyingPiece());
@@ -436,12 +433,12 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         return result;
         }
         
-        dx = {3, -3, 0, 0, 2, 2, -2, -2, 1, 1, -1, -1};
-        dy = {0, 0, 3, -3, 1, -1, 1, -1, 2, -2, 2, -2};
+        dx = new int[]{3, -3, 0, 0, 2, 2, -2, -2, 1, 1, -1, -1};
+        dy = new int[]{0, 0, 3, -3, 1, -1, 1, -1, 2, -2, 2, -2};
         for(int i =0; i<12; i++){
             // boundary check
-            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
-                BoardTile temp = board[row + dx[i]][col + dy[i]];
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i] < 10) ){
+                BoardTile temp = gameState.getBoardArray()[row + dx[i]][col + dy[i]];
                 if(temp.getOccupyingPiece().getPlayerType() != friendly ){
         
                 result.add(temp.getOccupyingPiece());
@@ -460,12 +457,12 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         return result;
         }
         
-        dx = {4, -4, 0, 0, 3, 3, -3, -3, 1, 1, -1, -1, 2, 2, -2, -2};
-        dy = {0, 0, 4, -4, 1, -1, 1, -1, 3, -3, 3, -3, 2, -2, 2, -2};
+        dx = new int[]{4, -4, 0, 0, 3, 3, -3, -3, 1, 1, -1, -1, 2, 2, -2, -2};
+        dy = new int[]{0, 0, 4, -4, 1, -1, 1, -1, 3, -3, 3, -3, 2, -2, 2, -2};
         for(int i =0; i<16; i++){
             // boundary check
-            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
-                BoardTile temp = board[row + dx[i]][col + dy[i]];
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i] < 10) ){
+                BoardTile temp = gameState.getBoardArray()[row + dx[i]][col + dy[i]];
                 if(temp.getOccupyingPiece().getPlayerType() != friendly ){
         
                 result.add(temp.getOccupyingPiece());
@@ -484,12 +481,12 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         return result;
         }
         
-        dx = {5, -5, 0, 0, 4, 4, -4, -4, 1, 1, -1, -1, 3, 3, -3, -3, 2, 2, -2, -2};
-        dy = {0, 0, 5, -5, 1, -1, 1, -1, 4, -4, 4, -4, 2, -2, 2, -2, 3, -3, 3, -3};
+        dx = new int[]{5, -5, 0, 0, 4, 4, -4, -4, 1, 1, -1, -1, 3, 3, -3, -3, 2, 2, -2, -2};
+        dy = new int[]{0, 0, 5, -5, 1, -1, 1, -1, 4, -4, 4, -4, 2, -2, 2, -2, 3, -3, 3, -3};
         for(int i =0; i<20; i++){
             // boundary check
-            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
-                BoardTile temp = board[row + dx[i]][col + dy[i]];
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i] < 10) ){
+                BoardTile temp = gameState.getBoardArray()[row + dx[i]][col + dy[i]];
                 if(temp.getOccupyingPiece().getPlayerType() != friendly ){
         
                 result.add(temp.getOccupyingPiece());
@@ -508,12 +505,12 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         return result;
         }
         
-        dx = {6, -6, 0, 0, 5, 5, -5, -5, 1, 1, -1, -1, 4, 4, -4, -4, 2, 2, -2, -2, 3, 3, -3, -3};
-        dy = {0, 0, 6, -6, 1, -1, 1, -1, 5, -5, 5, -5, 2, -2, 2, -2, 4, -4, 4, -4, 3, -3, 3, -3};
+        dx = new int[]{6, -6, 0, 0, 5, 5, -5, -5, 1, 1, -1, -1, 4, 4, -4, -4, 2, 2, -2, -2, 3, 3, -3, -3};
+        dy = new int[]{0, 0, 6, -6, 1, -1, 1, -1, 5, -5, 5, -5, 2, -2, 2, -2, 4, -4, 4, -4, 3, -3, 3, -3};
         for(int i =0; i<24; i++){
             // boundary check
-            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i]) ){
-                BoardTile temp = board[row + dx[i]][col + dy[i]];
+            if( (row + dx[i] > -1) && (row + dx[i] < 10) && (col + dy[i] > -1) && (col + dy[i] < 10) ) {
+                BoardTile temp = gameState.getBoardArray()[row + dx[i]][col + dy[i]];
                 if(temp.getOccupyingPiece().getPlayerType() != friendly ){
         
                 result.add(temp.getOccupyingPiece());
@@ -523,7 +520,7 @@ public class InvincibleEvaluationFunction extends AbstractEvaluationFunction {
         
         } 
     
-    return result;
+        return result;
     }
     
     

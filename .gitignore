@@ -5,4 +5,4 @@
 /out/
 .classpath
 .project
-.workspace.xml
+.idea/workspace.xml

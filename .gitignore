@@ -5,3 +5,4 @@
 /out/
 .classpath
 .project
+git rm -f .idea/workspace.xml

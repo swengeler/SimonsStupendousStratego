@@ -11,8 +11,8 @@ public class StrategoClient implements Runnable {
 
     private volatile boolean stopThread = false;
 
-    //private static final String SERVER_ADDRESS = "82.165.162.249";
-    private String SERVER_ADDRESS = "localhost";
+    private String SERVER_ADDRESS = "82.165.162.249";
+    //private String SERVER_ADDRESS = "localhost";
 
     private static final int SERVER_PORT = 2000;
 

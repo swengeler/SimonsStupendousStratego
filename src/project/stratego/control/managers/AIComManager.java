@@ -401,6 +401,9 @@ public class AIComManager {
     }
 
     public void gameOver(StrategoGame game) {
+        if (gameMode == GameMode.MULTIPLAYER) {
+            return;
+        }
         aiMatchRunning = false;
         System.out.println("AI match finished");
         game.getGameState().printBoard();

@@ -121,7 +121,7 @@ public class ModelComManager {
         AIComManager.getInstance().configureAIShowMatch();
         AIComManager.getInstance().setSecondaryAI("star1 0 i 750 -o m");
         //AIComManager.getInstance().setSecondaryAI("random", PlayerType.NORTH.ordinal());
-        AIComManager.getInstance().setPrimaryAI("mcts");
+        AIComManager.getInstance().setPrimaryAI("expectimax 2 -i 0 -o");
         AIComManager.getInstance().tryBoardSetup(findGame(-1).getGameState());
         sendDeploymentUpdate(-1, PlayerType.NORTH.ordinal());
         sendDeploymentUpdate(-1, PlayerType.SOUTH.ordinal());

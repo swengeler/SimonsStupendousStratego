@@ -23,7 +23,7 @@ public class AIComManager {
     }
 
     private AIComManager() {
-        setPrimaryAI("expectinegamax");
+        setPrimaryAI("expectimax 1 -i 0 -o");
     }
 
     private AbstractAI primaryAI, secondaryAI;

@@ -300,10 +300,6 @@ public class ViewComManager {
         }
     }
 
-    public void sendConfigureWindowOpen() {
-        Configurator config = new Configurator(0);
-    }
-
     public void revealAll() {
         frame.getInGameView().revealAll();
     }

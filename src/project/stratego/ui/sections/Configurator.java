@@ -18,8 +18,6 @@ import project.stratego.ui.utils.Messages;
 
 public class Configurator extends Stage {
 
-    private int mode;
-
     private VBox layout;
 
     private String aiType = "random";
@@ -31,9 +29,7 @@ public class Configurator extends Stage {
 
     private boolean expSelected;
 
-    public Configurator(int mode) {
-        this.mode = mode;
-
+    public Configurator(int playerIndex) {
         initModality(Modality.APPLICATION_MODAL);
         setTitle("Configure AI settings");
         getIcons().add(new Image(Messages.class.getResourceAsStream("/icons/program_icon.png")));
@@ -179,11 +175,11 @@ public class Configurator extends Stage {
             setTimeLimit((Integer) iterDeepBox.getValue());
             setMoveOrdering(moveOrdering.selectedProperty().getValue() ? "m" : "-m");
             if (aiType.equals("random") || aiType.equals("mcts")) {
-                ViewComManager.getInstance().requestConfigureAI(1, aiType);
+                ViewComManager.getInstance().requestConfigureAI(playerIndex, aiType);
             } else if (aiType.equals("expectimax")) {
-                ViewComManager.getInstance().requestConfigureAI(1, aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o");
+                ViewComManager.getInstance().requestConfigureAI(playerIndex, aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o");
             } else {
-                ViewComManager.getInstance().requestConfigureAI(1, aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o " + this.moveOrdering);
+                ViewComManager.getInstance().requestConfigureAI(playerIndex, aiType + " " + maxDepth + " " + this.iterDeep + " " + timeLimit + " -o " + this.moveOrdering);
             }
             close();
         });

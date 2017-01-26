@@ -110,7 +110,7 @@ public class SideMenu extends Pane {
         });
 
         Button configureButton = new Button("Configure AI");
-        configureButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().sendConfigureWindowOpen());
+        configureButton.setOnAction((ActionEvent e) -> new Configurator(1));
         configureButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         configureButton.setTextFill(Color.BLACK);
         configureButton.setOnMouseEntered(e -> {
@@ -262,30 +262,41 @@ public class SideMenu extends Pane {
         showMatchMenu = new TitledPane();
         showMatchMenu.setText("AI Show Match");
 
-        Button nextMoveButton = new Button("Play");
-        nextMoveButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestNextMove());
-        nextMoveButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
-        nextMoveButton.setTextFill(Color.BLACK);
-        nextMoveButton.setOnMouseEntered(e -> {
-            nextMoveButton.setTextFill(Color.WHITE);
+        Button playButton = new Button("Play");
+        playButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestNextMove());
+        playButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        playButton.setTextFill(Color.BLACK);
+        playButton.setOnMouseEntered(e -> {
+            playButton.setTextFill(Color.WHITE);
         });
-        nextMoveButton.setOnMouseExited(e -> {
-            nextMoveButton.setTextFill(Color.BLACK);
+        playButton.setOnMouseExited(e -> {
+            playButton.setTextFill(Color.BLACK);
         });
 
-        Button configureButton = new Button("Configure");
-        configureButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetDeployment());
-        configureButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
-        configureButton.setTextFill(Color.BLACK);
-        configureButton.setOnMouseEntered(e -> {
-            configureButton.setTextFill(Color.WHITE);
+        Button configureNorthButton = new Button("Configure North");
+        configureNorthButton.setOnAction((ActionEvent e) -> new Configurator(0));
+        configureNorthButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        configureNorthButton.setTextFill(Color.BLACK);
+        configureNorthButton.setOnMouseEntered(e -> {
+            configureNorthButton.setTextFill(Color.WHITE);
         });
-        configureButton.setOnMouseExited(e -> {
-            configureButton.setTextFill(Color.BLACK);
+        configureNorthButton.setOnMouseExited(e -> {
+            configureNorthButton.setTextFill(Color.BLACK);
+        });
+
+        Button configureSouthButton = new Button("Configure South");
+        configureSouthButton.setOnAction((ActionEvent e) -> new Configurator(1));
+        configureSouthButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
+        configureSouthButton.setTextFill(Color.BLACK);
+        configureSouthButton.setOnMouseEntered(e -> {
+            configureSouthButton.setTextFill(Color.WHITE);
+        });
+        configureSouthButton.setOnMouseExited(e -> {
+            configureSouthButton.setTextFill(Color.BLACK);
         });
 
         Button resetButton = new Button("Reset");
-        resetButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestStartGame());
+        resetButton.setOnAction((ActionEvent e) -> ViewComManager.getInstance().requestResetGame());
         resetButton.setStyle("-fx-font: 20 helvetica; -fx-background-color: transparent; -fx-border-color: transparent; -fx-font-weight: bold;");
         resetButton.setTextFill(Color.BLACK);
         resetButton.setOnMouseEntered(e -> {
@@ -326,7 +337,7 @@ public class SideMenu extends Pane {
         pane.setPadding(new Insets(5));
         pane.setSpacing(0);
         pane.setStyle("-fx-background-color: transparent;");
-        pane.getChildren().addAll(nextMoveButton, configureButton, resetButton, saveGameButton, loadGameButton);
+        pane.getChildren().addAll(playButton, configureNorthButton, configureSouthButton, resetButton, loadGameButton);
 
         showMatchMenu.setContent(pane);
 

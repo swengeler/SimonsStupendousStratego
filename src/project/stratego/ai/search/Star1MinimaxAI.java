@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Star1MinimaxAI extends AbstractAI {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private int currentMaxDepth = 3;
 
